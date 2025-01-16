@@ -1,8 +1,10 @@
 package com.luisdbb.tarea3AD2024base;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 import com.luisdbb.tarea3AD2024base.config.StageManager;
@@ -10,7 +12,10 @@ import com.luisdbb.tarea3AD2024base.config.StageManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+
+
 @SpringBootApplication
+
 public class Tarea3Ad2024baseApplication extends Application {
 
 	protected ConfigurableApplicationContext springContext;
@@ -31,13 +36,13 @@ public class Tarea3Ad2024baseApplication extends Application {
 		displayInitialScene();
 
 	}
-
+	
 	/**
 	 * Useful to override this method by sub-classes wishing to change the first
 	 * Scene to be displayed on startup. Example: Functional tests on main window.
 	 */
 	protected void displayInitialScene() {
-		stageManager.switchScene(FxmlView.LOGIN);
+		stageManager.switchScene(FxmlView.PRINCIPAL);
 	}
 
 	private ConfigurableApplicationContext springBootApplicationContext() {

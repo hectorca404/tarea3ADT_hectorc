@@ -1,75 +1,80 @@
 package com.luisdbb.tarea3AD2024base.controller;
 
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
-import com.luisdbb.tarea3AD2024base.config.StageManager;
-import com.luisdbb.tarea3AD2024base.services.UserService;
-import com.luisdbb.tarea3AD2024base.view.FxmlView;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-
-/**
- * @author Ram Alapure
- * @since 05-04-2017
- */
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 @Controller
-public class LoginController implements Initializable{
-
-	@FXML
-    private Button btnLogin;
+public class LoginController {
 
     @FXML
-    private PasswordField password;
+    private Button volverBoton;
 
     @FXML
-    private TextField username;
+    private ImageView volverIcon;
 
     @FXML
-    private Label lblLogin;
-    
-    @Autowired
-    private UserService userService;
-    
-    @Lazy
-    @Autowired
-    private StageManager stageManager;
-        
-	@FXML
-    private void login(ActionEvent event) throws IOException{
-    	if(userService.authenticate(getUsername(), getPassword())){
-    		    		
-    		stageManager.switchScene(FxmlView.USER);
-    		
-    	}else{
-    		lblLogin.setText("Login Failed.");
-    	}
+    private TextField userField;
+
+    @FXML
+    private PasswordField passwordField;
+
+    @FXML
+    private Button ojoBoton;
+
+    @FXML
+    private ImageView ojoIcon;
+
+    private boolean passwordVisible = false;
+
+    @FXML
+    public void initialize() {
+        try {
+            // Configurar imágenes iniciales
+            volverIcon.setImage(new Image(getClass().getResourceAsStream("/images/volver.png")));
+            ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
+
+            // Configurar eventos de los botones
+            volverBoton.setOnAction(event -> volverAPrincipal());
+            ojoBoton.setOnAction(event -> visibilidad());
+        } catch (Exception e) {
+            System.out.println("Error al inicializar el controlador: " + e.getMessage());
+        }
     }
-	
-	public String getPassword() {
-		return password.getText();
-	}
 
-	public String getUsername() {
-		return username.getText();
-	}
+    private void visibilidad() {
+        passwordVisible = !passwordVisible;
+        if (passwordVisible) {
+            passwordField.setPromptText(passwordField.getText());
+            passwordField.clear();
+            ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/abierto.png")));
+        } else {
+        	passwordField.setText(passwordField.getText());
+            ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
+        }
+    }
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		
-	}
-
+ 
+    private void volverAPrincipal() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Principal.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) volverBoton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            System.out.println("Error al volver a la ventana principal: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
+
+

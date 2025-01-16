@@ -5,31 +5,46 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" 
-fx:controller="com.luisdbb.tarea3AD2024base.controller.LoginController">
-   <children>
-      <Rectangle fill="DODGERBLUE" height="250.0" stroke="#ffffff8b" strokeType="INSIDE" width="400.0" />
-      <Label fx:id="lblLogin" layoutX="97.0" layoutY="46.0" text="Login" textFill="WHITE">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <TextField fx:id="username" layoutX="98.0" layoutY="92.0" prefHeight="36.0" prefWidth="204.0" promptText="Username" />
-      <PasswordField fx:id="password" layoutX="98.0" layoutY="141.0" onAction="#login" prefHeight="36.0" prefWidth="204.0" promptText="Password" />
-      <Button fx:id="btnLogin" layoutX="215.0" layoutY="193.0" mnemonicParsing="false" onAction="#login" prefHeight="30.0" prefWidth="86.0" styleClass="btnGreen" text="Sign In" textFill="WHITE">
-         <font>
-            <Font size="15.0" />
-         </font>
-         <effect>
-            <DropShadow blurType="ONE_PASS_BOX" />
-         </effect></Button>
-   </children>
-   <opaqueInsets>
-      <Insets />
-   </opaqueInsets>
-</AnchorPane>
+<VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.luisdbb.tarea3AD2024base.controller.LoginController">
+    <children>
+     <HBox prefHeight="56.0" prefWidth="660.0">
+            <Button fx:id="volverBoton" alignment="TOP_LEFT" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-cursor: hand;">
+                <graphic>
+                    <ImageView fx:id="volverIcon" fitHeight="24" fitWidth="24" />
+                </graphic>
+            </Button>
+        </HBox>
+      <HBox prefHeight="26.0" prefWidth="429.0">
+         <children>
+              <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="90.0" text="Usuario:" />
+              <TextField fx:id="userField" minHeight="-Infinity" prefHeight="25.0" prefWidth="245.0" promptText="Introduce tu usuario" />
+         </children>
+      </HBox>
+        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="360.0">
+            <children>
+              
+              <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="90.0" text="Contraseña:" />
+                <PasswordField fx:id="passwordField" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="245.0" promptText="Introduce tu contraseña" />
+            <Button fx:id="ojoBoton" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-cursor: hand;">
+                    <graphic>
+                        <ImageView fx:id="ojoIcon" fitHeight="24" fitWidth="24" />
+                    </graphic>
+                </Button>
+                
+            </children>
+        </HBox>
+
+              <Button text="Iniciar Sesión">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </Button>
+    </children>
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
+</VBox>

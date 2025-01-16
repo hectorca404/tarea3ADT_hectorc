@@ -1,10 +1,33 @@
-/* CSS for app */
 
-.btnGreen{
-	-fx-background-color:  #3cbc53;
+.root {
+    -fx-background-color: #01143C;
 }
 
-.background{
-	-fx-background-color: DODGERBLUE;
+.button {
+    -fx-font-size: 16px;
+    -fx-padding: 15px 30px;
+    -fx-border-radius: 10px;
+    -fx-background-color: #2E4372;
+    -fx-text-fill: #A0A3A7;
 }
+
+#registerButton {
+    -fx-background-color: #606E8C;
+    -fx-text-fill: #A0A3A7;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 15px;
+    -fx-border-radius: 5px;
+}
+#loginButton {
+    -fx-background-color: #2E4372;
+    -fx-text-fill: #A0A3A7;
+}
+
+.label {
+    -fx-text-fill: #A0A3A7;
+    -fx-font-size: 14px;
+    -fx-underline: true;
+}
+
+
 
