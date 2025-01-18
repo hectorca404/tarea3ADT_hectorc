@@ -1,33 +1,117 @@
 
 .root {
-    -fx-background-color: #01143C;
+    -fx-background-color: #FFFFFF;
+    -fx-font-family: 'Arial', sans-serif;
+    -fx-font-size: 14px;
+}
+
+.text-field, .password-field {
+    -fx-pref-height: 40px;
+    -fx-pref-width: 260px;
+    -fx-background-color: #F5F5F5;
+    -fx-border-color: #CCCCCC;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 0 10px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #377DFF;
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(55, 125, 255, 0.2), 10, 0, 0, 0);
 }
 
 .button {
-    -fx-font-size: 16px;
-    -fx-padding: 15px 30px;
-    -fx-border-radius: 10px;
-    -fx-background-color: #2E4372;
-    -fx-text-fill: #A0A3A7;
+    -fx-background-color: #EAEAEA;
+    -fx-border-color: #CCCCCC;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 10 20px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-text-fill: #333333;
 }
 
-#registerButton {
-    -fx-background-color: #606E8C;
-    -fx-text-fill: #A0A3A7;
-    -fx-font-size: 14px;
-    -fx-padding: 8px 15px;
-    -fx-border-radius: 5px;
-}
-#loginButton {
-    -fx-background-color: #2E4372;
-    -fx-text-fill: #A0A3A7;
+.button:hover {
+    -fx-background-color: #CCCCCC;
+    -fx-border-color: #377DFF;
 }
 
-.label {
-    -fx-text-fill: #A0A3A7;
+.button:pressed {
+    -fx-background-color: #B0B0B0;
+}
+
+.button#logButton, .button#recuperarButton, .button#registrarButton {
+    -fx-background-color: #377DFF;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: transparent;
+    -fx-font-weight: bold;
+}
+
+.button#logButton:hover, .button#recuperarButton:hover, .button#registrarButton:hover {
+    -fx-background-color: #255DCB;
+}
+
+.button#logButton:pressed, .button#recuperarButton:pressed, .button#registrarButton:pressed {
+    -fx-background-color: #1A45A4;
+}
+
+.button#limpiarButton {
+    -fx-background-color: #EAEAEA;
+    -fx-text-fill: #333333;
+    -fx-border-color: #CCCCCC;
+}
+
+.button#limpiarButton:hover {
+    -fx-background-color: #CCCCCC;
+    -fx-border-color: #377DFF;
+}
+
+.button#limpiarButton:pressed {
+    -fx-background-color: #B0B0B0;
+}
+
+.hyperlink {
+    -fx-text-fill: #377DFF;
+    -fx-underline: false;
     -fx-font-size: 14px;
+}
+
+.hyperlink:hover {
+    -fx-text-fill: #255DCB;
     -fx-underline: true;
 }
 
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
 
+.hbox, .vbox {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+}
+
+.combo-box {
+    -fx-pref-height: 40px;
+    -fx-background-color: #F5F5F5;
+    -fx-border-color: #CCCCCC;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 0 10px;
+    -fx-font-size: 14px;
+}
+
+.combo-box:focused {
+    -fx-border-color: #377DFF;
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(55, 125, 255, 0.2), 10, 0, 0, 0);
+}
+
+#userLogField, #passField{
+	-fx-pref-height: 24px;
+}
 

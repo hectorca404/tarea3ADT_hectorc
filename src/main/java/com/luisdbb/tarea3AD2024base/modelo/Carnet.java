@@ -98,7 +98,7 @@ public class Carnet {
                "\nFecha Expedición: " + fechaexp +
                "\nDistancia: " + distancia +
                "\nNúmero de Estancias VIP: " + nVips +
-               "\nParada de Inicio: " + (paradaInicio != null ? paradaInicio.getNombre() : "N/A");
+               "\nParada de Inicio: " + paradaInicio.getNombre();
     }
 
     @Override

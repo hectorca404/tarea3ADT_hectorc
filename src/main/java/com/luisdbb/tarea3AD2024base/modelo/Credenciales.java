@@ -35,9 +35,10 @@ public class Credenciales {
     // CONSTRUCTORES
     public Credenciales() {}
 
-    public Credenciales(String nombreUsuario, String contrasena, Perfil perfil) {
+    public Credenciales(String nombreUsuario, String contrasena, String correo,Perfil perfil) {
         this.nombreUsuario = nombreUsuario;
         this.contrasena = contrasena;
+        this.correo = correo;
         this.perfil = perfil;
     }
 
@@ -115,8 +116,8 @@ public class Credenciales {
     public String toString() {
         return "Credenciales Usuario: " + nombreUsuario +
                "\nPerfil: " + perfil +
-               "\nPeregrino: " + (peregrino != null ? peregrino.getId() : "N/A") +
-               "\nParada: " + (parada != null ? parada.getId() : "N/A");
+               "\nPeregrino: " + peregrino.getId() +
+               "\nParada: " + parada.getId();
     }
 }
 

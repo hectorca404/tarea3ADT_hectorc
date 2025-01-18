@@ -96,8 +96,8 @@ public class Estancia implements Serializable {
         return "Estancia ID: " + id +
                "\nFecha: " + fecha +
                "\nEs VIP: " + (vip ? "Si" : "No") +
-               "\nParada: " + (parada != null ? parada.getId() : "N/A") +
-               "\nPeregrino ID: " + (peregrino != null ? peregrino.getId() : "N/A");
+               "\nParada: " + parada.getId() +
+               "\nPeregrino ID: " + peregrino.getId();
     }
 
     @Override

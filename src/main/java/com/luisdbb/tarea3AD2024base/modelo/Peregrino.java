@@ -17,6 +17,9 @@ public class Peregrino implements Serializable {
 
     @Column(nullable = false)
     private String nombre;
+    
+    @Column(nullable = false)
+    private String apellido;
 
     @Column(nullable = false)
     private String nacionalidad;
@@ -40,9 +43,10 @@ public class Peregrino implements Serializable {
     
     public Peregrino() {}
 
-    public Peregrino(Long id, String nombre, String nacionalidad, Parada paradaInicio) {
+    public Peregrino(Long id, String nombre, String apellido ,String nacionalidad, Parada paradaInicio) {
         this.id = id;
         this.nombre = nombre;
+        this.apellido = apellido;
         this.nacionalidad = nacionalidad;
         this.paradaInicio = paradaInicio;
         this.carnet = new Carnet(id, paradaInicio);

@@ -75,8 +75,8 @@ public class ParadasPeregrinos implements Serializable {
     public String toString() {
         return "ParadasPeregrinos{" +
                 "id=" + id +
-                ", peregrino=" + (peregrino != null ? peregrino.getId() : "N/A") +
-                ", parada=" + (parada != null ? parada.getId() : "N/A") +
+                ", peregrino="+peregrino.getId() +
+                ", parada=" + parada.getId() +
                 '}';
     }
 }
