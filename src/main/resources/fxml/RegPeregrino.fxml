@@ -15,7 +15,7 @@
       <Insets top="20.0" left="50.0" right="50.0" bottom="20.0" />
    </padding>
    <children>
-      <Label text="Registrar Peregrino" styleClass="header-label" />
+      <Label text="Registrar Peregrino" />
       <VBox spacing="10.0">
          <children>
             <TextField fx:id="userField" promptText="Nombre de usuario"/>

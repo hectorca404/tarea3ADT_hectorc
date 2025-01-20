@@ -115,3 +115,19 @@
 	-fx-pref-height: 24px;
 }
 
+.ojo-button {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20;
+    -fx-border-color: #000000;
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-padding: 5;
+    -fx-cursor: hand;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0, 2, 2);
+}
+
+.ojo-button:pressed {
+    -fx-background-color: #e0e0e0;
+}
+

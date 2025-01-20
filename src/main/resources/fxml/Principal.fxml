@@ -26,9 +26,9 @@
                   <HBox alignment="CENTER" prefWidth="260.0" spacing="5.0">
                      <children>
                         <PasswordField fx:id="passField" prefWidth="230.0" promptText="Introduce tu contraseña" />
-                        <Button fx:id="passButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0">
+                        <Button fx:id="passButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="ojo-button">
                            <graphic>
-                              <ImageView fx:id="togglePasswordIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fx:id="ojoIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
                         </Button>
                      </children>

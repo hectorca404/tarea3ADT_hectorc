@@ -31,7 +31,10 @@ public class Parada implements Serializable {
     @Transient
     private List<Peregrino> peregrinos;
 
-    // CONSTRUCTOR
+    // CONSTRUCTORES
+    public Parada() {
+    	
+    }
     
     public Parada(Long id, String nombre, char region, String responsable) {
         this.id = id;

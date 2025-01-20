@@ -1,5 +1,8 @@
 package com.luisdbb.tarea3AD2024base.controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
+import com.luisdbb.tarea3AD2024base.config.SpringFXMLLoader;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,25 +22,28 @@ public class RegPeregrinoController {
 	@FXML
 	private Hyperlink volverLogin;
 	
+	@Autowired
+	private SpringFXMLLoader springFXMLLoader;
+	
 	
 	@FXML
     public void initialize() {
         try {
-            volverLogin.setOnAction(event -> volverAPrincipal());
+            volverLogin.setOnAction(event -> cambiarVentana("/fxml/Principal.fxml"));
         } catch (Exception e) {
             System.out.println("Error al inicializar el controlador: " + e.getMessage());
         }
     }
 	
 	
-	private void volverAPrincipal() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Principal.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) volverLogin.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        } catch (Exception e) {
-            System.out.println("Error al volver a la ventana principal: " + e.getMessage());
-        }
-    }
+	private void cambiarVentana(String fxmlPath) {
+	    try {
+	        Parent root = springFXMLLoader.load(fxmlPath);
+	        Stage stage = (Stage) volverLogin.getScene().getWindow();
+	        stage.setScene(new Scene(root));
+	        stage.show();
+	    } catch (Exception e) {
+	        System.out.println("Error al cerrar sesión: " + e.getMessage());
+	    }
+	}
 }

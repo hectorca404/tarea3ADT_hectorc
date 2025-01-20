@@ -23,7 +23,9 @@ public class ParadasPeregrinos implements Serializable {
     private Parada parada;
 
     // CONSTRUCTORES
-    public ParadasPeregrinos() {}
+    public ParadasPeregrinos() {
+    	
+    }
 
     public ParadasPeregrinos(Peregrino peregrino, Parada parada) {
         this.peregrino = peregrino;

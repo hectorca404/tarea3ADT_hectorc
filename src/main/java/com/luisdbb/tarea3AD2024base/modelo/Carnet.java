@@ -27,7 +27,9 @@ public class Carnet {
     
     // CONSTRUCTORES
 
-    public Carnet() {}
+    public Carnet() {
+    	
+    }
 
     public Carnet(Long id, Parada paradaInicio) {
         this.id = id;

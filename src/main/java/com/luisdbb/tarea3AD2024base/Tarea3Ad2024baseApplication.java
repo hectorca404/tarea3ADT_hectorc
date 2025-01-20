@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 import com.luisdbb.tarea3AD2024base.config.StageManager;
+import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -20,10 +21,15 @@ public class Tarea3Ad2024baseApplication extends Application {
 
 	protected ConfigurableApplicationContext springContext;
 	protected StageManager stageManager;
+	
 
 	@Override
 	public void init() throws Exception {
 		springContext = springBootApplicationContext();
+		
+		CredencialesService credencialesService = springContext.getBean(CredencialesService.class);
+	    credencialesService.crearAdministrador();
+	    
 	}
 
 	public static void main(final String[] args) {

@@ -31,7 +31,9 @@ public class Estancia implements Serializable {
 
     // CONSTRUCTORES
     
-    public Estancia() {}
+    public Estancia() {
+    	
+    }
 
     public Estancia(Long id, LocalDate fecha, boolean vip, Parada parada, Peregrino peregrino) {
         this.id = id;

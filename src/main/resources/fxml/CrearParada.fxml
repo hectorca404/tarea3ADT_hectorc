@@ -2,14 +2,13 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" spacing="20.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.luisdbb.tarea3AD2024base.controller.CrearParadaController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.luisdbb.tarea3AD2024base.controller.CrearParadaController">
    <padding>
       <Insets top="20.0" left="50.0" right="50.0" bottom="20.0" />
    </padding>
@@ -17,11 +16,11 @@
       <Label text="Crear Parada"/>
       <VBox spacing="10.0">
          <children>
-            <TextField fx:id="responsableField" promptText="Nombre de usuario del Responsable"/>
+            <TextField fx:id="responsableField" promptText="Nombre completo del Responsable"/>
             <TextField fx:id="correoField" promptText="Correo del Responsable"/>
+            <TextField fx:id="usuarioField" promptText="Nombre de usuario del Responsable"/>
             <TextField fx:id="nombreParadaField" promptText="Nombre de la Parada"/>
-            <ComboBox fx:id="regionComboBox" promptText="Seleccionar Región"/>
-
+            <TextField fx:id="regionField" promptText="Región (un carácter)" />
             <PasswordField fx:id="passwordField" promptText="Contraseña del Responsable"/>
             <PasswordField fx:id="confirmPasswordField" promptText="Confirmar Contraseña"/>
          </children>
@@ -35,3 +34,4 @@
       <Button fx:id="volverMenuButton" text="Volver al Menú" alignment="CENTER" />
    </children>
 </VBox>
+

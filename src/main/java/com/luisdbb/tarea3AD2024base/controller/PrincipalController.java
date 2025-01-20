@@ -1,6 +1,13 @@
 package com.luisdbb.tarea3AD2024base.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
+import com.luisdbb.tarea3AD2024base.config.SpringFXMLLoader;
+import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
+import com.luisdbb.tarea3AD2024base.modelo.Perfil;
+import com.luisdbb.tarea3AD2024base.services.CredencialesService;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,7 +36,7 @@ public class PrincipalController {
     private Button passButton;
 
     @FXML
-    private ImageView togglePasswordIcon;
+    private ImageView ojoIcon;
 
     @FXML
     private Button logButton;
@@ -41,20 +48,55 @@ public class PrincipalController {
     private Hyperlink regisLink;
 
     private boolean contraseñaVisible = false;
+    
+    @Autowired
+    private CredencialesService credencialesService;
+    
+    @Autowired
+    private SpringFXMLLoader springFXMLLoader;
 
     @FXML
     public void initialize() {
         try {
             logo.setImage(new Image(getClass().getResourceAsStream("/images/logo2.png")));
-            togglePasswordIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
+            ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
 
             passButton.setOnAction(event -> visualizarContraseña());
             forgotPass.setOnAction(event -> cambiarVentana("/fxml/ForgotPass.fxml"));
             regisLink.setOnAction(event -> cambiarVentana("/fxml/RegPeregrino.fxml"));
+            
+            logButton.setOnAction(event -> iniciarSesion());
 
         } catch (Exception e) {
-            System.out.println("Error al inicializar el controlador: " + e.getMessage());
+            System.out.println("Error al iniciar el PrncipalController: " + e.getMessage());
         }
+    }
+    
+    
+    private void iniciarSesion() {
+        String username = userLogField.getText();
+        String password = passField.getText();
+
+        try {
+            Credenciales credenciales = credencialesService.validarCredenciales(username, password);
+            vistaSegunRol(credenciales.getPerfil());
+        } catch (IllegalArgumentException e) {
+            mostrarError("Credenciales invalidas");
+        }
+    }
+    
+    
+    private void vistaSegunRol(Perfil perfil) {
+        switch (perfil) {
+            case ADMINISTRADOR -> cambiarVentana("/fxml/Admin.fxml");
+            case PEREGRINO -> cambiarVentana("/fxml/Peregrino.fxml");
+            case PARADA -> cambiarVentana("/fxml/ResParada.fxml");
+            default -> mostrarError("usuario no existe");
+        }
+    }
+    
+    private void mostrarError(String mensaje) {
+    	System.out.println(mensaje);
     }
 
     private void visualizarContraseña() {
@@ -63,17 +105,16 @@ public class PrincipalController {
         if (contraseñaVisible) {
             passField.setPromptText(passField.getText());
             passField.clear();
-            togglePasswordIcon.setImage(new Image(getClass().getResourceAsStream("/images/abierto.png")));
+            ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/abierto.png")));
         } else {
             passField.setPromptText("Introduce tu contraseña");
-            togglePasswordIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
+            ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
         }
     }
 
     private void cambiarVentana(String fxmlPath) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent root = loader.load();
+            Parent root = springFXMLLoader.load(fxmlPath);
 
             Stage stage = (Stage) logButton.getScene().getWindow();
             stage.setScene(new Scene(root));

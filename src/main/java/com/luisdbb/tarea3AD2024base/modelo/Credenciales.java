@@ -33,7 +33,9 @@ public class Credenciales {
     private Parada parada;
 
     // CONSTRUCTORES
-    public Credenciales() {}
+    public Credenciales() {
+    	
+    }
 
     public Credenciales(String nombreUsuario, String contrasena, String correo,Perfil perfil) {
         this.nombreUsuario = nombreUsuario;

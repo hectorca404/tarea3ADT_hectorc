@@ -41,7 +41,9 @@ public class Peregrino implements Serializable {
 
     // CONSTRUCTORES
     
-    public Peregrino() {}
+    public Peregrino() {
+    	
+    }
 
     public Peregrino(Long id, String nombre, String apellido ,String nacionalidad, Parada paradaInicio) {
         this.id = id;
