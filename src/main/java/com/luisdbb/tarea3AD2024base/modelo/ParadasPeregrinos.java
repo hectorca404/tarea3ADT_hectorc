@@ -2,6 +2,7 @@ package com.luisdbb.tarea3AD2024base.modelo;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -13,6 +14,9 @@ public class ParadasPeregrinos implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column
+    private LocalDate fecha;
 
     @ManyToOne
     @JoinColumn(name = "peregrino_id", nullable = false)
@@ -24,12 +28,13 @@ public class ParadasPeregrinos implements Serializable {
 
     // CONSTRUCTORES
     public ParadasPeregrinos() {
-    	
+    	this.fecha = LocalDate.now();
     }
 
     public ParadasPeregrinos(Peregrino peregrino, Parada parada) {
         this.peregrino = peregrino;
         this.parada = parada;
+        this.fecha = LocalDate.now();
     }
 
     // GETTERS Y SETTERS
@@ -58,9 +63,18 @@ public class ParadasPeregrinos implements Serializable {
         this.parada = parada;
     }
     
+    public LocalDate getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(LocalDate fecha) {
+		this.fecha = fecha;
+	}
+
     // METODOS ENTITY
     
-    @Override
+  
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

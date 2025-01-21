@@ -1,9 +1,12 @@
 package com.luisdbb.tarea3AD2024base.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.luisdbb.tarea3AD2024base.config.SpringFXMLLoader;
+import com.luisdbb.tarea3AD2024base.config.StageManager;
+import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,8 +32,9 @@ public class AdminController {
     @FXML
     private ImageView cerrarSesionIcon;
     
+    @Lazy
     @Autowired
-    private SpringFXMLLoader springFXMLLoader;
+    private StageManager stageManager;
 
     @FXML
     public void initialize() {
@@ -38,24 +42,23 @@ public class AdminController {
             crearParadaIcon.setImage(new Image(getClass().getResourceAsStream("/images/parada.png")));
             cerrarSesionIcon.setImage(new Image(getClass().getResourceAsStream("/images/cerrarSesion.png")));
 
-            crearParadaButton.setOnAction(event -> cambiarVentana("/fxml/CrearParada.fxml"));
-            cerrarSesionButton.setOnAction(event -> cambiarVentana("/fxml/Principal.fxml"));
+            crearParadaButton.setOnAction(event -> crearParada());
+            cerrarSesionButton.setOnAction(event -> cerrarSesion());
         } catch (Exception e) {
             System.out.println("Error al iniciar AdminController: " + e.getMessage());
         }
     }
 
 
-    private void cambiarVentana(String fxmlPath) {
-        try {
-            Parent root = springFXMLLoader.load(fxmlPath);
-            Stage stage = (Stage) cerrarSesionButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            System.out.println("Error al cambiar de ventana: " + e.getMessage());
-        }
+    private void crearParada(){
+    	stageManager.switchScene(FxmlView.CREARPARADA);
     }
+    
+    private void cerrarSesion(){
+    	stageManager.switchScene(FxmlView.PRINCIPAL);
+    }
+    
+    
 
 
 }

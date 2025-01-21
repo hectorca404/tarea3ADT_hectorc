@@ -88,7 +88,7 @@ public enum FxmlView {
 
         @Override
         public String getFxmlFile() {
-            return "/fxml/Principal.fxml";
+            return "/fxml/Peregrino.fxml";
         }
     },
 	  SELLARALOJAR {

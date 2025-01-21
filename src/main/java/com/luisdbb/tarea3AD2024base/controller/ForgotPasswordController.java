@@ -10,9 +10,12 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.luisdbb.tarea3AD2024base.config.SpringFXMLLoader;
+import com.luisdbb.tarea3AD2024base.config.StageManager;
+import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 @Controller
 public class ForgotPasswordController {
@@ -26,22 +29,16 @@ public class ForgotPasswordController {
     @FXML
     private Hyperlink volverLogin;
     
+    @Lazy
     @Autowired
-    private SpringFXMLLoader springFXMLLoader;
+    private StageManager stageManager;
 
     @FXML
     public void initialize() {
-        volverLogin.setOnAction(event -> cambiarVentana("/fxml/Principal.fxml"));
+        volverLogin.setOnAction(event -> volverLogin());
     }
 
-    private void cambiarVentana(String fxmlPath) {
-        try {
-            Parent root = springFXMLLoader.load(fxmlPath);
-            Stage stage = (Stage) volverLogin.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            System.out.println("Error al cerrar sesion: " + e.getMessage());
-        }
+    private void volverLogin(){
+    	stageManager.switchScene(FxmlView.PRINCIPAL);
     }
 }

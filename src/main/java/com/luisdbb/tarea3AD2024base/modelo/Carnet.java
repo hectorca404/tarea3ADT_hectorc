@@ -39,14 +39,6 @@ public class Carnet {
         this.fechaexp = LocalDate.now();
     }
 
-    public Carnet(Long id, LocalDate fechaexp, double distancia, int nVips, Parada paradaInicio) {
-        this.id = id;
-        this.fechaexp = fechaexp;
-        this.distancia = distancia;
-        this.nVips = nVips;
-        this.paradaInicio = paradaInicio;
-    }
-
     // GETTERS Y SETTERS
     public Long getId() {
         return id;

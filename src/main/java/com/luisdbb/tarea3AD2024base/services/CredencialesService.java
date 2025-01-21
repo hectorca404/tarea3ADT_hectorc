@@ -24,9 +24,14 @@ public class CredencialesService {
     }
 
     public Credenciales validarCredenciales(String nombreUsuario, String contrasena) {
-        return credencialesRepository.findByNombreUsuario(nombreUsuario)
-                .filter(credenciales -> credenciales.getContrasena().equals(contrasena))
-                .orElseThrow(() -> new IllegalArgumentException("Credeciales incorrectas"));
+        Credenciales credenciales = credencialesRepository.findByNombreUsuario(nombreUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Credenciales incorrectas"));
+
+        if (!credenciales.getContrasena().equals(contrasena)) {
+            throw new IllegalArgumentException("Contraseña incorrecta");
+        }
+
+        return credenciales;
     }
 }
 

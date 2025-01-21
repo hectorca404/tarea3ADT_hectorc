@@ -1,12 +1,15 @@
 package com.luisdbb.tarea3AD2024base.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.luisdbb.tarea3AD2024base.config.SpringFXMLLoader;
+import com.luisdbb.tarea3AD2024base.config.StageManager;
 import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
 import com.luisdbb.tarea3AD2024base.modelo.Perfil;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
+import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,8 +55,9 @@ public class PrincipalController {
     @Autowired
     private CredencialesService credencialesService;
     
+    @Lazy
     @Autowired
-    private SpringFXMLLoader springFXMLLoader;
+    private StageManager stageManager;
 
     @FXML
     public void initialize() {
@@ -62,8 +66,8 @@ public class PrincipalController {
             ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
 
             passButton.setOnAction(event -> visualizarContraseña());
-            forgotPass.setOnAction(event -> cambiarVentana("/fxml/ForgotPass.fxml"));
-            regisLink.setOnAction(event -> cambiarVentana("/fxml/RegPeregrino.fxml"));
+            forgotPass.setOnAction(event -> forgotPass());
+            regisLink.setOnAction(event -> regPeregrino());
             
             logButton.setOnAction(event -> iniciarSesion());
 
@@ -88,9 +92,9 @@ public class PrincipalController {
     
     private void vistaSegunRol(Perfil perfil) {
         switch (perfil) {
-            case ADMINISTRADOR -> cambiarVentana("/fxml/Admin.fxml");
-            case PEREGRINO -> cambiarVentana("/fxml/Peregrino.fxml");
-            case PARADA -> cambiarVentana("/fxml/ResParada.fxml");
+            case ADMINISTRADOR -> menuAdmin();
+            case PEREGRINO -> menuPeregrino();
+            case PARADA ->menuParada();
             default -> mostrarError("usuario no existe");
         }
     }
@@ -112,16 +116,25 @@ public class PrincipalController {
         }
     }
 
-    private void cambiarVentana(String fxmlPath) {
-        try {
-            Parent root = springFXMLLoader.load(fxmlPath);
-
-            Stage stage = (Stage) logButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            System.out.println("Error al cambiar de ventana: " + e.getMessage());
-        }
+    private void menuAdmin(){
+    	stageManager.switchScene(FxmlView.ADMIN);
     }
+    
+    private void menuPeregrino(){
+    	stageManager.switchScene(FxmlView.PEREGRINO);
+    }
+    
+    private void menuParada(){
+    	stageManager.switchScene(FxmlView.RESPARADA);
+    }
+    
+    private void forgotPass(){
+    	stageManager.switchScene(FxmlView.FORGOTPASS);
+    }
+    
+    private void regPeregrino(){
+    	stageManager.switchScene(FxmlView.REGPEREGRINO);
+    }
+    
 }
 

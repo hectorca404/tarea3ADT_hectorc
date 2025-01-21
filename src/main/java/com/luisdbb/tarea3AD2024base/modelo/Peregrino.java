@@ -114,7 +114,15 @@ public class Peregrino implements Serializable {
         this.estancias = estancias;
     }
 
-    // METODOS
+    public String getApellido() {
+		return apellido;
+	}
+
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
+
+	// METODOS
     public void agregarParada(Parada parada) {
         paradas.add(parada);
     }

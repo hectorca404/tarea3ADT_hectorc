@@ -1,11 +1,14 @@
 package com.luisdbb.tarea3AD2024base.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.luisdbb.tarea3AD2024base.config.SpringFXMLLoader;
+import com.luisdbb.tarea3AD2024base.config.StageManager;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 import com.luisdbb.tarea3AD2024base.services.ParadaService;
+import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -48,8 +51,9 @@ public class CrearParadaController {
     @FXML
     private Button volverMenuButton;
     
+    @Lazy
     @Autowired
-    private SpringFXMLLoader springFXMLLoader;
+    private StageManager stageManager;
     
     @Autowired
     private ParadaService paradaService;
@@ -58,7 +62,7 @@ public class CrearParadaController {
     public void initialize() {
     	crearButton.setOnAction(event -> registrarParada());
         limpiarButton.setOnAction(event -> limpiarFormulario());
-        volverMenuButton.setOnAction(event -> cambiarVentana("/fxml/Admin.fxml"));
+        volverMenuButton.setOnAction(event -> volverMenu());
     }
     
     private void registrarParada() {
@@ -94,16 +98,10 @@ public class CrearParadaController {
         confirmPasswordField.clear();
     }
 
-    private void cambiarVentana(String fxmlPath) {
-        try {
-            Parent root = springFXMLLoader.load(fxmlPath);
-            Stage stage = (Stage) volverMenuButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            System.out.println("Error al cerrar sesion: " + e.getMessage());
-        }
+    private void volverMenu(){
+    	stageManager.switchScene(FxmlView.ADMIN);
     }
+    
     
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);

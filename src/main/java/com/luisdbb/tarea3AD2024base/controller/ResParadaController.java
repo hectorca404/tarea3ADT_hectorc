@@ -9,9 +9,12 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.luisdbb.tarea3AD2024base.config.SpringFXMLLoader;
+import com.luisdbb.tarea3AD2024base.config.StageManager;
+import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 @Controller
 public class ResParadaController {
@@ -34,8 +37,9 @@ public class ResParadaController {
     @FXML
     private ImageView cerrarSesionIcon;
     
+    @Lazy
     @Autowired
-    private SpringFXMLLoader springFXMLLoader;
+    private StageManager stageManager;
 
     @FXML
     public void initialize() {
@@ -44,21 +48,21 @@ public class ResParadaController {
             sellarIcon.setImage(new Image(getClass().getResourceAsStream("/images/sellar.png")));
             cerrarSesionIcon.setImage(new Image(getClass().getResourceAsStream("/images/cerrarSesion.png")));
             
-            cerrarSesionButton.setOnAction(event -> cambiarVentana("/fxml/Principa.fxml"));
+            cerrarSesionButton.setOnAction(event -> volverLogin());
+            sellarAlojarButton.setOnAction(event -> sellarAlojar());
         } catch (Exception e) {
             System.out.println("Error al inicializar el ResParadaController: " + e.getMessage());
         }
     }
     
-    private void cambiarVentana(String fxmlPath) {
-        try {
-            Parent root = springFXMLLoader.load(fxmlPath);
-            Stage stage = (Stage) cerrarSesionButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            System.out.println("Error al cerrar sesion: " + e.getMessage());
-        }
+    
+    private void volverLogin(){
+    	stageManager.switchScene(FxmlView.PRINCIPAL);
     }
+    
+    private void sellarAlojar(){
+    	stageManager.switchScene(FxmlView.SELLARALOJAR);
+    }
+    
 
 }

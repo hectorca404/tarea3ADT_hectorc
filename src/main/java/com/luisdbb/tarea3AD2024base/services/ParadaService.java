@@ -5,6 +5,9 @@ import com.luisdbb.tarea3AD2024base.modelo.Parada;
 import com.luisdbb.tarea3AD2024base.modelo.Perfil;
 import com.luisdbb.tarea3AD2024base.repositorios.CredencialesRepository;
 import com.luisdbb.tarea3AD2024base.repositorios.ParadaRepository;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +20,10 @@ public class ParadaService {
     public ParadaService(ParadaRepository paradaRepository, CredencialesRepository credencialesRepository) {
         this.paradaRepository = paradaRepository;
         this.credencialesRepository = credencialesRepository;
+    }
+    
+    public List<Parada> obtenerTodasLasParadas() {
+        return paradaRepository.findAll();
     }
 
     @Transactional

@@ -93,9 +93,17 @@ public class Credenciales {
         this.parada = parada;
     }
     
+    public String getCorreo() {
+		return correo;
+	}
+
+	public void setCorreo(String correo) {
+		this.correo = correo;
+	}
+	
     // METODOS ENTITY
-    
-    @Override
+
+	@Override
     public int hashCode() {
         return Objects.hash(nombreUsuario.toLowerCase(), contrasena, perfil, peregrino, parada);
     }
