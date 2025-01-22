@@ -33,6 +33,7 @@ public class CrearParadaController {
 
     @FXML
     private TextField regionField;
+    
     @FXML
     private TextField usuarioField;
 
