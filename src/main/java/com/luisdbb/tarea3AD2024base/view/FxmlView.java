@@ -25,6 +25,17 @@ public enum FxmlView {
             return "/fxml/ForgotPass.fxml";
         }
     },
+	EXPORTPEREGRINO {
+        @Override
+        public String getTitle() {
+            return "Exportar Peregrinos";
+        }
+
+        @Override
+        public String getFxmlFile() {
+            return "/fxml/ExportPeregrino.fxml";
+        }
+    },
 	ADMIN {
         @Override
         public String getTitle() {

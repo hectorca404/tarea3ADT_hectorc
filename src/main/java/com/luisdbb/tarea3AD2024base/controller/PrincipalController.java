@@ -7,8 +7,11 @@ import org.springframework.stereotype.Controller;
 import com.luisdbb.tarea3AD2024base.config.SpringFXMLLoader;
 import com.luisdbb.tarea3AD2024base.config.StageManager;
 import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
+import com.luisdbb.tarea3AD2024base.modelo.Parada;
+import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
 import com.luisdbb.tarea3AD2024base.modelo.Perfil;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
+import com.luisdbb.tarea3AD2024base.services.SesionService;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.fxml.FXML;
@@ -58,6 +61,9 @@ public class PrincipalController {
     @Lazy
     @Autowired
     private StageManager stageManager;
+    
+    @Autowired
+    private SesionService sesionService;
 
     @FXML
     public void initialize() {
@@ -83,21 +89,35 @@ public class PrincipalController {
 
         try {
             Credenciales credenciales = credencialesService.validarCredenciales(username, password);
-            vistaSegunRol(credenciales.getPerfil());
+            vistaSegunRol(credenciales.getPerfil(), credenciales);
+
         } catch (IllegalArgumentException e) {
-            mostrarError("Credenciales invalidas");
+            mostrarError("Credenciales inválidas");
         }
     }
-    
-    
-    private void vistaSegunRol(Perfil perfil) {
+
+    private void vistaSegunRol(Perfil perfil, Credenciales credenciales) {
         switch (perfil) {
-            case ADMINISTRADOR -> menuAdmin();
-            case PEREGRINO -> menuPeregrino();
-            case PARADA ->menuParada();
-            default -> mostrarError("usuario no existe");
+            case PEREGRINO -> {
+                Peregrino peregrino = credenciales.getPeregrino();
+                sesionService.setPeregrinoActual(peregrino);
+                menuPeregrino();
+            }
+            case ADMINISTRADOR ->{
+            	menuAdmin();
+            }
+            case PARADA ->{
+            	Parada parada = credenciales.getParada();
+            	sesionService.setParadaActual(parada);
+            	menuParada();
+            }
+            default -> mostrarError("Usuario no existe");
         }
     }
+
+
+
+
     
     private void mostrarError(String mensaje) {
     	System.out.println(mensaje);

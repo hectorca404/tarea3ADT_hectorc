@@ -5,8 +5,11 @@ import com.luisdbb.tarea3AD2024base.repositorios.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Service
 public class PeregrinoService {
@@ -14,11 +17,15 @@ public class PeregrinoService {
     private final PeregrinoRepository peregrinoRepository;
     private final ParadasPeregrinosRepository paradasPeregrinosRepository;
     private final CredencialesRepository credencialesRepository;
+    private final EstanciaRepository estanciaRepository;
+    
 
-    public PeregrinoService(PeregrinoRepository peregrinoRepository, ParadasPeregrinosRepository paradasPeregrinosRepository,  CredencialesRepository credencialesRepository) {
+    public PeregrinoService(PeregrinoRepository peregrinoRepository, ParadasPeregrinosRepository paradasPeregrinosRepository,  CredencialesRepository credencialesRepository, EstanciaRepository estanciaRepository) {
         this.peregrinoRepository = peregrinoRepository;
         this.paradasPeregrinosRepository = paradasPeregrinosRepository;
         this.credencialesRepository = credencialesRepository;
+        this.estanciaRepository = estanciaRepository;
+       
     }
 
     @Transactional
@@ -46,15 +53,42 @@ public class PeregrinoService {
 
         return peregrinoGuardado;
     }
+    
+   
 
-
-
-    @Transactional(readOnly = true)
-    public List<Parada> obtenerParadasPorPeregrino(Long peregrinoId) {
-        return paradasPeregrinosRepository.findAllByPeregrino_Id(peregrinoId).stream()
+    public List<Parada> obtenerParadas(Long peregrinoId) {
+        return paradasPeregrinosRepository.findByPeregrinoId(peregrinoId)
+                .stream()
                 .map(ParadasPeregrinos::getParada)
-                .collect(Collectors.toList());
+                .toList();
     }
+
+    public List<Estancia> obtenerEstancias(Long peregrinoId) {
+        return estanciaRepository.findByPeregrinoId(peregrinoId);
+    }
+
+
+    
+    @Transactional
+    public void guardarCambiosPeregrino(Peregrino peregrino, String nuevoCorreo) {
+        peregrinoRepository.save(peregrino);
+
+        Credenciales credenciales = credencialesRepository.findByPeregrino(peregrino)
+                .orElseThrow(() -> new IllegalArgumentException("No se encontraron credenciales asociadas al peregrino"));
+
+        credenciales.setCorreo(nuevoCorreo);
+
+        credencialesRepository.save(credenciales);
+    }
+
+    
+    public Peregrino obtenerPeregrinoPorId(Long id) {
+        return peregrinoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No se encontró el peregrino con ID: " + id));
+    }
+
+
+
 }
 
 
