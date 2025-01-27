@@ -6,30 +6,43 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.luisdbb.tarea3AD2024base.controller.ResParadaController">
-   <padding>
-      <Insets bottom="20.0" left="50.0" right="50.0" top="20.0" />
-   </padding>
-   <children>
-      <Label text="Menú Responsable de Parada" styleClass="title-label" />
-      <VBox alignment="CENTER" prefHeight="604.0" prefWidth="700.0" spacing="20.0">
-         <children>
-            <Button fx:id="exportarDatosButton" prefWidth="250.0" text="Exportar Datos Parada">
-               <graphic>
-                  <ImageView fx:id="exportarIcon" fitHeight="20.0" fitWidth="20.0" />
-               </graphic>
-            </Button>
-            <Button fx:id="sellarAlojarButton" prefWidth="250.0" text="Sellar y Alojar">
-               <graphic>
-                  <ImageView fx:id="sellarIcon" fitHeight="20.0" fitWidth="20.0" />
-               </graphic>
-            </Button>
-            <Button fx:id="cerrarSesionButton" prefWidth="250.0" text="Cerrar Sesión">
-               <graphic>
-                  <ImageView fx:id="cerrarSesionIcon" fitHeight="20.0" fitWidth="20.0" />
-               </graphic>
-            </Button>
-         </children>
-      </VBox>
-   </children>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+	prefWidth="800.0" spacing="20.0" stylesheets="@../styles/Styles.css"
+	xmlns="http://javafx.com/javafx/23.0.1"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.luisdbb.tarea3AD2024base.controller.ResParadaController">
+	<padding>
+		<Insets bottom="20.0" left="50.0" right="50.0" top="20.0" />
+	</padding>
+	<children>
+		<Label text="Menú Responsable de Parada"
+			styleClass="title-label" />
+		<VBox alignment="CENTER" prefHeight="604.0" prefWidth="700.0"
+			spacing="20.0">
+			<children>
+				<Button fx:id="exportarDatosButton" prefWidth="250.0"
+					text="Exportar Datos Parada">
+					<graphic>
+						<ImageView fx:id="exportarIcon" fitHeight="20.0"
+							fitWidth="20.0" />
+					</graphic>
+				</Button>
+				<Button fx:id="sellarAlojarButton" prefWidth="250.0"
+					text="Sellar y Alojar">
+					<graphic>
+						<ImageView fx:id="sellarIcon" fitHeight="20.0"
+							fitWidth="20.0" />
+					</graphic>
+				</Button>
+				<Button fx:id="cerrarSesionButton" prefWidth="250.0"
+					text="Cerrar Sesión">
+					<graphic>
+						<ImageView fx:id="cerrarSesionIcon" fitHeight="20.0"
+							fitWidth="20.0" />
+					</graphic>
+				</Button>
+			</children>
+		</VBox>
+	</children>
 </VBox>

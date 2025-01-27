@@ -118,7 +118,7 @@ public class EditPeregrinoController {
 	}
 
 	private void volverMenu() {
-		stageManager.switchScene(FxmlView.PEREGRINO); 
+		stageManager.switchScene(FxmlView.PEREGRINO);
 	}
 
 	private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {

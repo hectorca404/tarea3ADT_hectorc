@@ -20,47 +20,42 @@ import javafx.stage.Stage;
 @Controller
 public class AdminController {
 
-    @FXML
-    private Button crearParadaButton;
+	@FXML
+	private Button crearParadaButton;
 
-    @FXML
-    private Button cerrarSesionButton;
+	@FXML
+	private Button cerrarSesionButton;
 
-    @FXML
-    private ImageView crearParadaIcon;
+	@FXML
+	private ImageView crearParadaIcon;
 
-    @FXML
-    private ImageView cerrarSesionIcon;
-    
-    @Lazy
-    @Autowired
-    private StageManager stageManager;
+	@FXML
+	private ImageView cerrarSesionIcon;
 
-    @FXML
-    public void initialize() {
-        try {
-            crearParadaIcon.setImage(new Image(getClass().getResourceAsStream("/images/parada.png")));
-            cerrarSesionIcon.setImage(new Image(getClass().getResourceAsStream("/images/cerrarSesion.png")));
+	@Lazy
+	@Autowired
+	private StageManager stageManager;
 
-            crearParadaButton.setOnAction(event -> crearParada());
-            cerrarSesionButton.setOnAction(event -> cerrarSesion());
-        } catch (Exception e) {
-            System.out.println("Error al iniciar AdminController: " + e.getMessage());
-        }
-    }
+	@FXML
+	public void initialize() {
+		try {
+			crearParadaIcon.setImage(new Image(getClass().getResourceAsStream("/images/parada.png")));
+			cerrarSesionIcon.setImage(new Image(getClass().getResourceAsStream("/images/cerrarSesion.png")));
 
+			crearParadaButton.setOnAction(event -> crearParada());
+			cerrarSesionButton.setOnAction(event -> cerrarSesion());
+		} catch (Exception e) {
+			System.out.println("Error al iniciar AdminController: " + e.getMessage());
+		}
+	}
 
-    private void crearParada(){
-    	stageManager.switchScene(FxmlView.CREARPARADA);
-    }
-    
-    private void cerrarSesion(){
-    	stageManager.switchScene(FxmlView.PRINCIPAL);
-    }
-    
-    
+	private void crearParada() {
+		stageManager.switchScene(FxmlView.CREARPARADA);
+	}
 
+	private void cerrarSesion() {
+		stageManager.switchScene(FxmlView.PRINCIPAL);
+	}
 
 }
-
 

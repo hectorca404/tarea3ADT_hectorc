@@ -46,249 +46,233 @@ import org.w3c.dom.Element;
 @Controller
 public class ExportPeregrinoController {
 
-    @FXML
-    private TextField nombreField;
-    @FXML
-    private TextField apellidoField;
-    @FXML
-    private TextField correoField;
-    @FXML
-    private TextField nacionalidadField;
-    @FXML
-    private TextField idCarnetField;
-    @FXML
-    private TextField fechaExpedicionField;
-    @FXML
-    private TextField distanciaField;
-    @FXML
-    private TextField numeroVipsField;
-    @FXML
-    private TextField paradaInicialField;
+	@FXML
+	private TextField nombreField;
+	@FXML
+	private TextField apellidoField;
+	@FXML
+	private TextField correoField;
+	@FXML
+	private TextField nacionalidadField;
+	@FXML
+	private TextField idCarnetField;
+	@FXML
+	private TextField fechaExpedicionField;
+	@FXML
+	private TextField distanciaField;
+	@FXML
+	private TextField numeroVipsField;
+	@FXML
+	private TextField paradaInicialField;
 
-    @FXML
-    private TableView<Parada> tablaParadas;
-    @FXML
-    private TableColumn<Parada, String> paradaColumn;
-    @FXML
-    private TableColumn<Parada, String> estanciaColumn;
-    @FXML
-    private TableColumn<Parada, String> vipColumn;
+	@FXML
+	private TableView<Parada> tablaParadas;
+	@FXML
+	private TableColumn<Parada, String> paradaColumn;
+	@FXML
+	private TableColumn<Parada, String> estanciaColumn;
+	@FXML
+	private TableColumn<Parada, String> vipColumn;
 
-    @FXML
-    private Button exportarButton;
-    @FXML
-    private Button volverMenuButton;
+	@FXML
+	private Button exportarButton;
+	@FXML
+	private Button volverMenuButton;
 
-    @Lazy
-    @Autowired
-    private StageManager stageManager;
+	@Lazy
+	@Autowired
+	private StageManager stageManager;
 
-    @Autowired
-    private SesionService sesionService;
+	@Autowired
+	private SesionService sesionService;
 
-    @Autowired
-    private PeregrinoService peregrinoService;
+	@Autowired
+	private PeregrinoService peregrinoService;
 
-    @Autowired
-    private CredencialesService credencialesService;
+	@Autowired
+	private CredencialesService credencialesService;
 
-    private Peregrino peregrinoActual;
+	private Peregrino peregrinoActual;
 
-    @FXML
-    public void initialize() {
-        peregrinoActual = sesionService.getPeregrinoActual();
-        
-            cargarDatosPeregrino(peregrinoActual);
-            cargarParadasYEstancias(peregrinoActual);
-        
-       volverMenuButton.setOnAction(event -> volverMenu());
-       exportarButton.setOnAction(event -> exportarPeregrinoXML(peregrinoActual));
-    }
+	@FXML
+	public void initialize() {
+		peregrinoActual = sesionService.getPeregrinoActual();
 
-    private void cargarDatosPeregrino(Peregrino peregrino) {
-        nombreField.setText(peregrino.getNombre());
-        apellidoField.setText(peregrino.getApellido());
+		cargarDatosPeregrino(peregrinoActual);
+		cargarParadasYEstancias(peregrinoActual);
 
-        Credenciales credenciales = credencialesService.obtenerCredencialesPeregrino(peregrino);
-        correoField.setText(credenciales != null ? credenciales.getCorreo() : "Sin correo");
+		volverMenuButton.setOnAction(event -> volverMenu());
+		exportarButton.setOnAction(event -> exportarPeregrinoXML(peregrinoActual));
+	}
 
-        nacionalidadField.setText(peregrino.getNacionalidad());
+	private void cargarDatosPeregrino(Peregrino peregrino) {
+		nombreField.setText(peregrino.getNombre());
+		apellidoField.setText(peregrino.getApellido());
 
-        if (peregrino.getCarnet() != null) {
-            idCarnetField.setText(String.valueOf(peregrino.getCarnet().getId()));
-            fechaExpedicionField.setText(peregrino.getCarnet().getFechaexp().toString());
-            distanciaField.setText(String.valueOf(peregrino.getCarnet().getDistancia()));
-            numeroVipsField.setText(String.valueOf(peregrino.getCarnet().getnVips()));
-        } else {
-            idCarnetField.setText("Sin carnet");
-            fechaExpedicionField.setText("Sin fecha");
-            distanciaField.setText("0");
-            numeroVipsField.setText("0");
-        }
+		Credenciales credenciales = credencialesService.obtenerCredencialesPeregrino(peregrino);
+		correoField.setText(credenciales != null ? credenciales.getCorreo() : "Sin correo");
 
-        paradaInicialField.setText(
-            peregrino.getParadaInicio() != null ? peregrino.getParadaInicio().getNombre() : "Sin parada inicial"
-        );
+		nacionalidadField.setText(peregrino.getNacionalidad());
 
-        nombreField.setEditable(false);
-        apellidoField.setEditable(false);
-        correoField.setEditable(false);
-        nacionalidadField.setEditable(false);
-        paradaInicialField.setEditable(false);
-        idCarnetField.setEditable(false);
-        fechaExpedicionField.setEditable(false);
-        distanciaField.setEditable(false);
-        numeroVipsField.setEditable(false);
-    }
+		idCarnetField.setText(String.valueOf(peregrino.getCarnet().getId()));
+		fechaExpedicionField.setText(peregrino.getCarnet().getFechaexp().toString());
+		distanciaField.setText(String.valueOf(peregrino.getCarnet().getDistancia()));
+		numeroVipsField.setText(String.valueOf(peregrino.getCarnet().getnVips()));
 
-    private void cargarParadasYEstancias(Peregrino peregrino) {
-        List<Parada> paradas = peregrinoService.obtenerParadas(peregrino.getId());
-        ObservableList<Parada> paradasObservable = FXCollections.observableArrayList(paradas);
+		paradaInicialField.setText(peregrino.getCarnet().getParadaInicio().getNombre());
 
-        tablaParadas.setItems(paradasObservable);
+		nombreField.setEditable(false);
+		apellidoField.setEditable(false);
+		correoField.setEditable(false);
+		nacionalidadField.setEditable(false);
+		paradaInicialField.setEditable(false);
+		idCarnetField.setEditable(false);
+		fechaExpedicionField.setEditable(false);
+		distanciaField.setEditable(false);
+		numeroVipsField.setEditable(false);
+	}
 
-        paradaColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
+	private void cargarParadasYEstancias(Peregrino peregrino) {
+		List<Parada> paradas = peregrinoService.obtenerParadas(peregrino.getId());
+		ObservableList<Parada> paradasObservable = FXCollections.observableArrayList(paradas);
 
-        estanciaColumn.setCellValueFactory(cellData -> {
-            Parada parada = cellData.getValue();
-            boolean tieneEstancia = peregrinoService.obtenerEstancias(peregrino.getId())
-                .stream()
-                .anyMatch(estancia -> estancia.getParada().getId().equals(parada.getId()));
-            return new SimpleStringProperty(tieneEstancia ? "Estancia" : "Sin estancia");
-        });
+		tablaParadas.setItems(paradasObservable);
 
-        vipColumn.setCellValueFactory(cellData -> {
-            Parada parada = cellData.getValue();
-            boolean esVip = peregrinoService.obtenerEstancias(peregrino.getId())
-                .stream()
-                .anyMatch(estancia -> 
-                    estancia.getParada().getId().equals(parada.getId()) && estancia.isVip()
-                );
-            return new SimpleStringProperty(esVip ? "Si" : "No");
-        });
-    }
-    
-    public void exportarPeregrinoXML(Peregrino peregrino) {
-        String pathExportacion = "src/main/resources/peregrinosXML/";
+		paradaColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
 
-        List<Parada> paradas = peregrinoService.obtenerParadas(peregrino.getId());
-        List<Estancia> estancias = peregrinoService.obtenerEstancias(peregrino.getId());
+		estanciaColumn.setCellValueFactory(cellData -> {
+			Parada parada = cellData.getValue();
+			boolean tieneEstancia = peregrinoService.obtenerEstancias(peregrino.getId()).stream()
+					.anyMatch(estancia -> estancia.getParada().getId().equals(parada.getId()));
+			return new SimpleStringProperty(tieneEstancia ? "Estancia" : "Sin estancia");
+		});
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate fechaExpCarnet = peregrino.getCarnet().getFechaexp();
-        String fechaExpFormateada = (fechaExpCarnet != null) ? fechaExpCarnet.format(formatter) : "Fecha no disponible";
+		vipColumn.setCellValueFactory(cellData -> {
+			Parada parada = cellData.getValue();
+			boolean esVip = peregrinoService.obtenerEstancias(peregrino.getId()).stream()
+					.anyMatch(estancia -> estancia.getParada().getId().equals(parada.getId()) && estancia.isVip());
+			return new SimpleStringProperty(esVip ? "Si" : "No");
+		});
+	}
 
-        String nombreFichero = peregrino.getNombre().replaceAll(" ", "_") + "_P" + peregrino.getId() + ".xml";
-        String fichero = pathExportacion + nombreFichero;
+	public void exportarPeregrinoXML(Peregrino peregrino) {
+		String pathExportacion = "src/main/resources/peregrinosXML/";
 
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.newDocument();
+		List<Parada> paradas = peregrinoService.obtenerParadas(peregrino.getId());
+		List<Estancia> estancias = peregrinoService.obtenerEstancias(peregrino.getId());
 
-            Element carnetElement = doc.createElement("carnet");
-            doc.appendChild(carnetElement);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		LocalDate fechaExpCarnet = peregrino.getCarnet().getFechaexp();
+		String fechaExpFormateada = (fechaExpCarnet != null) ? fechaExpCarnet.format(formatter) : "Fecha no disponible";
 
-            Element idElement = doc.createElement("id");
-            idElement.setTextContent(String.valueOf(peregrino.getCarnet().getId()));
-            carnetElement.appendChild(idElement);
+		String nombreFichero = peregrino.getNombre().replaceAll(" ", "_") + "_P" + peregrino.getId() + ".xml";
+		String fichero = pathExportacion + nombreFichero;
 
-            Element fechaExpElement = doc.createElement("fechaexp");
-            fechaExpElement.setTextContent(fechaExpFormateada);
-            carnetElement.appendChild(fechaExpElement);
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document doc = builder.newDocument();
 
-            Element expedidoEnElement = doc.createElement("expedidoen");
-            expedidoEnElement.setTextContent(peregrino.getCarnet().getParadaInicio().getNombre());
-            carnetElement.appendChild(expedidoEnElement);
+			Element carnetElement = doc.createElement("carnet");
+			doc.appendChild(carnetElement);
 
-            Element peregrinoElement = doc.createElement("peregrino");
-            carnetElement.appendChild(peregrinoElement);
+			Element idElement = doc.createElement("id");
+			idElement.setTextContent(String.valueOf(peregrino.getCarnet().getId()));
+			carnetElement.appendChild(idElement);
 
-            Element nombreElement = doc.createElement("nombre");
-            nombreElement.setTextContent(peregrino.getNombre());
-            peregrinoElement.appendChild(nombreElement);
+			Element fechaExpElement = doc.createElement("fechaexp");
+			fechaExpElement.setTextContent(fechaExpFormateada);
+			carnetElement.appendChild(fechaExpElement);
 
-            Element nacionalidadElement = doc.createElement("nacionalidad");
-            nacionalidadElement.setTextContent(peregrino.getNacionalidad());
-            peregrinoElement.appendChild(nacionalidadElement);
+			Element expedidoEnElement = doc.createElement("expedidoen");
+			expedidoEnElement.setTextContent(peregrino.getCarnet().getParadaInicio().getNombre());
+			carnetElement.appendChild(expedidoEnElement);
 
-            Element hoyElement = doc.createElement("hoy");
-            hoyElement.setTextContent(LocalDate.now().format(formatter));
-            carnetElement.appendChild(hoyElement);
+			Element peregrinoElement = doc.createElement("peregrino");
+			carnetElement.appendChild(peregrinoElement);
 
-            Element distanciaTotalElement = doc.createElement("distanciatotal");
-            distanciaTotalElement.setTextContent(String.valueOf(peregrino.getCarnet().getDistancia()));
-            carnetElement.appendChild(distanciaTotalElement);
+			Element nombreElement = doc.createElement("nombre");
+			nombreElement.setTextContent(peregrino.getNombre());
+			peregrinoElement.appendChild(nombreElement);
 
-            Element paradasElement = doc.createElement("paradas");
-            carnetElement.appendChild(paradasElement);
+			Element nacionalidadElement = doc.createElement("nacionalidad");
+			nacionalidadElement.setTextContent(peregrino.getNacionalidad());
+			peregrinoElement.appendChild(nacionalidadElement);
 
-            int orden = 1;
-            for (Parada parada : paradas) {
-                Element paradaElement = doc.createElement("parada");
+			Element hoyElement = doc.createElement("hoy");
+			hoyElement.setTextContent(LocalDate.now().format(formatter));
+			carnetElement.appendChild(hoyElement);
 
-                Element ordenElement = doc.createElement("orden");
-                ordenElement.setTextContent(String.valueOf(orden++));
-                paradaElement.appendChild(ordenElement);
+			Element distanciaTotalElement = doc.createElement("distanciatotal");
+			distanciaTotalElement.setTextContent(String.valueOf(peregrino.getCarnet().getDistancia()));
+			carnetElement.appendChild(distanciaTotalElement);
 
-                Element nombreParadaElement = doc.createElement("nombre");
-                nombreParadaElement.setTextContent(parada.getNombre());
-                paradaElement.appendChild(nombreParadaElement);
+			Element paradasElement = doc.createElement("paradas");
+			carnetElement.appendChild(paradasElement);
 
-                Element regionElement = doc.createElement("region");
-                regionElement.setTextContent(""+parada.getRegion());
-                paradaElement.appendChild(regionElement);
+			int orden = 1;
+			for (Parada parada : paradas) {
+				Element paradaElement = doc.createElement("parada");
 
-                paradasElement.appendChild(paradaElement);
-            }
+				Element ordenElement = doc.createElement("orden");
+				ordenElement.setTextContent(String.valueOf(orden++));
+				paradaElement.appendChild(ordenElement);
 
-            Element estanciasElement = doc.createElement("estancias");
-            carnetElement.appendChild(estanciasElement);
+				Element nombreParadaElement = doc.createElement("nombre");
+				nombreParadaElement.setTextContent(parada.getNombre());
+				paradaElement.appendChild(nombreParadaElement);
 
-            for (Estancia estancia : estancias) {
-                Element estanciaElement = doc.createElement("estancia");
+				Element regionElement = doc.createElement("region");
+				regionElement.setTextContent("" + parada.getRegion());
+				paradaElement.appendChild(regionElement);
 
-                Element idEstanciaElement = doc.createElement("id");
-                idEstanciaElement.setTextContent(String.valueOf(estancia.getId()));
-                estanciaElement.appendChild(idEstanciaElement);
+				paradasElement.appendChild(paradaElement);
+			}
 
-                Element fechaEstanciaElement = doc.createElement("fecha");
-                fechaEstanciaElement.setTextContent(estancia.getFecha().format(formatter));
-                estanciaElement.appendChild(fechaEstanciaElement);
+			Element estanciasElement = doc.createElement("estancias");
+			carnetElement.appendChild(estanciasElement);
 
-                Element paradaEstanciaElement = doc.createElement("parada");
-                paradaEstanciaElement.setTextContent(estancia.getParada().getNombre());
-                estanciaElement.appendChild(paradaEstanciaElement);
+			for (Estancia estancia : estancias) {
+				Element estanciaElement = doc.createElement("estancia");
 
-                if (estancia.isVip()) {
-                    Element vipElement = doc.createElement("vip");
-                    vipElement.setTextContent("Sí");
-                    estanciaElement.appendChild(vipElement);
-                }
+				Element idEstanciaElement = doc.createElement("id");
+				idEstanciaElement.setTextContent(String.valueOf(estancia.getId()));
+				estanciaElement.appendChild(idEstanciaElement);
 
-                estanciasElement.appendChild(estanciaElement);
-            }
+				Element fechaEstanciaElement = doc.createElement("fecha");
+				fechaEstanciaElement.setTextContent(estancia.getFecha().format(formatter));
+				estanciaElement.appendChild(fechaEstanciaElement);
 
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+				Element paradaEstanciaElement = doc.createElement("parada");
+				paradaEstanciaElement.setTextContent(estancia.getParada().getNombre());
+				estanciaElement.appendChild(paradaEstanciaElement);
 
-            try (OutputStream outputStream = new FileOutputStream(new File(fichero))) {
-                transformer.transform(new DOMSource(doc), new StreamResult(outputStream));
-                System.out.println("Peregrino XML exportado exitosamente como: " + fichero);
-            }
+				if (estancia.isVip()) {
+					Element vipElement = doc.createElement("vip");
+					vipElement.setTextContent("Sí");
+					estanciaElement.appendChild(vipElement);
+				}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error al exportar el peregrino XML: " + e.getMessage());
-        }
-    }
+				estanciasElement.appendChild(estanciaElement);
+			}
 
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
+			try (OutputStream outputStream = new FileOutputStream(new File(fichero))) {
+				transformer.transform(new DOMSource(doc), new StreamResult(outputStream));
+				System.out.println("Peregrino XML exportado exitosamente como: " + fichero);
+			}
 
-    @FXML
-    private void volverMenu() {
-        stageManager.switchScene(FxmlView.PEREGRINO);
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Error al exportar el peregrino XML: " + e.getMessage());
+		}
+	}
+
+	@FXML
+	private void volverMenu() {
+		stageManager.switchScene(FxmlView.PEREGRINO);
+	}
 }
-

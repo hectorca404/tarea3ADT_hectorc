@@ -8,110 +8,104 @@ import java.util.Objects;
 @Table(name = "carnets")
 public class Carnet {
 	// ATRIBUTOS
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "fecha_expedicion", nullable = false)
-    private LocalDate fechaexp;
+	@Column(name = "fecha_expedicion", nullable = false)
+	private LocalDate fechaexp;
 
-    @Column(nullable = false)
-    private double distancia;
+	@Column(nullable = false)
+	private double distancia;
 
-    @Column(name = "numero_vips", nullable = false)
-    private int nVips;
+	@Column(name = "numero_vips", nullable = false)
+	private int nVips;
 
-    @ManyToOne
-    @JoinColumn(name = "parada_inicio_id", nullable = false)
-    private Parada paradaInicio;
-    
-    // CONSTRUCTORES
+	@ManyToOne
+	@JoinColumn(name = "parada_inicio_id", nullable = false)
+	private Parada paradaInicio;
 
-    public Carnet() {
-    	
-    }
+	// CONSTRUCTORES
 
-    public Carnet(Long id, Parada paradaInicio) {
-        this.id = id;
-        this.paradaInicio = paradaInicio;
-        this.distancia = 0.0;
-        this.nVips = 0;
-        this.fechaexp = LocalDate.now();
-    }
+	public Carnet() {
 
-    // GETTERS Y SETTERS
-    public Long getId() {
-        return id;
-    }
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Carnet(Long id, Parada paradaInicio) {
+		this.id = id;
+		this.paradaInicio = paradaInicio;
+		this.distancia = 0.0;
+		this.nVips = 0;
+		this.fechaexp = LocalDate.now();
+	}
 
-    public LocalDate getFechaexp() {
-        return fechaexp;
-    }
+	// GETTERS Y SETTERS
+	public Long getId() {
+		return id;
+	}
 
-    public void setFechaexp(LocalDate fechaexp) {
-        this.fechaexp = fechaexp;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public double getDistancia() {
-        return distancia;
-    }
+	public LocalDate getFechaexp() {
+		return fechaexp;
+	}
 
-    public void setDistancia(double distancia) {
-        this.distancia = distancia;
-    }
+	public void setFechaexp(LocalDate fechaexp) {
+		this.fechaexp = fechaexp;
+	}
 
-    public int getnVips() {
-        return nVips;
-    }
+	public double getDistancia() {
+		return distancia;
+	}
 
-    public void setnVips(int nVips) {
-        this.nVips = nVips;
-    }
+	public void setDistancia(double distancia) {
+		this.distancia = distancia;
+	}
 
-    public Parada getParadaInicio() {
-        return paradaInicio;
-    }
+	public int getnVips() {
+		return nVips;
+	}
 
-    public void setParadaInicio(Parada paradaInicio) {
-        this.paradaInicio = paradaInicio;
-    }
+	public void setnVips(int nVips) {
+		this.nVips = nVips;
+	}
 
-    // METODOS
-    public void incrementarNumeroEstanciasVip() {
-        this.nVips++;
-    }
+	public Parada getParadaInicio() {
+		return paradaInicio;
+	}
 
-    // METODOS ENTITY
-    @Override
-    public String toString() {
-        return "\nCarnet " + "ID: " + id +
-               "\nFecha Expedición: " + fechaexp +
-               "\nDistancia: " + distancia +
-               "\nNúmero de Estancias VIP: " + nVips +
-               "\nParada de Inicio: " + paradaInicio.getNombre();
-    }
+	public void setParadaInicio(Parada paradaInicio) {
+		this.paradaInicio = paradaInicio;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(distancia, fechaexp, id, nVips, paradaInicio);
-    }
+	// METODOS
+	public void incrementarNumeroEstanciasVip() {
+		this.nVips++;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-        Carnet other = (Carnet) obj;
-        return Double.doubleToLongBits(distancia) == Double.doubleToLongBits(other.distancia)
-                && Objects.equals(fechaexp, other.fechaexp)
-                && Objects.equals(id, other.id)
-                && nVips == other.nVips
-                && Objects.equals(paradaInicio, other.paradaInicio);
-    }
+	// METODOS ENTITY
+	@Override
+	public String toString() {
+		return "\nCarnet " + "ID: " + id + "\nFecha Expedición: " + fechaexp + "\nDistancia: " + distancia
+				+ "\nNúmero de Estancias VIP: " + nVips + "\nParada de Inicio: " + paradaInicio.getNombre();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(distancia, fechaexp, id, nVips, paradaInicio);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		Carnet other = (Carnet) obj;
+		return Double.doubleToLongBits(distancia) == Double.doubleToLongBits(other.distancia)
+				&& Objects.equals(fechaexp, other.fechaexp) && Objects.equals(id, other.id) && nVips == other.nVips
+				&& Objects.equals(paradaInicio, other.paradaInicio);
+	}
 }
-

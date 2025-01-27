@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<parada>
+    <id>1</id>
+    <nombre>parada A</nombre>
+    <region>A</region>
+    <fecha_inicio>01/01/2025</fecha_inicio>
+    <fecha_fin>25/01/2025</fecha_fin>
+    <estancias/>
+</parada>

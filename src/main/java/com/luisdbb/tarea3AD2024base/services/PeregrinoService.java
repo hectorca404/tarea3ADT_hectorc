@@ -10,85 +10,82 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 @Service
 public class PeregrinoService {
 
-    private final PeregrinoRepository peregrinoRepository;
-    private final ParadasPeregrinosRepository paradasPeregrinosRepository;
-    private final CredencialesRepository credencialesRepository;
-    private final EstanciaRepository estanciaRepository;
-    
+	private final PeregrinoRepository peregrinoRepository;
+	private final ParadasPeregrinosRepository paradasPeregrinosRepository;
+	private final CredencialesRepository credencialesRepository;
+	private final EstanciaRepository estanciaRepository;
 
-    public PeregrinoService(PeregrinoRepository peregrinoRepository, ParadasPeregrinosRepository paradasPeregrinosRepository,  CredencialesRepository credencialesRepository, EstanciaRepository estanciaRepository) {
-        this.peregrinoRepository = peregrinoRepository;
-        this.paradasPeregrinosRepository = paradasPeregrinosRepository;
-        this.credencialesRepository = credencialesRepository;
-        this.estanciaRepository = estanciaRepository;
-       
-    }
+	public PeregrinoService(PeregrinoRepository peregrinoRepository,
+			ParadasPeregrinosRepository paradasPeregrinosRepository, CredencialesRepository credencialesRepository,
+			EstanciaRepository estanciaRepository) {
+		this.peregrinoRepository = peregrinoRepository;
+		this.paradasPeregrinosRepository = paradasPeregrinosRepository;
+		this.credencialesRepository = credencialesRepository;
+		this.estanciaRepository = estanciaRepository;
 
-    @Transactional
-    public Peregrino registrarPeregrino(String nombreUsuario, String contrasena, String correo, String nombre,
-                                        String apellido, String nacionalidad, Parada paradaInicio) {
-        if (credencialesRepository.findByNombreUsuario(nombreUsuario).isPresent()) {
-            throw new IllegalArgumentException("El nombre de usuario ya existe");
-        }
+	}
 
-        Peregrino peregrino = new Peregrino(null, nombre, apellido, nacionalidad, paradaInicio);
+	@Transactional
+	public Peregrino registrarPeregrino(String nombreUsuario, String contrasena, String correo, String nombre,
+			String apellido, String nacionalidad, Parada paradaInicio) {
+		if (credencialesRepository.findByNombreUsuario(nombreUsuario).isPresent()) {
+			throw new IllegalArgumentException("El nombre de usuario ya existe");
+		}
 
-        Peregrino peregrinoGuardado = peregrinoRepository.save(peregrino);
+		Peregrino peregrino = new Peregrino(null, nombre, apellido, nacionalidad, paradaInicio);
 
-        ParadasPeregrinos relacion = new ParadasPeregrinos(peregrinoGuardado, paradaInicio);
-        paradasPeregrinosRepository.save(relacion);
+		Peregrino peregrinoGuardado = peregrinoRepository.save(peregrino);
 
-        Credenciales credenciales = new Credenciales();
-        credenciales.setNombreUsuario(nombreUsuario);
-        credenciales.setContrasena(contrasena);
-        credenciales.setCorreo(correo);
-        credenciales.setPerfil(Perfil.PEREGRINO);
-        credenciales.setPeregrino(peregrinoGuardado);
+		ParadasPeregrinos relacion = new ParadasPeregrinos(peregrinoGuardado, paradaInicio);
+		paradasPeregrinosRepository.save(relacion);
 
-        credencialesRepository.save(credenciales);
+		Credenciales credenciales = new Credenciales();
+		credenciales.setNombreUsuario(nombreUsuario);
+		credenciales.setContrasena(contrasena);
+		credenciales.setCorreo(correo);
+		credenciales.setPerfil(Perfil.PEREGRINO);
+		credenciales.setPeregrino(peregrinoGuardado);
 
-        return peregrinoGuardado;
-    }
-    
-   
+		credencialesRepository.save(credenciales);
 
-    public List<Parada> obtenerParadas(Long peregrinoId) {
-        return paradasPeregrinosRepository.findByPeregrinoId(peregrinoId)
-                .stream()
-                .map(ParadasPeregrinos::getParada)
-                .toList();
-    }
+		return peregrinoGuardado;
+	}
 
-    public List<Estancia> obtenerEstancias(Long peregrinoId) {
-        return estanciaRepository.findByPeregrinoId(peregrinoId);
-    }
+	public List<Parada> obtenerParadas(Long peregrinoId) {
+		return paradasPeregrinosRepository.findByPeregrinoId(peregrinoId).stream().map(ParadasPeregrinos::getParada)
+				.toList();
+	}
 
+	public List<Estancia> obtenerEstancias(Long peregrinoId) {
+		return estanciaRepository.findByPeregrinoId(peregrinoId);
+	}
 
-    
-    @Transactional
-    public void guardarCambiosPeregrino(Peregrino peregrino, String nuevoCorreo) {
-        peregrinoRepository.save(peregrino);
+	@Transactional
+	public void guardarCambiosPeregrino(Peregrino peregrino, String nuevoCorreo) {
+		peregrinoRepository.save(peregrino);
 
-        Credenciales credenciales = credencialesRepository.findByPeregrino(peregrino)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontraron credenciales asociadas al peregrino"));
+		Credenciales credenciales = credencialesRepository.findByPeregrino(peregrino).orElseThrow(
+				() -> new IllegalArgumentException("No se encontraron credenciales asociadas al peregrino"));
 
-        credenciales.setCorreo(nuevoCorreo);
+		credenciales.setCorreo(nuevoCorreo);
 
-        credencialesRepository.save(credenciales);
-    }
+		credencialesRepository.save(credenciales);
+	}
 
-    
-    public Peregrino obtenerPeregrinoPorId(Long id) {
-        return peregrinoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró el peregrino con ID: " + id));
-    }
+	@Transactional
+	public void actualizarCarnet(Carnet carnet) {
+		Peregrino peregrino = peregrinoRepository.findByCarnetId(carnet.getId())
+				.orElseThrow(() -> new IllegalArgumentException(
+						"No se encontró un peregrino asociado al carnet con ID: " + carnet.getId()));
 
+		peregrino.getCarnet().setDistancia(carnet.getDistancia());
+		peregrino.getCarnet().setnVips(carnet.getnVips());
 
+		peregrinoRepository.save(peregrino);
+	}
 
 }
-
 

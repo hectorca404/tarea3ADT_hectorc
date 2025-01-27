@@ -9,111 +9,110 @@ import java.util.Objects;
 @Entity
 @Table(name = "paradas")
 public class Parada implements Serializable {
-    // ATRIBUTOS
-	
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	// ATRIBUTOS
 
-    @Column(name = "nombre_parada", nullable = false)
-    private String nombre;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private Character region;
+	@Column(name = "nombre_parada", nullable = false)
+	private String nombre;
 
-    @Column(nullable = false)
-    private String responsable;
+	@Column(nullable = false)
+	private Character region;
 
-    // RELACIONES (AUXILIARES, NO SE MAPEAN) --> ACCESO RAPIDO Y COMODO
-    @Transient
-    private List<Estancia> estancias;
+	@Column(nullable = false)
+	private String responsable;
 
-    @Transient
-    private List<Peregrino> peregrinos;
+	// RELACIONES (AUXILIARES, NO SE MAPEAN) --> ACCESO RAPIDO Y COMODO
+	@Transient
+	private List<Estancia> estancias;
 
-    // CONSTRUCTORES
-    public Parada() {
-    	
-    }
-    
-    public Parada(Long id, String nombre, char region, String responsable) {
-        this.id = id;
-        this.nombre = nombre;
-        this.region = region;
-        this.responsable = responsable;
-        this.estancias = new ArrayList<>();
-        this.peregrinos = new ArrayList<>();
-    }
+	@Transient
+	private List<Peregrino> peregrinos;
 
-    // GETTERS Y SETTERS
-    
-    public Long getId() {
-        return id;
-    }
+	// CONSTRUCTORES
+	public Parada() {
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	}
 
-    public String getNombre() {
-        return nombre;
-    }
+	public Parada(Long id, String nombre, char region, String responsable) {
+		this.id = id;
+		this.nombre = nombre;
+		this.region = region;
+		this.responsable = responsable;
+		this.estancias = new ArrayList<>();
+		this.peregrinos = new ArrayList<>();
+	}
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	// GETTERS Y SETTERS
 
-    public char getRegion() {
-        return region;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setRegion(char region) {
-        this.region = region;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getResponsable() {
-        return responsable;
-    }
+	public String getNombre() {
+		return nombre;
+	}
 
-    public void setResponsable(String responsable) {
-        this.responsable = responsable;
-    }
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    public List<Estancia> getEstancias() {
-        return estancias;
-    }
+	public char getRegion() {
+		return region;
+	}
 
-    public void setEstancias(List<Estancia> estancias) {
-        this.estancias = estancias;
-    }
+	public void setRegion(char region) {
+		this.region = region;
+	}
 
-    public List<Peregrino> getPeregrinos() {
-        return peregrinos;
-    }
+	public String getResponsable() {
+		return responsable;
+	}
 
-    public void setPeregrinos(List<Peregrino> peregrinos) {
-        this.peregrinos = peregrinos;
-    }
+	public void setResponsable(String responsable) {
+		this.responsable = responsable;
+	}
 
-    // METODOS ENITTY
-    @Override
-    public String toString() {
-        return nombre;
-    }
+	public List<Estancia> getEstancias() {
+		return estancias;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(nombre.toLowerCase());
-    }
+	public void setEstancias(List<Estancia> estancias) {
+		this.estancias = estancias;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-        Parada other = (Parada) obj;
-        return Objects.equals(nombre.toLowerCase(), other.nombre.toLowerCase());
-    }
+	public List<Peregrino> getPeregrinos() {
+		return peregrinos;
+	}
+
+	public void setPeregrinos(List<Peregrino> peregrinos) {
+		this.peregrinos = peregrinos;
+	}
+
+	// METODOS ENITTY
+	@Override
+	public String toString() {
+		return nombre;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(nombre.toLowerCase());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		Parada other = (Parada) obj;
+		return Objects.equals(nombre.toLowerCase(), other.nombre.toLowerCase());
+	}
 }
-

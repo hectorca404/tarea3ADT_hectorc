@@ -29,132 +29,126 @@ import javafx.stage.Stage;
 @Controller
 public class PrincipalController {
 
-    @FXML
-    private ImageView logo;
+	@FXML
+	private ImageView logo;
 
-    @FXML
-    private TextField userLogField;
+	@FXML
+	private TextField userLogField;
 
-    @FXML
-    private PasswordField passField;
+	@FXML
+	private PasswordField passField;
 
-    @FXML
-    private Button passButton;
+	@FXML
+	private Button passButton;
 
-    @FXML
-    private ImageView ojoIcon;
+	@FXML
+	private ImageView ojoIcon;
 
-    @FXML
-    private Button logButton;
+	@FXML
+	private Button logButton;
 
-    @FXML
-    private Hyperlink forgotPass;
+	@FXML
+	private Hyperlink forgotPass;
 
-    @FXML
-    private Hyperlink regisLink;
+	@FXML
+	private Hyperlink regisLink;
 
-    private boolean contraseñaVisible = false;
-    
-    @Autowired
-    private CredencialesService credencialesService;
-    
-    @Lazy
-    @Autowired
-    private StageManager stageManager;
-    
-    @Autowired
-    private SesionService sesionService;
+	private boolean contraseñaVisible = false;
 
-    @FXML
-    public void initialize() {
-        try {
-            logo.setImage(new Image(getClass().getResourceAsStream("/images/logo2.png")));
-            ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
+	@Autowired
+	private CredencialesService credencialesService;
 
-            passButton.setOnAction(event -> visualizarContraseña());
-            forgotPass.setOnAction(event -> forgotPass());
-            regisLink.setOnAction(event -> regPeregrino());
-            
-            logButton.setOnAction(event -> iniciarSesion());
+	@Lazy
+	@Autowired
+	private StageManager stageManager;
 
-        } catch (Exception e) {
-            System.out.println("Error al iniciar el PrncipalController: " + e.getMessage());
-        }
-    }
-    
-    
-    private void iniciarSesion() {
-        String username = userLogField.getText();
-        String password = passField.getText();
+	@Autowired
+	private SesionService sesionService;
 
-        try {
-            Credenciales credenciales = credencialesService.validarCredenciales(username, password);
-            vistaSegunRol(credenciales.getPerfil(), credenciales);
+	@FXML
+	public void initialize() {
+		try {
+			logo.setImage(new Image(getClass().getResourceAsStream("/images/logo2.png")));
+			ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
 
-        } catch (IllegalArgumentException e) {
-            mostrarError("Credenciales inválidas");
-        }
-    }
+			passButton.setOnAction(event -> visualizarContraseña());
+			forgotPass.setOnAction(event -> forgotPass());
+			regisLink.setOnAction(event -> regPeregrino());
 
-    private void vistaSegunRol(Perfil perfil, Credenciales credenciales) {
-        switch (perfil) {
-            case PEREGRINO -> {
-                Peregrino peregrino = credenciales.getPeregrino();
-                sesionService.setPeregrinoActual(peregrino);
-                menuPeregrino();
-            }
-            case ADMINISTRADOR ->{
-            	menuAdmin();
-            }
-            case PARADA ->{
-            	Parada parada = credenciales.getParada();
-            	sesionService.setParadaActual(parada);
-            	menuParada();
-            }
-            default -> mostrarError("Usuario no existe");
-        }
-    }
+			logButton.setOnAction(event -> iniciarSesion());
 
+		} catch (Exception e) {
+			System.out.println("Error al iniciar el PrncipalController: " + e.getMessage());
+		}
+	}
 
+	private void iniciarSesion() {
+		String username = userLogField.getText();
+		String password = passField.getText();
 
+		try {
+			Credenciales credenciales = credencialesService.validarCredenciales(username, password);
+			vistaSegunRol(credenciales.getPerfil(), credenciales);
 
-    
-    private void mostrarError(String mensaje) {
-    	System.out.println(mensaje);
-    }
+		} catch (IllegalArgumentException e) {
+			mostrarError("Credenciales inválidas");
+		}
+	}
 
-    private void visualizarContraseña() {
-        contraseñaVisible = !contraseñaVisible;
+	private void vistaSegunRol(Perfil perfil, Credenciales credenciales) {
+		switch (perfil) {
+		case PEREGRINO -> {
+			Peregrino peregrino = credenciales.getPeregrino();
+			sesionService.setPeregrinoActual(peregrino);
+			menuPeregrino();
+		}
+		case ADMINISTRADOR -> {
+			menuAdmin();
+		}
+		case PARADA -> {
+			Parada parada = credenciales.getParada();
+			sesionService.setParadaActual(parada);
+			menuParada();
+		}
+		default -> mostrarError("Usuario no existe");
+		}
+	}
 
-        if (contraseñaVisible) {
-            passField.setPromptText(passField.getText());
-            passField.clear();
-            ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/abierto.png")));
-        } else {
-            passField.setPromptText("Introduce tu contraseña");
-            ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
-        }
-    }
+	private void mostrarError(String mensaje) {
+		System.out.println(mensaje);
+	}
 
-    private void menuAdmin(){
-    	stageManager.switchScene(FxmlView.ADMIN);
-    }
-    
-    private void menuPeregrino(){
-    	stageManager.switchScene(FxmlView.PEREGRINO);
-    }
-    
-    private void menuParada(){
-    	stageManager.switchScene(FxmlView.RESPARADA);
-    }
-    
-    private void forgotPass(){
-    	stageManager.switchScene(FxmlView.FORGOTPASS);
-    }
-    
-    private void regPeregrino(){
-    	stageManager.switchScene(FxmlView.REGPEREGRINO);
-    }
-    
+	private void visualizarContraseña() {
+		contraseñaVisible = !contraseñaVisible;
+
+		if (contraseñaVisible) {
+			passField.setPromptText(passField.getText());
+			passField.clear();
+			ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/abierto.png")));
+		} else {
+			passField.setPromptText("Introduce tu contraseña");
+			ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
+		}
+	}
+
+	private void menuAdmin() {
+		stageManager.switchScene(FxmlView.ADMIN);
+	}
+
+	private void menuPeregrino() {
+		stageManager.switchScene(FxmlView.PEREGRINO);
+	}
+
+	private void menuParada() {
+		stageManager.switchScene(FxmlView.RESPARADA);
+	}
+
+	private void forgotPass() {
+		stageManager.switchScene(FxmlView.FORGOTPASS);
+	}
+
+	private void regPeregrino() {
+		stageManager.switchScene(FxmlView.REGPEREGRINO);
+	}
+
 }
-

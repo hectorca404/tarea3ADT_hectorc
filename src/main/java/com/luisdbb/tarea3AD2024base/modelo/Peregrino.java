@@ -9,112 +9,99 @@ import java.util.Objects;
 @Entity
 @Table(name = "peregrinos")
 public class Peregrino implements Serializable {
-    // ATRIBUTOS
-	
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	// ATRIBUTOS
 
-    @Column(nullable = false)
-    private String nombre;
-    
-    @Column(nullable = false)
-    private String apellido;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String nacionalidad;
+	@Column(nullable = false)
+	private String nombre;
 
-    @ManyToOne
-    @JoinColumn(name = "parada_inicio_id", nullable = true)
-    private Parada paradaInicio;
+	@Column(nullable = false)
+	private String apellido;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "carnet_id", nullable = false)
-    private Carnet carnet;
+	@Column(nullable = false)
+	private String nacionalidad;
 
-    // RELACIONES (AUXILIARES)
-    @Transient
-    private List<Parada> paradas;
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "carnet_id", nullable = false)
+	private Carnet carnet;
 
-    @Transient
-    private List<Estancia> estancias;
+	// RELACIONES (AUXILIARES)
+	@Transient
+	private List<Parada> paradas;
 
-    // CONSTRUCTORES
-    
-    public Peregrino() {
-    	
-    }
+	@Transient
+	private List<Estancia> estancias;
 
-    public Peregrino(Long id, String nombre, String apellido ,String nacionalidad, Parada paradaInicio) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.nacionalidad = nacionalidad;
-        this.paradaInicio = paradaInicio;
-        this.carnet = new Carnet(id, paradaInicio);
-        this.paradas = new ArrayList<>();
-        this.estancias = new ArrayList<>(); 
-    }
+	// CONSTRUCTORES
 
-    // GETTERS Y SETTERS
-    
-    public Long getId() {
-        return id;
-    }
+	public Peregrino() {
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	}
 
-    public String getNombre() {
-        return nombre;
-    }
+	public Peregrino(Long id, String nombre, String apellido, String nacionalidad, Parada paradaInicio) {
+		this.id = id;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.nacionalidad = nacionalidad;
+		this.carnet = new Carnet(id, paradaInicio);
+		this.paradas = new ArrayList<>();
+		this.estancias = new ArrayList<>();
+	}
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	// GETTERS Y SETTERS
 
-    public String getNacionalidad() {
-        return nacionalidad;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setNacionalidad(String nacionalidad) {
-        this.nacionalidad = nacionalidad;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Parada getParadaInicio() {
-        return paradaInicio;
-    }
+	public String getNombre() {
+		return nombre;
+	}
 
-    public void setParadaInicio(Parada paradaInicio) {
-        this.paradaInicio = paradaInicio;
-    }
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    public Carnet getCarnet() {
-        return carnet;
-    }
+	public String getNacionalidad() {
+		return nacionalidad;
+	}
 
-    public void setCarnet(Carnet carnet) {
-        this.carnet = carnet;
-    }
+	public void setNacionalidad(String nacionalidad) {
+		this.nacionalidad = nacionalidad;
+	}
 
-    public List<Parada> getParadas() {
-        return paradas;
-    }
+	public Carnet getCarnet() {
+		return carnet;
+	}
 
-    public void setParadas(List<Parada> paradas) {
-        this.paradas = paradas;
-    }
+	public void setCarnet(Carnet carnet) {
+		this.carnet = carnet;
+	}
 
-    public List<Estancia> getEstancias() {
-        return estancias;
-    }
+	public List<Parada> getParadas() {
+		return paradas;
+	}
 
-    public void setEstancias(List<Estancia> estancias) {
-        this.estancias = estancias;
-    }
+	public void setParadas(List<Parada> paradas) {
+		this.paradas = paradas;
+	}
 
-    public String getApellido() {
+	public List<Estancia> getEstancias() {
+		return estancias;
+	}
+
+	public void setEstancias(List<Estancia> estancias) {
+		this.estancias = estancias;
+	}
+
+	public String getApellido() {
 		return apellido;
 	}
 
@@ -123,42 +110,36 @@ public class Peregrino implements Serializable {
 	}
 
 	// METODOS
-    public void agregarParada(Parada parada) {
-        paradas.add(parada);
-    }
+	public void agregarParada(Parada parada) {
+		paradas.add(parada);
+	}
 
-    public void agregarEstancia(Estancia estancia) {
-        estancias.add(estancia);
-    }
-    
-    // METODOS ENTITY
-    @Override
-    public String toString() {
-        return "Peregrino:" +
-                "\nID: " + id +
-                "\nNombre: " + nombre +
-                "\nNacionalidad: " + nacionalidad +
-                "\nCarnet: " + carnet.toString() +
-                "\nParadas: " + paradas.size() +
-                "\nEstancias: " + estancias.size();
-    }
+	public void agregarEstancia(Estancia estancia) {
+		estancias.add(estancia);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, nombre, nacionalidad);
-    }
+	// METODOS ENTITY
+	@Override
+	public String toString() {
+		return "Peregrino:" + "\nID: " + id + "\nNombre: " + nombre + "\nNacionalidad: " + nacionalidad + "\nCarnet: "
+				+ carnet.toString() + "\nParadas: " + paradas.size() + "\nEstancias: " + estancias.size();
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        Peregrino other = (Peregrino) obj;
-        return Objects.equals(id, other.id) &&
-                Objects.equals(nombre, other.nombre) &&
-                Objects.equals(nacionalidad, other.nacionalidad);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, nombre, nacionalidad);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		Peregrino other = (Peregrino) obj;
+		return Objects.equals(id, other.id) && Objects.equals(nombre, other.nombre)
+				&& Objects.equals(nacionalidad, other.nacionalidad);
+	}
 }

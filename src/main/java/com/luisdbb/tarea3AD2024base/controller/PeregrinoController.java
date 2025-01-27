@@ -40,9 +40,6 @@ public class PeregrinoController {
 	@Autowired
 	private StageManager stageManager;
 
-	@Autowired
-	private SesionService sesionService;
-
 	@FXML
 	public void initialize() {
 		try {

@@ -20,25 +20,25 @@ import com.luisdbb.tarea3AD2024base.view.FxmlView;
 @Controller
 public class ForgotPasswordController {
 
-    @FXML
-    private TextField userField;
+	@FXML
+	private TextField userField;
 
-    @FXML
-    private Button recuperarButton;
+	@FXML
+	private Button recuperarButton;
 
-    @FXML
-    private Hyperlink volverLogin;
-    
-    @Lazy
-    @Autowired
-    private StageManager stageManager;
+	@FXML
+	private Hyperlink volverLogin;
 
-    @FXML
-    public void initialize() {
-        volverLogin.setOnAction(event -> volverLogin());
-    }
+	@Lazy
+	@Autowired
+	private StageManager stageManager;
 
-    private void volverLogin(){
-    	stageManager.switchScene(FxmlView.PRINCIPAL);
-    }
+	@FXML
+	public void initialize() {
+		volverLogin.setOnAction(event -> volverLogin());
+	}
+
+	private void volverLogin() {
+		stageManager.switchScene(FxmlView.PRINCIPAL);
+	}
 }

@@ -8,39 +8,48 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" spacing="20.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.luisdbb.tarea3AD2024base.controller.SellarAlojarController">
-   <padding>
-      <Insets bottom="20.0" left="50.0" right="50.0" top="20.0" />
-   </padding>
-   <children>
-      <Label text="Sellar y Alojar Peregrino" />
-      <VBox alignment="CENTER_LEFT" prefHeight="225.0" prefWidth="600.0" spacing="10.0">
-         <children>
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
-               <children>
-                  <Label text="Seleccionar Peregrino:" />
-                  <ComboBox fx:id="peregrinoComboBox" promptText="Seleccionar peregrino"/>
-               </children>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
-               <children>
-                  <CheckBox fx:id="alojarCheckBox" text="Alojar al peregrino" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
-               <children>
-                  <CheckBox fx:id="vipCheckBox" text="¿VIP?" disable="true" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <HBox alignment="CENTER" spacing="20.0">
-         <children>
-            <Button fx:id="confirmarButton" text="Confirmar" />
-            <Button fx:id="limpiarButton" text="Limpiar" />
-         </children>
-      </HBox>
-      <Button fx:id="volverMenuButton" alignment="CENTER" text="Volver al Menú" />
-   </children>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0"
+	prefWidth="700.0" spacing="20.0" stylesheets="@../styles/Styles.css"
+	xmlns="http://javafx.com/javafx/23.0.1"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.luisdbb.tarea3AD2024base.controller.SellarAlojarController">
+	<padding>
+		<Insets bottom="20.0" left="50.0" right="50.0" top="20.0" />
+	</padding>
+	<children>
+		<Label text="Sellar y Alojar Peregrino" />
+		<VBox alignment="CENTER_LEFT" prefHeight="225.0"
+			prefWidth="600.0" spacing="10.0">
+			<children>
+				<HBox alignment="CENTER_LEFT" spacing="10.0">
+					<children>
+						<Label text="Seleccionar Peregrino:" />
+						<ComboBox fx:id="peregrinoComboBox"
+							promptText="Seleccionar peregrino" />
+					</children>
+				</HBox>
+				<HBox alignment="CENTER_LEFT" spacing="10.0">
+					<children>
+						<CheckBox fx:id="alojarCheckBox"
+							text="Alojar al peregrino" />
+					</children>
+				</HBox>
+				<HBox alignment="CENTER_LEFT" spacing="10.0">
+					<children>
+						<CheckBox fx:id="vipCheckBox" text="¿VIP?" disable="true" />
+					</children>
+				</HBox>
+			</children>
+		</VBox>
+		<HBox alignment="CENTER" spacing="20.0">
+			<children>
+				<Button fx:id="confirmarButton" text="Confirmar" />
+				<Button fx:id="limpiarButton" text="Limpiar" />
+			</children>
+		</HBox>
+		<Button fx:id="volverMenuButton" alignment="CENTER"
+			text="Volver al Menú" />
+	</children>
 </VBox>
 

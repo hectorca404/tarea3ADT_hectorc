@@ -8,31 +8,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class SesionService {
 
-    private Peregrino peregrinoActual;
-    private Parada paradaActual;
+	private Peregrino peregrinoActual;
+	private Parada paradaActual;
 
-    public SesionService() {
+	public SesionService() {
 
-    }
+	}
 
-    public void setPeregrinoActual(Peregrino peregrino) {
-        this.peregrinoActual = peregrino;
-    }
+	public void setPeregrinoActual(Peregrino peregrino) {
+		this.peregrinoActual = peregrino;
+	}
 
-    public Peregrino getPeregrinoActual() {
-        return peregrinoActual;
-    }
+	public Peregrino getPeregrinoActual() {
+		return peregrinoActual;
+	}
 
-    public void setParadaActual(Parada parada) {
-        this.paradaActual = parada;
-    }
+	public void setParadaActual(Parada parada) {
+		this.paradaActual = parada;
+	}
 
-    public Parada getParadaActual() {
-        return paradaActual;
-    }
-
-
-
-
+	public Parada getParadaActual() {
+		return paradaActual;
+	}
 
 }

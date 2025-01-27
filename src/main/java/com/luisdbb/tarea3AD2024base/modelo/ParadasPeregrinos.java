@@ -8,86 +8,83 @@ import java.time.LocalDate;
 @Table(name = "paradas_peregrinos")
 public class ParadasPeregrinos implements Serializable {
 
-    @EmbeddedId
-    private ParadasPeregrinosId id;
+	@EmbeddedId
+	private ParadasPeregrinosId id;
 
-    @MapsId("peregrino")
-    @ManyToOne
-    @JoinColumn(name = "peregrino_id", nullable = false)
-    private Peregrino peregrino;
+	@MapsId("peregrino")
+	@ManyToOne
+	@JoinColumn(name = "peregrino_id", nullable = false)
+	private Peregrino peregrino;
 
-    @MapsId("parada")
-    @ManyToOne
-    @JoinColumn(name = "parada_id", nullable = false)
-    private Parada parada;
+	@MapsId("parada")
+	@ManyToOne
+	@JoinColumn(name = "parada_id", nullable = false)
+	private Parada parada;
 
-    // CONSTRUCTORES
-    public ParadasPeregrinos() {
-        this.id = new ParadasPeregrinosId();
-    }
+	// CONSTRUCTORES
+	public ParadasPeregrinos() {
+		this.id = new ParadasPeregrinosId();
+	}
 
-    public ParadasPeregrinos(Peregrino peregrino, Parada parada) {
-        this.id = new ParadasPeregrinosId(peregrino.getId(), parada.getId());
-        this.peregrino = peregrino;
-        this.parada = parada;
-    }
+	public ParadasPeregrinos(Peregrino peregrino, Parada parada) {
+		this.id = new ParadasPeregrinosId(peregrino.getId(), parada.getId());
+		this.peregrino = peregrino;
+		this.parada = parada;
+	}
 
-    // GETTERS Y SETTERS
-    public ParadasPeregrinosId getId() {
-        return id;
-    }
+	// GETTERS Y SETTERS
+	public ParadasPeregrinosId getId() {
+		return id;
+	}
 
-    public void setId(ParadasPeregrinosId id) {
-        this.id = id;
-    }
+	public void setId(ParadasPeregrinosId id) {
+		this.id = id;
+	}
 
-    public Peregrino getPeregrino() {
-        return peregrino;
-    }
+	public Peregrino getPeregrino() {
+		return peregrino;
+	}
 
-    public void setPeregrino(Peregrino peregrino) {
-        this.peregrino = peregrino;
-    }
+	public void setPeregrino(Peregrino peregrino) {
+		this.peregrino = peregrino;
+	}
 
-    public Parada getParada() {
-        return parada;
-    }
+	public Parada getParada() {
+		return parada;
+	}
 
-    public void setParada(Parada parada) {
-        this.parada = parada;
-    }
+	public void setParada(Parada parada) {
+		this.parada = parada;
+	}
 
-    public LocalDate getFecha() {
-        return id.getFecha();
-    }
+	public LocalDate getFecha() {
+		return id.getFecha();
+	}
 
-    public void setFecha(LocalDate fecha) {
-        this.id.setFecha(fecha);
-    }
+	public void setFecha(LocalDate fecha) {
+		this.id.setFecha(fecha);
+	}
 
-    // METODOS ENTITY
-    
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ParadasPeregrinos that = (ParadasPeregrinos) o;
-        return id.equals(that.id);
-    }
+	// METODOS ENTITY
 
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		ParadasPeregrinos that = (ParadasPeregrinos) o;
+		return id.equals(that.id);
+	}
 
-    @Override
-    public String toString() {
-        return "ParadasPeregrinos{" +
-                "id=" + id +
-                ", peregrino=" + peregrino.getId() +
-                ", parada=" + parada.getId() +
-                '}';
-    }
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return "ParadasPeregrinos{" + "id=" + id + ", peregrino=" + peregrino.getId() + ", parada=" + parada.getId()
+				+ '}';
+	}
 }
-
-

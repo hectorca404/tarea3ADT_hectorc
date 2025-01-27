@@ -50,6 +50,7 @@ public class ResParadaController {
             
             cerrarSesionButton.setOnAction(event -> volverLogin());
             sellarAlojarButton.setOnAction(event -> sellarAlojar());
+            exportarDatosButton.setOnAction(event -> exportarDatos());
         } catch (Exception e) {
             System.out.println("Error al inicializar el ResParadaController: " + e.getMessage());
         }
@@ -62,6 +63,10 @@ public class ResParadaController {
     
     private void sellarAlojar(){
     	stageManager.switchScene(FxmlView.SELLARALOJAR);
+    }
+    
+    private void exportarDatos(){
+    	stageManager.switchScene(FxmlView.EXPORTPARADA);
     }
     
 

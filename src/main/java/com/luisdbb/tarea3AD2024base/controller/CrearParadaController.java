@@ -22,94 +22,92 @@ import javafx.stage.Stage;
 @Controller
 public class CrearParadaController {
 
-    @FXML
-    private TextField responsableField;
+	@FXML
+	private TextField responsableField;
 
-    @FXML
-    private TextField correoField;
+	@FXML
+	private TextField correoField;
 
-    @FXML
-    private TextField nombreParadaField;
+	@FXML
+	private TextField nombreParadaField;
 
-    @FXML
-    private TextField regionField;
-    
-    @FXML
-    private TextField usuarioField;
+	@FXML
+	private TextField regionField;
 
-    @FXML
-    private PasswordField passwordField;
+	@FXML
+	private TextField usuarioField;
 
-    @FXML
-    private PasswordField confirmPasswordField;
+	@FXML
+	private PasswordField passwordField;
 
-    @FXML
-    private Button crearButton;
+	@FXML
+	private PasswordField confirmPasswordField;
 
-    @FXML
-    private Button limpiarButton;
+	@FXML
+	private Button crearButton;
 
-    @FXML
-    private Button volverMenuButton;
-    
-    @Lazy
-    @Autowired
-    private StageManager stageManager;
-    
-    @Autowired
-    private ParadaService paradaService;
+	@FXML
+	private Button limpiarButton;
 
-    @FXML
-    public void initialize() {
-    	crearButton.setOnAction(event -> registrarParada());
-        limpiarButton.setOnAction(event -> limpiarFormulario());
-        volverMenuButton.setOnAction(event -> volverMenu());
-    }
-    
-    private void registrarParada() {
-        try {
-            String nombre = nombreParadaField.getText();
-            char region = regionField.getText().charAt(0);
-            String responsable = responsableField.getText();
-            String usuario = usuarioField.getText();
-            String correo = correoField.getText();
-            String password = passwordField.getText();
-            String confirmPassword = confirmPasswordField.getText();
+	@FXML
+	private Button volverMenuButton;
 
-            if (!password.equals(confirmPassword)) {
-                mostrarAlerta("Error", "Las contraseñas no coinciden", Alert.AlertType.ERROR);
-                return;
-            }
+	@Lazy
+	@Autowired
+	private StageManager stageManager;
 
-            paradaService.registrarParada(nombre, region, responsable, usuario ,correo, password);
-            mostrarAlerta("Exitoso", "Parada registrada correctamente", Alert.AlertType.INFORMATION);
-            limpiarFormulario();
-        } catch (Exception e) {
-            mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
+	@Autowired
+	private ParadaService paradaService;
 
-    private void limpiarFormulario() {
-        responsableField.clear();
-        correoField.clear();
-        usuarioField.clear();
-        nombreParadaField.clear();
-        regionField.clear();
-        passwordField.clear();
-        confirmPasswordField.clear();
-    }
+	@FXML
+	public void initialize() {
+		crearButton.setOnAction(event -> registrarParada());
+		limpiarButton.setOnAction(event -> limpiarFormulario());
+		volverMenuButton.setOnAction(event -> volverMenu());
+	}
 
-    private void volverMenu(){
-    	stageManager.switchScene(FxmlView.ADMIN);
-    }
-    
-    
-    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensaje);
-        alerta.showAndWait();
-    }
+	private void registrarParada() {
+		try {
+			String nombre = nombreParadaField.getText();
+			char region = regionField.getText().charAt(0);
+			String responsable = responsableField.getText();
+			String usuario = usuarioField.getText();
+			String correo = correoField.getText();
+			String password = passwordField.getText();
+			String confirmPassword = confirmPasswordField.getText();
+
+			if (!password.equals(confirmPassword)) {
+				mostrarAlerta("Error", "Las contraseñas no coinciden", Alert.AlertType.ERROR);
+				return;
+			}
+
+			paradaService.registrarParada(nombre, region, responsable, usuario, correo, password);
+			mostrarAlerta("Exitoso", "Parada registrada correctamente", Alert.AlertType.INFORMATION);
+			limpiarFormulario();
+		} catch (Exception e) {
+			mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
+		}
+	}
+
+	private void limpiarFormulario() {
+		responsableField.clear();
+		correoField.clear();
+		usuarioField.clear();
+		nombreParadaField.clear();
+		regionField.clear();
+		passwordField.clear();
+		confirmPasswordField.clear();
+	}
+
+	private void volverMenu() {
+		stageManager.switchScene(FxmlView.ADMIN);
+	}
+
+	private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+		Alert alerta = new Alert(tipo);
+		alerta.setTitle(titulo);
+		alerta.setHeaderText(null);
+		alerta.setContentText(mensaje);
+		alerta.showAndWait();
+	}
 }
-

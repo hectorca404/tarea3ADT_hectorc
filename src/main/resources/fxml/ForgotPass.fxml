@@ -7,15 +7,25 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.luisdbb.tarea3AD2024base.controller.ForgotPasswordController">
-   <padding>
-      <Insets bottom="30.0" left="50.0" right="50.0" top="30.0" />
-   </padding>
-   <children>
-      <Label text="Recuperar contraseña" />
-      <Label  text="No te preocupes, escribe tu usuario y te mandaremos un enlace al correo para restablecer tu contraseña." wrapText="true" />
-      <TextField fx:id="userField" prefWidth="600.0" promptText="Usuario"/>
-      <Button fx:id="recuperarButton" prefHeight="40.0" prefWidth="700.0" text="Recuperar contraseña" />
-      <Hyperlink fx:id="volverLogin" text="Volver al Inicio de sesión." />
-   </children>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+	prefWidth="800.0" spacing="20.0" stylesheets="@../styles/Styles.css"
+	xmlns="http://javafx.com/javafx/23.0.1"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.luisdbb.tarea3AD2024base.controller.ForgotPasswordController">
+	<padding>
+		<Insets bottom="30.0" left="50.0" right="50.0" top="30.0" />
+	</padding>
+	<children>
+		<Label text="Recuperar contraseña" />
+		<Label
+			text="No te preocupes, escribe tu usuario y te mandaremos un enlace al correo para restablecer tu contraseña."
+			wrapText="true" />
+		<TextField fx:id="userField" prefWidth="600.0"
+			promptText="Usuario" />
+		<Button fx:id="recuperarButton" prefHeight="40.0"
+			prefWidth="700.0" text="Recuperar contraseña" />
+		<Hyperlink fx:id="volverLogin"
+			text="Volver al Inicio de sesión." />
+	</children>
 </VBox>

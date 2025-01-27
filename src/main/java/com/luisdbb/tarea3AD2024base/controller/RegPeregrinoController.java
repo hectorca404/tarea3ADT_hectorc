@@ -31,144 +31,141 @@ import java.util.List;
 @Controller
 public class RegPeregrinoController {
 
-    @FXML
-    private TextField userField;
+	@FXML
+	private TextField userField;
 
-    @FXML
-    private TextField nombreField;
+	@FXML
+	private TextField nombreField;
 
-    @FXML
-    private TextField apellidoField;
+	@FXML
+	private TextField apellidoField;
 
-    @FXML
-    private TextField correoField;
+	@FXML
+	private TextField correoField;
 
-    @FXML
-    private ComboBox<String> nacionalidadComboBox;
+	@FXML
+	private ComboBox<String> nacionalidadComboBox;
 
-    @FXML
-    private ComboBox<Parada> paradaInicioComboBox;
+	@FXML
+	private ComboBox<Parada> paradaInicioComboBox;
 
-    @FXML
-    private PasswordField passwordField;
+	@FXML
+	private PasswordField passwordField;
 
-    @FXML
-    private PasswordField confirmPasswordField;
+	@FXML
+	private PasswordField confirmPasswordField;
 
-    @FXML
-    private Button registrarButton;
+	@FXML
+	private Button registrarButton;
 
-    @FXML
-    private Button limpiarButton;
-    
-    @FXML
-    private Hyperlink volverLogin;
-    
-    @Lazy
-    @Autowired
-    private StageManager stageManager;
+	@FXML
+	private Button limpiarButton;
 
-    @Autowired
-    private PeregrinoService peregrinoService;
+	@FXML
+	private Hyperlink volverLogin;
 
-    @Autowired
-    private ParadaService paradaService;
+	@Lazy
+	@Autowired
+	private StageManager stageManager;
 
-    @FXML
-    public void initialize() {
-        cargarNacionalidades();
-        cargarParadas();
-        registrarButton.setOnAction(event -> registrarPeregrino());
-        limpiarButton.setOnAction(event -> limpiarFormulario());
-        volverLogin.setOnAction(event -> volverLogin());
-    }
-    
-    
-    private void volverLogin(){
-    	stageManager.switchScene(FxmlView.PRINCIPAL);
-    }
-    
+	@Autowired
+	private PeregrinoService peregrinoService;
 
-    private void cargarNacionalidades() {
-        try {
-            List<String> nacionalidades = obtenerNacionalidadesXML("/paises.xml");
-            nacionalidadComboBox.setItems(FXCollections.observableArrayList(nacionalidades));
-        } catch (Exception e) {
-            mostrarAlerta("Error", "No se pudieron cargar las nacionalidades", Alert.AlertType.ERROR);
-        }
-    }
+	@Autowired
+	private ParadaService paradaService;
 
-    private void cargarParadas() {
-        try {
-            List<Parada> paradas = paradaService.obtenerTodasLasParadas();
-            paradaInicioComboBox.setItems(FXCollections.observableArrayList(paradas));
-        } catch (Exception e) {
-            mostrarAlerta("Error", "No se pudieron cargar las paradas", Alert.AlertType.ERROR);
-        }
-    }
+	@FXML
+	public void initialize() {
+		cargarNacionalidades();
+		cargarParadas();
+		registrarButton.setOnAction(event -> registrarPeregrino());
+		limpiarButton.setOnAction(event -> limpiarFormulario());
+		volverLogin.setOnAction(event -> volverLogin());
+	}
 
-    private void registrarPeregrino() {
-        try {
-            String nombreUsuario = userField.getText();
-            String contrasena = passwordField.getText();
-            String confirmarContrasena = confirmPasswordField.getText();
-            String correo = correoField.getText();
-            String nombre = nombreField.getText();
-            String apellido = apellidoField.getText();
-            String nacionalidad = nacionalidadComboBox.getValue();
-            Parada paradaInicio = paradaInicioComboBox.getValue();
+	private void volverLogin() {
+		stageManager.switchScene(FxmlView.PRINCIPAL);
+	}
 
-            if (!contrasena.equals(confirmarContrasena)) {
-                mostrarAlerta("Error", "Las contraseñas no coinciden", Alert.AlertType.ERROR);
-                return;
-            }
+	private void cargarNacionalidades() {
+		try {
+			List<String> nacionalidades = obtenerNacionalidadesXML("/paises.xml");
+			nacionalidadComboBox.setItems(FXCollections.observableArrayList(nacionalidades));
+		} catch (Exception e) {
+			mostrarAlerta("Error", "No se pudieron cargar las nacionalidades", Alert.AlertType.ERROR);
+		}
+	}
 
-            peregrinoService.registrarPeregrino(nombreUsuario, contrasena, correo, nombre, apellido, nacionalidad, paradaInicio);
-            mostrarAlerta("Peregrino Reistrado", "Peregrino registrado correctamente", Alert.AlertType.INFORMATION);
-            limpiarFormulario();
-        } catch (Exception e) {
-            mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
+	private void cargarParadas() {
+		try {
+			List<Parada> paradas = paradaService.obtenerTodasLasParadas();
+			paradaInicioComboBox.setItems(FXCollections.observableArrayList(paradas));
+		} catch (Exception e) {
+			mostrarAlerta("Error", "No se pudieron cargar las paradas", Alert.AlertType.ERROR);
+		}
+	}
 
-    private void limpiarFormulario() {
-        userField.clear();
-        nombreField.clear();
-        apellidoField.clear();
-        correoField.clear();
-        nacionalidadComboBox.getSelectionModel().clearSelection();
-        paradaInicioComboBox.getSelectionModel().clearSelection();
-        passwordField.clear();
-        confirmPasswordField.clear();
-    }
+	private void registrarPeregrino() {
+		try {
+			String nombreUsuario = userField.getText();
+			String contrasena = passwordField.getText();
+			String confirmarContrasena = confirmPasswordField.getText();
+			String correo = correoField.getText();
+			String nombre = nombreField.getText();
+			String apellido = apellidoField.getText();
+			String nacionalidad = nacionalidadComboBox.getValue();
+			Parada paradaInicio = paradaInicioComboBox.getValue();
 
-    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensaje);
-        alerta.showAndWait();
-    }
+			if (!contrasena.equals(confirmarContrasena)) {
+				mostrarAlerta("Error", "Las contraseñas no coinciden", Alert.AlertType.ERROR);
+				return;
+			}
 
-    private List<String> obtenerNacionalidadesXML(String rutaArchivo) {
-        List<String> nacionalidades = new ArrayList<>();
-        try {
-            InputStream inputStream = getClass().getResourceAsStream(rutaArchivo);
+			peregrinoService.registrarPeregrino(nombreUsuario, contrasena, correo, nombre, apellido, nacionalidad,
+					paradaInicio);
+			mostrarAlerta("Peregrino Reistrado", "Peregrino registrado correctamente", Alert.AlertType.INFORMATION);
+			limpiarFormulario();
+		} catch (Exception e) {
+			mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
+		}
+	}
 
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(inputStream);
-            NodeList paises = document.getElementsByTagName("pais");
-            for (int i = 0; i < paises.getLength(); i++) {
-                Element pais = (Element) paises.item(i);
-                String nombre = pais.getElementsByTagName("nombre").item(0).getTextContent();
-                nacionalidades.add(nombre);
-            }
-        } catch (Exception e) {
-            System.out.println("Error al cargar las nacionalidades: " + e.getMessage());
-        }
-        return nacionalidades;
-    }
+	private void limpiarFormulario() {
+		userField.clear();
+		nombreField.clear();
+		apellidoField.clear();
+		correoField.clear();
+		nacionalidadComboBox.getSelectionModel().clearSelection();
+		paradaInicioComboBox.getSelectionModel().clearSelection();
+		passwordField.clear();
+		confirmPasswordField.clear();
+	}
+
+	private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+		Alert alerta = new Alert(tipo);
+		alerta.setTitle(titulo);
+		alerta.setHeaderText(null);
+		alerta.setContentText(mensaje);
+		alerta.showAndWait();
+	}
+
+	private List<String> obtenerNacionalidadesXML(String rutaArchivo) {
+		List<String> nacionalidades = new ArrayList<>();
+		try {
+			InputStream inputStream = getClass().getResourceAsStream(rutaArchivo);
+
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.parse(inputStream);
+			NodeList paises = document.getElementsByTagName("pais");
+			for (int i = 0; i < paises.getLength(); i++) {
+				Element pais = (Element) paises.item(i);
+				String nombre = pais.getElementsByTagName("nombre").item(0).getTextContent();
+				nacionalidades.add(nombre);
+			}
+		} catch (Exception e) {
+			System.out.println("Error al cargar las nacionalidades: " + e.getMessage());
+		}
+		return nacionalidades;
+	}
 }
-
-

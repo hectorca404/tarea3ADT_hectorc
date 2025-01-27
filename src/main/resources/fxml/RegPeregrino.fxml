@@ -10,31 +10,43 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.luisdbb.tarea3AD2024base.controller.RegPeregrinoController">
-   <padding>
-      <Insets top="20.0" left="50.0" right="50.0" bottom="20.0" />
-   </padding>
-   <children>
-      <Label text="Registrar Peregrino" />
-      <VBox spacing="10.0">
-         <children>
-            <TextField fx:id="userField" promptText="Nombre de usuario"/>
-            <TextField fx:id="nombreField" promptText="Nombre"/>
-            <TextField fx:id="apellidoField" promptText="Apellido"/>
-            <TextField fx:id="correoField" promptText="Correo electrónico"/>
-            <ComboBox fx:id="nacionalidadComboBox" promptText="Seleccionar nacionalidad"/>
-            <ComboBox fx:id="paradaInicioComboBox" promptText="Seleccionar parada de inicio"/>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+	prefWidth="800.0" spacing="20.0" stylesheets="@../styles/Styles.css"
+	xmlns="http://javafx.com/javafx/23.0.1"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.luisdbb.tarea3AD2024base.controller.RegPeregrinoController">
+	<padding>
+		<Insets top="20.0" left="50.0" right="50.0" bottom="20.0" />
+	</padding>
+	<children>
+		<Label text="Registrar Peregrino" />
+		<VBox spacing="10.0">
+			<children>
+				<TextField fx:id="userField"
+					promptText="Nombre de usuario" />
+				<TextField fx:id="nombreField" promptText="Nombre" />
+				<TextField fx:id="apellidoField" promptText="Apellido" />
+				<TextField fx:id="correoField"
+					promptText="Correo electrónico" />
+				<ComboBox fx:id="nacionalidadComboBox"
+					promptText="Seleccionar nacionalidad" />
+				<ComboBox fx:id="paradaInicioComboBox"
+					promptText="Seleccionar parada de inicio" />
 
-            <PasswordField fx:id="passwordField" promptText="Contraseña" />
-            <PasswordField fx:id="confirmPasswordField" promptText="Confirmar contraseña" />
-         </children>
-      </VBox>
-      <HBox spacing="20.0" alignment="CENTER">
-         <children>
-            <Button fx:id="registrarButton" text="Registrar Peregrino"/>
-            <Button fx:id="limpiarButton" text="Limpiar" />
-         </children>
-      </HBox>
-      <Hyperlink fx:id="volverLogin" text="Volver al inicio de sesión" alignment="CENTER" />
-   </children>
+				<PasswordField fx:id="passwordField"
+					promptText="Contraseña" />
+				<PasswordField fx:id="confirmPasswordField"
+					promptText="Confirmar contraseña" />
+			</children>
+		</VBox>
+		<HBox spacing="20.0" alignment="CENTER">
+			<children>
+				<Button fx:id="registrarButton" text="Registrar Peregrino" />
+				<Button fx:id="limpiarButton" text="Limpiar" />
+			</children>
+		</HBox>
+		<Hyperlink fx:id="volverLogin"
+			text="Volver al inicio de sesión" alignment="CENTER" />
+	</children>
 </VBox>
