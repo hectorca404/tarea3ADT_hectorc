@@ -2,6 +2,7 @@ package com.luisdbb.tarea3AD2024base.controller;
 
 import com.luisdbb.tarea3AD2024base.config.StageManager;
 import com.luisdbb.tarea3AD2024base.modelo.Parada;
+import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.services.ParadaService;
 import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
@@ -12,6 +13,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +65,13 @@ public class RegPeregrinoController {
 	private Button limpiarButton;
 
 	@FXML
+	private Button ayudaButton;
+
+	@FXML
 	private Hyperlink volverLogin;
+
+	@FXML
+	private ImageView ayudaIcon;
 
 	@Lazy
 	@Autowired
@@ -74,13 +83,51 @@ public class RegPeregrinoController {
 	@Autowired
 	private ParadaService paradaService;
 
+	@Autowired
+	private AyudaService ayudaService;
+
 	@FXML
 	public void initialize() {
 		cargarNacionalidades();
 		cargarParadas();
+
+		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
+
 		registrarButton.setOnAction(event -> registrarPeregrino());
 		limpiarButton.setOnAction(event -> limpiarFormulario());
 		volverLogin.setOnAction(event -> volverLogin());
+		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/RegPeregrino.html"));
+
+		configurarAtajos();
+	}
+
+	private void configurarAtajos() {
+		registrarButton.sceneProperty().addListener((observable, oldScene, newScene) -> {
+			if (newScene != null) {
+				newScene.setOnKeyPressed(event -> {
+					switch (event.getCode()) {
+					case ENTER -> {
+						event.consume();
+						registrarPeregrino();
+					}
+					case F1 -> {
+						event.consume();
+						ayudaService.mostrarAyuda("/help/RegPeregrino.html");
+					}
+					case ESCAPE -> {
+						event.consume();
+						volverLogin();
+					}
+					case L -> {
+						if (event.isControlDown()) {
+							event.consume();
+							limpiarFormulario();
+						}
+					}
+					}
+				});
+			}
+		});
 	}
 
 	private void volverLogin() {

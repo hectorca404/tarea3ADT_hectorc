@@ -5,6 +5,7 @@ import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
 import com.luisdbb.tarea3AD2024base.modelo.Estancia;
 import com.luisdbb.tarea3AD2024base.modelo.Parada;
 import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
+import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
 import com.luisdbb.tarea3AD2024base.services.SesionService;
@@ -15,6 +16,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
@@ -78,6 +83,11 @@ public class ExportPeregrinoController {
 	private Button exportarButton;
 	@FXML
 	private Button volverMenuButton;
+	@FXML
+	private Button ayudaButton;
+
+	@FXML
+	private ImageView ayudaIcon;
 
 	@Lazy
 	@Autowired
@@ -92,10 +102,16 @@ public class ExportPeregrinoController {
 	@Autowired
 	private CredencialesService credencialesService;
 
+	@Autowired
+	private AyudaService ayudaService;
+
 	private Peregrino peregrinoActual;
 
 	@FXML
 	public void initialize() {
+
+		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
+
 		peregrinoActual = sesionService.getPeregrinoActual();
 
 		cargarDatosPeregrino(peregrinoActual);
@@ -103,6 +119,35 @@ public class ExportPeregrinoController {
 
 		volverMenuButton.setOnAction(event -> volverMenu());
 		exportarButton.setOnAction(event -> exportarPeregrinoXML(peregrinoActual));
+		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/ExportPeregrino.html"));
+
+		configurarAtajos();
+	}
+
+	private void configurarAtajos() {
+		exportarButton.sceneProperty().addListener((observable, oldScene, newScene) -> {
+			if (oldScene != null) {
+				oldScene.setOnKeyPressed(null);
+			}
+			if (newScene != null) {
+				newScene.setOnKeyPressed(event -> {
+					switch (event.getCode()) {
+					case ENTER -> {
+						event.consume();
+						exportarPeregrinoXML(peregrinoActual);
+					}
+					case ESCAPE -> {
+						event.consume();
+						volverMenu();
+					}
+					case F1 -> {
+						event.consume();
+						ayudaService.mostrarAyuda("/help/ExportPeregrino.html");
+					}
+					}
+				});
+			}
+		});
 	}
 
 	private void cargarDatosPeregrino(Peregrino peregrino) {

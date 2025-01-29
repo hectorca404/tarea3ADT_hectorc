@@ -5,6 +5,7 @@ import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
 import com.luisdbb.tarea3AD2024base.modelo.Estancia;
 import com.luisdbb.tarea3AD2024base.modelo.Parada;
 import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
+import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 import com.luisdbb.tarea3AD2024base.services.ParadaService;
 import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
@@ -18,6 +19,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +82,12 @@ public class ExportParadaController {
 	@FXML
 	private Button volverMenuButton;
 
+	@FXML
+	private Button ayudaButton;
+
+	@FXML
+	private ImageView ayudaIcon;
+
 	@Lazy
 	@Autowired
 	private StageManager stageManager;
@@ -87,6 +97,9 @@ public class ExportParadaController {
 
 	@Autowired
 	private ParadaService paradaService;
+
+	@Autowired
+	private AyudaService ayudaService;
 
 	private LocalDate fechaInicio = null;
 	private LocalDate fechaFin = null;
@@ -103,11 +116,48 @@ public class ExportParadaController {
 		hastaDatePicker.valueProperty().addListener((obs, oldDate, newDate) -> actualizarTablaConFechas());
 		;
 
+		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
+
 		volverMenuButton.setOnAction(event -> volverMenu());
 		limpiarButton.setOnAction(event -> limpiarFormulario());
 
 		exportarButton.setOnAction(event -> {
 			exportarDatosParadaXML(paradaActual, fechas[0], fechas[1]);
+		});
+		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/ExportParada.html"));
+
+		configurarAtajos();
+	}
+
+	private void configurarAtajos() {
+		exportarButton.sceneProperty().addListener((observable, oldScene, newScene) -> {
+			if (oldScene != null) {
+				oldScene.setOnKeyPressed(null);
+			}
+			if (newScene != null) {
+				newScene.setOnKeyPressed(event -> {
+					switch (event.getCode()) {
+					case ENTER -> {
+						event.consume();
+						exportarDatosParadaXML(paradaActual, rangoDeFechas()[0], rangoDeFechas()[1]);
+					}
+					case F1 -> {
+						event.consume();
+						ayudaService.mostrarAyuda("/help/ExportParada.html");
+					}
+					case ESCAPE -> {
+						event.consume();
+						volverMenu();
+					}
+					case L -> {
+						if (event.isControlDown()) {
+							event.consume();
+							limpiarFormulario();
+						}
+					}
+					}
+				});
+			}
 		});
 	}
 

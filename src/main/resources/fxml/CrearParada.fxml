@@ -6,7 +6,9 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.ImageView?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity"
 	minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
@@ -14,37 +16,44 @@
 	xmlns="http://javafx.com/javafx/23.0.1"
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="com.luisdbb.tarea3AD2024base.controller.CrearParadaController">
+
 	<padding>
 		<Insets top="20.0" left="50.0" right="50.0" bottom="20.0" />
 	</padding>
+
 	<children>
-		<Label text="Crear Parada" />
+		<HBox alignment="CENTER_LEFT" prefHeight="51.0" prefWidth="760.0" spacing="10.0">
+			<children>
+				<Label text="Crear Parada" />
+				<Region HBox.hgrow="ALWAYS" />
+				<Button fx:id="ayudaButton" styleClass="help-button" minHeight="25.0" minWidth="25.0">
+					<graphic>
+						<ImageView fx:id="ayudaIcon" fitHeight="20.0" fitWidth="20.0" />
+					</graphic>
+				</Button>
+			</children>
+		</HBox>
+
 		<VBox spacing="10.0">
 			<children>
-				<TextField fx:id="responsableField"
-					promptText="Nombre completo del Responsable" />
-				<TextField fx:id="correoField"
-					promptText="Correo del Responsable" />
-				<TextField fx:id="usuarioField"
-					promptText="Nombre de usuario del Responsable" />
-				<TextField fx:id="nombreParadaField"
-					promptText="Nombre de la Parada" />
-				<TextField fx:id="regionField"
-					promptText="Región (un carácter)" />
-				<PasswordField fx:id="passwordField"
-					promptText="Contraseña del Responsable" />
-				<PasswordField fx:id="confirmPasswordField"
-					promptText="Confirmar Contraseña" />
+				<TextField fx:id="responsableField" promptText="Nombre completo del Responsable" />
+				<TextField fx:id="correoField" promptText="Correo del Responsable" />
+				<TextField fx:id="usuarioField" promptText="Nombre de usuario del Responsable" />
+				<TextField fx:id="nombreParadaField" promptText="Nombre de la Parada" />
+				<TextField fx:id="regionField" promptText="Región (un carácter)" />
+				<PasswordField fx:id="passwordField" promptText="Contraseña del Responsable" />
+				<PasswordField fx:id="confirmPasswordField" promptText="Confirmar Contraseña" />
 			</children>
 		</VBox>
+
 		<HBox spacing="20.0" alignment="CENTER">
 			<children>
 				<Button fx:id="crearButton" text="Crear Parada" />
 				<Button fx:id="limpiarButton" text="Limpiar" />
 			</children>
 		</HBox>
-		<Button fx:id="volverMenuButton" text="Volver al Menú"
-			alignment="CENTER" />
+
+		<Button fx:id="volverMenuButton" text="Volver al Menú" alignment="CENTER" />
 	</children>
 </VBox>
 

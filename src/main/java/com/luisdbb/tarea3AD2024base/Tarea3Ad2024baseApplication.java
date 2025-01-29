@@ -11,6 +11,7 @@ import com.luisdbb.tarea3AD2024base.config.StageManager;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 
@@ -39,6 +40,7 @@ public class Tarea3Ad2024baseApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		stageManager = springContext.getBean(StageManager.class, primaryStage);
+		primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icono.png")));	    
 		displayInitialScene();
 
 	}

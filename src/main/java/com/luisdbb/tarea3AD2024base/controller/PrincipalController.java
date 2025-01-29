@@ -10,6 +10,7 @@ import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
 import com.luisdbb.tarea3AD2024base.modelo.Parada;
 import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
 import com.luisdbb.tarea3AD2024base.modelo.Perfil;
+import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 import com.luisdbb.tarea3AD2024base.services.SesionService;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
@@ -24,6 +25,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 @Controller
@@ -42,7 +44,13 @@ public class PrincipalController {
 	private Button passButton;
 
 	@FXML
+	private Button ayudaButton;
+
+	@FXML
 	private ImageView ojoIcon;
+
+	@FXML
+	private ImageView ayudaIcon;
 
 	@FXML
 	private Button logButton;
@@ -65,21 +73,41 @@ public class PrincipalController {
 	@Autowired
 	private SesionService sesionService;
 
+	@Autowired
+	private AyudaService ayudaService;
+
 	@FXML
 	public void initialize() {
-		try {
-			logo.setImage(new Image(getClass().getResourceAsStream("/images/logo2.png")));
-			ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
+		logo.setImage(new Image(getClass().getResourceAsStream("/images/logo2.png")));
+		ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
+		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
 
-			passButton.setOnAction(event -> visualizarContraseña());
-			forgotPass.setOnAction(event -> forgotPass());
-			regisLink.setOnAction(event -> regPeregrino());
+		passButton.setOnAction(event -> visualizarContraseña());
+		forgotPass.setOnAction(event -> forgotPass());
+		regisLink.setOnAction(event -> regPeregrino());
+		logButton.setOnAction(event -> iniciarSesion());
+		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/Principal.html"));
 
-			logButton.setOnAction(event -> iniciarSesion());
+		configurarAtajos();
 
-		} catch (Exception e) {
-			System.out.println("Error al iniciar el PrncipalController: " + e.getMessage());
-		}
+	}
+
+	private void configurarAtajos() {
+		userLogField.sceneProperty().addListener((observable, oldScene, newScene) -> {
+			if (newScene != null) {
+				newScene.setOnKeyPressed(event -> {
+					if (event.getTarget() instanceof TextField || event.getTarget() instanceof PasswordField) {
+						if (event.getCode() == KeyCode.ENTER) {
+							event.consume();
+							iniciarSesion();
+						}
+					} else if (event.getCode() == KeyCode.F1) {
+						event.consume();
+						ayudaService.mostrarAyuda("/help/Principal.html");
+					}
+				});
+			}
+		});
 	}
 
 	private void iniciarSesion() {
@@ -119,15 +147,18 @@ public class PrincipalController {
 	}
 
 	private void visualizarContraseña() {
-		contraseñaVisible = !contraseñaVisible;
-
 		if (contraseñaVisible) {
+			passField.setText(passField.getPromptText());
+			passField.setPromptText("");
+			passField.setDisable(false);
+			ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
+			contraseñaVisible = false;
+		} else {
 			passField.setPromptText(passField.getText());
 			passField.clear();
+			passField.setDisable(true);
 			ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/abierto.png")));
-		} else {
-			passField.setPromptText("Introduce tu contraseña");
-			ojoIcon.setImage(new Image(getClass().getResourceAsStream("/images/ceerrado.png")));
+			contraseñaVisible = true;
 		}
 	}
 

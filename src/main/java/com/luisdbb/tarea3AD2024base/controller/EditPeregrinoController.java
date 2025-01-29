@@ -17,6 +17,7 @@ import org.w3c.dom.NodeList;
 import com.luisdbb.tarea3AD2024base.config.StageManager;
 import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
 import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
+import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
 import com.luisdbb.tarea3AD2024base.services.SesionService;
@@ -28,6 +29,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 
 @Controller
 public class EditPeregrinoController {
@@ -46,6 +50,11 @@ public class EditPeregrinoController {
 	private Button limpiarButton;
 	@FXML
 	private Button volverMenuButton;
+	@FXML
+	private Button ayudaButton;
+
+	@FXML
+	private ImageView ayudaIcon;
 
 	@Lazy
 	@Autowired
@@ -60,6 +69,9 @@ public class EditPeregrinoController {
 	@Autowired
 	private SesionService sesionService;
 
+	@Autowired
+	private AyudaService ayudaService;
+
 	private Peregrino peregrinoActual;
 
 	@FXML
@@ -68,11 +80,48 @@ public class EditPeregrinoController {
 
 		cargarPeregrino(peregrinoActual);
 
+		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
+
 		guardarButton.setOnAction(event -> guardarCambios());
 		limpiarButton.setOnAction(event -> limpiarFormulario());
 		volverMenuButton.setOnAction(event -> volverMenu());
+		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/EditPeregrino.html"));
 
 		cargarNacionalidades();
+
+		configurarAtajos();
+	}
+
+	private void configurarAtajos() {
+		guardarButton.sceneProperty().addListener((observable, oldScene, newScene) -> {
+			if (oldScene != null) {
+				oldScene.setOnKeyPressed(null);
+			}
+			if (newScene != null) {
+				newScene.setOnKeyPressed(event -> {
+					switch (event.getCode()) {
+					case ENTER -> {
+						event.consume();
+						guardarCambios();
+					}
+					case ESCAPE -> {
+						event.consume();
+						volverMenu();
+					}
+					case F1 -> {
+						event.consume();
+						ayudaService.mostrarAyuda("/help/EditPeregrino.html");
+					}
+					case L -> {
+						if (event.isControlDown()) {
+							event.consume();
+							limpiarFormulario();
+						}
+					}
+					}
+				});
+			}
+		});
 	}
 
 	public void cargarPeregrino(Peregrino peregrino) {

@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
+@Repository
 public interface EstanciaRepository extends JpaRepository<Estancia, Long> {
 	List<Estancia> findByPeregrinoId(Long peregrinoId);
 

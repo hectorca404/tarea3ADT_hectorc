@@ -117,7 +117,7 @@ public enum FxmlView {
 	PRINCIPAL {
 		@Override
 		public String getTitle() {
-			return "Principal";
+			return "Programa Peregrinos ADT - DESIN - Héctor Castañé Álvarez";
 		}
 
 		@Override

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 
 import com.luisdbb.tarea3AD2024base.config.SpringFXMLLoader;
 import com.luisdbb.tarea3AD2024base.config.StageManager;
+import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 import com.luisdbb.tarea3AD2024base.services.ParadaService;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
@@ -17,6 +18,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 @Controller
@@ -52,6 +56,12 @@ public class CrearParadaController {
 	@FXML
 	private Button volverMenuButton;
 
+	@FXML
+	private Button ayudaButton;
+
+	@FXML
+	private ImageView ayudaIcon;
+
 	@Lazy
 	@Autowired
 	private StageManager stageManager;
@@ -59,11 +69,51 @@ public class CrearParadaController {
 	@Autowired
 	private ParadaService paradaService;
 
+	@Autowired
+	private AyudaService ayudaService;
+
 	@FXML
 	public void initialize() {
+		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
+
 		crearButton.setOnAction(event -> registrarParada());
 		limpiarButton.setOnAction(event -> limpiarFormulario());
 		volverMenuButton.setOnAction(event -> volverMenu());
+		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/CrearParada.html"));
+
+		configurarAtajos();
+	}
+
+	private void configurarAtajos() {
+		crearButton.sceneProperty().addListener((observable, oldScene, newScene) -> {
+			if (oldScene != null) {
+				oldScene.setOnKeyPressed(null);
+			}
+			if (newScene != null) {
+				newScene.setOnKeyPressed(event -> {
+					switch (event.getCode()) {
+					case ENTER -> {
+						event.consume();
+						registrarParada();
+					}
+					case F1 -> {
+						event.consume();
+						ayudaService.mostrarAyuda("/help/CrearParada.html");
+					}
+					case ESCAPE -> {
+						event.consume();
+						volverMenu();
+					}
+					case L -> {
+						if (event.isControlDown()) {
+							event.consume();
+							limpiarFormulario();
+						}
+					}
+					}
+				});
+			}
+		});
 	}
 
 	private void registrarParada() {
