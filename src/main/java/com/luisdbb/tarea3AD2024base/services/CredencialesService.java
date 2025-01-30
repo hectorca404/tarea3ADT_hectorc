@@ -1,7 +1,11 @@
 package com.luisdbb.tarea3AD2024base.services;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
+import java.util.Scanner;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +15,7 @@ import com.luisdbb.tarea3AD2024base.modelo.Parada;
 import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
 import com.luisdbb.tarea3AD2024base.modelo.Perfil;
 import com.luisdbb.tarea3AD2024base.repositorios.CredencialesRepository;
+import com.luisdbb.tarea3AD2024base.view.AlertsView;
 
 @Service
 public class CredencialesService {
@@ -21,24 +26,6 @@ public class CredencialesService {
 		this.credencialesRepository = credencialesRepository;
 	}
 
-	public Credenciales crearAdministrador() {
-		if (credencialesRepository.findByNombreUsuario("admin").isEmpty()) {
-			Credenciales admin = new Credenciales("admin", "1234", "admin@gmail.com", Perfil.ADMINISTRADOR);
-			return credencialesRepository.save(admin);
-		}
-		return null;
-	}
-
-	public Credenciales validarCredenciales(String nombreUsuario, String contrasena) {
-		Credenciales credenciales = credencialesRepository.findByNombreUsuario(nombreUsuario)
-				.orElseThrow(() -> new IllegalArgumentException("Credenciales incorrectas"));
-
-		if (!credenciales.getContrasena().equals(contrasena)) {
-			throw new IllegalArgumentException("Contraseña incorrecta");
-		}
-
-		return credenciales;
-	}
 
 	public Credenciales obtenerCredencialesPeregrino(Peregrino peregrino) {
 		return credencialesRepository.findByPeregrino(peregrino)
@@ -56,5 +43,6 @@ public class CredencialesService {
 	public Optional<Credenciales> obtenerCredencialPorUsuario(String nombreUsuario) {
 		return credencialesRepository.findByNombreUsuario(nombreUsuario);
 	}
+	
 
 }

@@ -43,6 +43,13 @@ public class Credenciales {
 		this.correo = correo;
 		this.perfil = perfil;
 	}
+	//CONSTRUCTOR ADMIN
+	public Credenciales(String nombreUsuario, String contrasena, Perfil perfil) {
+		this.nombreUsuario = nombreUsuario;
+		this.contrasena = contrasena;
+		this.correo = correo;
+		this.perfil = perfil;
+	}
 
 	// GETTERS Y SETTERS
 	public Long getId() {

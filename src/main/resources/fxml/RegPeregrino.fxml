@@ -42,8 +42,8 @@
 				<TextField fx:id="nombreField" promptText="Nombre" />
 				<TextField fx:id="apellidoField" promptText="Apellido" />
 				<TextField fx:id="correoField" promptText="Correo electrónico" />
-				<ComboBox fx:id="nacionalidadComboBox" promptText="Seleccionar nacionalidad" />
-				<ComboBox fx:id="paradaInicioComboBox" promptText="Seleccionar parada de inicio" />
+				<ComboBox fx:id="nacionalidadComboBox" promptText="Seleccionar nacionalidad"/>
+				<ComboBox fx:id="paradaInicioComboBox" promptText="Seleccionar parada de inicio"/>
 
 				<PasswordField fx:id="passwordField" promptText="Contraseña" />
 				<PasswordField fx:id="confirmPasswordField" promptText="Confirmar contraseña" />

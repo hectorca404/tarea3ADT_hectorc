@@ -9,6 +9,7 @@ import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
 import com.luisdbb.tarea3AD2024base.services.SesionService;
+import com.luisdbb.tarea3AD2024base.view.AlertsView;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -104,6 +105,9 @@ public class ExportPeregrinoController {
 
 	@Autowired
 	private AyudaService ayudaService;
+	
+	@Autowired
+	private AlertsView alertsView;
 
 	private Peregrino peregrinoActual;
 
@@ -307,7 +311,7 @@ public class ExportPeregrinoController {
 
 			try (OutputStream outputStream = new FileOutputStream(new File(fichero))) {
 				transformer.transform(new DOMSource(doc), new StreamResult(outputStream));
-				System.out.println("Peregrino XML exportado exitosamente como: " + fichero);
+				alertsView.mostrarInfo("Expotado correctamente", "Peregrino exportado exitosamente a :"+fichero);
 			}
 
 		} catch (Exception e) {

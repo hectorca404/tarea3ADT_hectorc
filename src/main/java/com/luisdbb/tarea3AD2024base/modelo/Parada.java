@@ -98,7 +98,7 @@ public class Parada implements Serializable {
 	// METODOS ENITTY
 	@Override
 	public String toString() {
-		return nombre;
+		return "Nombre: "+nombre + " Region: "+region;
 	}
 
 	@Override

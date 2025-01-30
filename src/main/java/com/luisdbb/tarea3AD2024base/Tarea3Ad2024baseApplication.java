@@ -27,10 +27,6 @@ public class Tarea3Ad2024baseApplication extends Application {
 	@Override
 	public void init() throws Exception {
 		springContext = springBootApplicationContext();
-		
-		CredencialesService credencialesService = springContext.getBean(CredencialesService.class);
-	    credencialesService.crearAdministrador();
-	    
 	}
 
 	public static void main(final String[] args) {

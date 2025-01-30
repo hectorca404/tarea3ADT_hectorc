@@ -5,6 +5,8 @@ import com.luisdbb.tarea3AD2024base.modelo.Parada;
 import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.services.ParadaService;
 import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
+import com.luisdbb.tarea3AD2024base.services.ValidacionesService;
+import com.luisdbb.tarea3AD2024base.view.AlertsView;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.collections.FXCollections;
@@ -85,6 +87,12 @@ public class RegPeregrinoController {
 
 	@Autowired
 	private AyudaService ayudaService;
+	
+	@Autowired
+	private AlertsView alertsView;
+	
+	@Autowired
+	private ValidacionesService validacionesService;
 
 	@FXML
 	public void initialize() {
@@ -135,47 +143,68 @@ public class RegPeregrinoController {
 	}
 
 	private void cargarNacionalidades() {
-		try {
 			List<String> nacionalidades = obtenerNacionalidadesXML("/paises.xml");
 			nacionalidadComboBox.setItems(FXCollections.observableArrayList(nacionalidades));
-		} catch (Exception e) {
-			mostrarAlerta("Error", "No se pudieron cargar las nacionalidades", Alert.AlertType.ERROR);
-		}
 	}
 
 	private void cargarParadas() {
-		try {
 			List<Parada> paradas = paradaService.obtenerTodasLasParadas();
 			paradaInicioComboBox.setItems(FXCollections.observableArrayList(paradas));
-		} catch (Exception e) {
-			mostrarAlerta("Error", "No se pudieron cargar las paradas", Alert.AlertType.ERROR);
-		}
 	}
 
 	private void registrarPeregrino() {
-		try {
+		
 			String nombreUsuario = userField.getText();
-			String contrasena = passwordField.getText();
-			String confirmarContrasena = confirmPasswordField.getText();
-			String correo = correoField.getText();
-			String nombre = nombreField.getText();
-			String apellido = apellidoField.getText();
-			String nacionalidad = nacionalidadComboBox.getValue();
-			Parada paradaInicio = paradaInicioComboBox.getValue();
-
-			if (!contrasena.equals(confirmarContrasena)) {
-				mostrarAlerta("Error", "Las contraseñas no coinciden", Alert.AlertType.ERROR);
+			if(validacionesService.existeUsuario(nombreUsuario)) {
 				return;
 			}
+			if(!validacionesService.validarNombreUsuario(nombreUsuario)) {
+				return;
+			}
+				
+			String contrasena = passwordField.getText();
+			String confirmarContrasena = confirmPasswordField.getText();
+			
+			
+			String correo = correoField.getText();
+			if(!validacionesService.validarCorreo(correo)) {
+				return;
+			}
+			
+			String nombre = nombreField.getText();
+			String apellido = apellidoField.getText();
+			if(!validacionesService.validarNombreYApellido(nombre, apellido)) {
+				return;
+			}
+			
+			String nacionalidad = nacionalidadComboBox.getValue();
+			if(!validacionesService.validarComboBox(nacionalidad)) {
+				return;
+			}
+			
+			Parada paradaInicio = paradaInicioComboBox.getValue();
+			if (paradaInicio == null) {
+		        alertsView.mostrarError("Error", "Debes seleccionar una parada de inicio.");
+		        return;
+		    }
+			
+			
+			if (!contrasena.equals(confirmarContrasena)) {
+				alertsView.mostrarError("Error", "Las contraseñas no coinciden");
+				return;
+			}
+			
+			try {
+				peregrinoService.registrarPeregrino(nombreUsuario, contrasena, correo, nombre, apellido, nacionalidad,
+						paradaInicio);
+				alertsView.mostrarInfo("Peregrino Reistrado", "Peregrino registrado correctamente");
+				limpiarFormulario();
 
-			peregrinoService.registrarPeregrino(nombreUsuario, contrasena, correo, nombre, apellido, nacionalidad,
-					paradaInicio);
-			mostrarAlerta("Peregrino Reistrado", "Peregrino registrado correctamente", Alert.AlertType.INFORMATION);
-			limpiarFormulario();
-		} catch (Exception e) {
-			mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
+			} catch (IllegalArgumentException e) {
+				alertsView.mostrarError("Error", e.getMessage());
+			}
+
 		}
-	}
 
 	private void limpiarFormulario() {
 		userField.clear();
@@ -188,13 +217,7 @@ public class RegPeregrinoController {
 		confirmPasswordField.clear();
 	}
 
-	private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
-		Alert alerta = new Alert(tipo);
-		alerta.setTitle(titulo);
-		alerta.setHeaderText(null);
-		alerta.setContentText(mensaje);
-		alerta.showAndWait();
-	}
+	
 
 	private List<String> obtenerNacionalidadesXML(String rutaArchivo) {
 		List<String> nacionalidades = new ArrayList<>();

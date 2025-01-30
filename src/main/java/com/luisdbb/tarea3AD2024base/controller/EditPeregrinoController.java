@@ -21,6 +21,8 @@ import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
 import com.luisdbb.tarea3AD2024base.services.SesionService;
+import com.luisdbb.tarea3AD2024base.services.ValidacionesService;
+import com.luisdbb.tarea3AD2024base.view.AlertsView;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.collections.FXCollections;
@@ -71,6 +73,12 @@ public class EditPeregrinoController {
 
 	@Autowired
 	private AyudaService ayudaService;
+	
+	@Autowired
+	private ValidacionesService validacionesService;
+	
+	@Autowired
+	private AlertsView alertsView;
 
 	private Peregrino peregrinoActual;
 
@@ -135,27 +143,40 @@ public class EditPeregrinoController {
 	}
 
 	private void cargarNacionalidades() {
-		try {
 			List<String> nacionalidades = obtenerNacionalidadesXML("/paises.xml");
 			nacionalidadComboBox.setItems(FXCollections.observableArrayList(nacionalidades));
-		} catch (Exception e) {
-			mostrarAlerta("Error", "No se pudieron cargar las nacionalidades", Alert.AlertType.ERROR);
-		}
 	}
 
 	private void guardarCambios() {
+		String nombre = nombreField.getText();
+		String apellido = apellidoField.getText();
 
-		peregrinoActual.setNombre(nombreField.getText());
-		peregrinoActual.setApellido(apellidoField.getText());
-		peregrinoActual.setNacionalidad(nacionalidadComboBox.getValue());
+		if (!validacionesService.validarNombreYApellido(nombre, apellido)) {
+			return;
+		}
+		String nacionalidad = nacionalidadComboBox.getValue();
+		if (!validacionesService.validarComboBox(nacionalidad)) {
+			return;
+		}
 
 		String nuevoCorreo = correoField.getText();
+		if (!validacionesService.validarCorreo(nuevoCorreo)) {
+			return;
+		}
 
-		peregrinoService.guardarCambiosPeregrino(peregrinoActual, nuevoCorreo);
-
-		mostrarAlerta("Peregrino Editado Correctamente", "Los cambios se guardaron correctamente",
-				Alert.AlertType.INFORMATION);
-		volverMenu();
+		try {
+			peregrinoActual.setNombre(nombreField.getText());
+			peregrinoActual.setApellido(apellidoField.getText());
+			peregrinoActual.setNacionalidad(nacionalidadComboBox.getValue());
+			peregrinoService.guardarCambiosPeregrino(peregrinoActual, nuevoCorreo);
+			alertsView.mostrarInfo("Peregrino Editado Correctamente", "Los cambios se guardaron correctamente");
+			volverMenu();
+		} catch (IllegalArgumentException e) {
+			alertsView.mostrarError("Error", e.getMessage());
+		}
+		 catch (Exception e) {
+		        alertsView.mostrarError("Error", "Error al guardar los cambios.");
+		    }
 
 	}
 
@@ -170,13 +191,7 @@ public class EditPeregrinoController {
 		stageManager.switchScene(FxmlView.PEREGRINO);
 	}
 
-	private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
-		Alert alerta = new Alert(tipo);
-		alerta.setTitle(titulo);
-		alerta.setHeaderText(null);
-		alerta.setContentText(mensaje);
-		alerta.showAndWait();
-	}
+
 
 	private List<String> obtenerNacionalidadesXML(String rutaArchivo) {
 		List<String> nacionalidades = new ArrayList<>();

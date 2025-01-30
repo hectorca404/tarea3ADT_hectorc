@@ -15,5 +15,5 @@ import java.util.List;
 public interface EstanciaRepository extends JpaRepository<Estancia, Long> {
 	List<Estancia> findByPeregrinoId(Long peregrinoId);
 
-	List<Estancia> findByParadaId(Long peregrinoId);
+	List<Estancia> findByParadaId(Long paradaId);
 }

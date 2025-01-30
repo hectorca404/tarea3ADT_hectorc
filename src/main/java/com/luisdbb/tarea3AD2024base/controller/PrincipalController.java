@@ -13,6 +13,7 @@ import com.luisdbb.tarea3AD2024base.modelo.Perfil;
 import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 import com.luisdbb.tarea3AD2024base.services.SesionService;
+import com.luisdbb.tarea3AD2024base.services.ValidacionesService;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.fxml.FXML;
@@ -75,6 +76,9 @@ public class PrincipalController {
 
 	@Autowired
 	private AyudaService ayudaService;
+	
+	@Autowired
+	private ValidacionesService validacionesService;
 
 	@FXML
 	public void initialize() {
@@ -114,13 +118,16 @@ public class PrincipalController {
 		String username = userLogField.getText();
 		String password = passField.getText();
 
-		try {
-			Credenciales credenciales = credencialesService.validarCredenciales(username, password);
+		
+			Credenciales credenciales = validacionesService.validarCredenciales(username, password);
+			
+			if (credenciales == null) {
+		        return;
+		    }
+			
 			vistaSegunRol(credenciales.getPerfil(), credenciales);
 
-		} catch (IllegalArgumentException e) {
-			mostrarError("Credenciales inválidas");
-		}
+		
 	}
 
 	private void vistaSegunRol(Perfil perfil, Credenciales credenciales) {
@@ -138,12 +145,8 @@ public class PrincipalController {
 			sesionService.setParadaActual(parada);
 			menuParada();
 		}
-		default -> mostrarError("Usuario no existe");
+		default -> {}
 		}
-	}
-
-	private void mostrarError(String mensaje) {
-		System.out.println(mensaje);
 	}
 
 	private void visualizarContraseña() {

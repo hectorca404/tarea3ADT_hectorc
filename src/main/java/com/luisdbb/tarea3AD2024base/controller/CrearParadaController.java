@@ -9,6 +9,8 @@ import com.luisdbb.tarea3AD2024base.config.StageManager;
 import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 import com.luisdbb.tarea3AD2024base.services.ParadaService;
+import com.luisdbb.tarea3AD2024base.services.ValidacionesService;
+import com.luisdbb.tarea3AD2024base.view.AlertsView;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.fxml.FXML;
@@ -71,9 +73,20 @@ public class CrearParadaController {
 
 	@Autowired
 	private AyudaService ayudaService;
+	
+	@Autowired
+	private ValidacionesService validacionesService;
+	
+	@Autowired
+	private AlertsView alertsView;
 
 	@FXML
 	public void initialize() {
+		regionField.textProperty().addListener((observable, oldValue, newValue) -> {
+	        if (newValue.length() > 1) {
+	            regionField.setText(oldValue);
+	        }
+	    });
 		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
 
 		crearButton.setOnAction(event -> registrarParada());
@@ -125,17 +138,47 @@ public class CrearParadaController {
 			String correo = correoField.getText();
 			String password = passwordField.getText();
 			String confirmPassword = confirmPasswordField.getText();
-
+			
+			if(!validacionesService.validarNombreUsuario(usuario)) {
+				return;
+			}
+			
+			if(validacionesService.existeUsuario(usuario)) {
+				return;
+			}
+			
+			if(!validacionesService.validarCorreo(correo)) {
+				return;
+			}
 			if (!password.equals(confirmPassword)) {
-				mostrarAlerta("Error", "Las contraseñas no coinciden", Alert.AlertType.ERROR);
+				alertsView.mostrarError("Error", "Las contraseñas no coinciden");
+				return;
+			}
+			
+			if(!validacionesService.validarNombreParadaYResponsable(nombre)) {
+				return;
+			}
+			
+			if(!validacionesService.validarNombreParadaYResponsable(responsable)) {
+				return;
+			}
+			
+			if(!validacionesService.validarSinEspacios(password)) {
+				return;
+			}
+			
+			if(validacionesService.existeNombreYRegion(nombre, region)) {
+				alertsView.mostrarError("Error", "Ya existe una parda con ese nombre en esa region");
 				return;
 			}
 
+			
+
 			paradaService.registrarParada(nombre, region, responsable, usuario, correo, password);
-			mostrarAlerta("Exitoso", "Parada registrada correctamente", Alert.AlertType.INFORMATION);
+			alertsView.mostrarInfo("Exitoso", "Parada registrada correctamente");
 			limpiarFormulario();
 		} catch (Exception e) {
-			mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
+			alertsView.mostrarError("Error", e.getMessage());
 		}
 	}
 
@@ -153,11 +196,5 @@ public class CrearParadaController {
 		stageManager.switchScene(FxmlView.ADMIN);
 	}
 
-	private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
-		Alert alerta = new Alert(tipo);
-		alerta.setTitle(titulo);
-		alerta.setHeaderText(null);
-		alerta.setContentText(mensaje);
-		alerta.showAndWait();
-	}
+
 }

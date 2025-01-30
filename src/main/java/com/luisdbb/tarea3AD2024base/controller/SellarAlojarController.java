@@ -1,5 +1,6 @@
 package com.luisdbb.tarea3AD2024base.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ import com.luisdbb.tarea3AD2024base.services.EstanciaService;
 import com.luisdbb.tarea3AD2024base.services.ParadaService;
 import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
 import com.luisdbb.tarea3AD2024base.services.SesionService;
+import com.luisdbb.tarea3AD2024base.services.ValidacionesService;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.collections.FXCollections;
@@ -76,6 +78,9 @@ public class SellarAlojarController {
 
 	@Autowired
 	private AyudaService ayudaService;
+	
+	@Autowired
+	private ValidacionesService validacionesService;
 
 	@Lazy
 	@Autowired
@@ -164,46 +169,59 @@ public class SellarAlojarController {
 	}
 
 	private void sellarAlojar() {
-		String nombreUsuarioSeleccionado = peregrinoComboBox.getSelectionModel().getSelectedItem();
-		if (nombreUsuarioSeleccionado == null) {
-			mostrarAlerta("Error", "Hay que seleccionar un usuario.");
-			return;
-		}
+	    String nombreUsuarioSeleccionado = peregrinoComboBox.getSelectionModel().getSelectedItem();
 
-		Optional<Credenciales> credencialesOp = credencialesService
-				.obtenerCredencialPorUsuario(nombreUsuarioSeleccionado);
+	    if (nombreUsuarioSeleccionado == null) {
+	        mostrarAlerta("Error", "Hay que seleccionar un usuario.");
+	        return;
+	    }
 
-		Credenciales credenciales = credencialesOp.get();
-		Peregrino peregrino = credenciales.getPeregrino();
+	    Optional<Credenciales> credencialesOp = credencialesService.obtenerCredencialPorUsuario(nombreUsuarioSeleccionado);
 
-		Carnet carnet = peregrino.getCarnet();
+	    if (credencialesOp.isEmpty()) {
+	        mostrarAlerta("Error", "Usuario no encontrado.");
+	        return;
+	    }
 
-		carnet.setDistancia(carnet.getDistancia() + 5);
+	    Credenciales credenciales = credencialesOp.get();
+	    Peregrino peregrino = credenciales.getPeregrino();
+	    Parada paradaActual = sesionService.getParadaActual();
+	    LocalDate fechaHoy = LocalDate.now(); // 📌 Definir la fecha actual correctamente
 
-		ParadasPeregrinos paradasPeregrinos = new ParadasPeregrinos(peregrino, sesionService.getParadaActual());
-		paradaService.guardarParadasPeregrinos(paradasPeregrinos);
+	    // 📌 🔹 Verificar si ya selló en esta parada hoy
+	    boolean yaSellado = validacionesService.yaHaSelladoHoy(peregrino, paradaActual, fechaHoy);
+	    if (yaSellado) {
+	        mostrarAlerta("Error", "Este peregrino ya ha sellado en esta parada hoy.");
+	        return;
+	    }
 
-		if (alojarCheckBox.isSelected()) {
-			boolean esVip = vipCheckBox.isSelected();
+	    Carnet carnet = peregrino.getCarnet();
+	    carnet.setDistancia(carnet.getDistancia() + 5);
 
-			Estancia estancia = new Estancia();
-			estancia.setVip(esVip);
-			estancia.setParada(sesionService.getParadaActual());
-			estancia.setPeregrino(peregrino);
+	    ParadasPeregrinos paradasPeregrinos = new ParadasPeregrinos(peregrino, paradaActual);
+	    paradaService.guardarParadasPeregrinos(paradasPeregrinos);
 
-			estanciaService.guardarEstancia(estancia);
+	    if (alojarCheckBox.isSelected()) {
+	        boolean esVip = vipCheckBox.isSelected();
 
-			if (esVip) {
-				carnet.setnVips(carnet.getnVips() + 1);
-			}
-		}
+	        Estancia estancia = new Estancia();
+	        estancia.setVip(esVip);
+	        estancia.setParada(paradaActual);
+	        estancia.setPeregrino(peregrino);
 
-		peregrinoService.actualizarCarnet(carnet);
+	        estanciaService.guardarEstancia(estancia);
 
-		mostrarAlerta("Exito", "Sellado/Alojamiento completado.");
+	        if (esVip) {
+	            carnet.setnVips(carnet.getnVips() + 1);
+	        }
+	    }
 
-		limpiarFormulario();
+	    peregrinoService.actualizarCarnet(carnet);
+
+	    mostrarAlerta("Éxito", "Sellado/Alojamiento completado.");
+	    limpiarFormulario();
 	}
+
 
 	private void mostrarAlerta(String titulo, String mensaje) {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);

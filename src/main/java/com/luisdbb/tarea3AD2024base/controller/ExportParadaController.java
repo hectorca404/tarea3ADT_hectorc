@@ -10,6 +10,7 @@ import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 import com.luisdbb.tarea3AD2024base.services.ParadaService;
 import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
 import com.luisdbb.tarea3AD2024base.services.SesionService;
+import com.luisdbb.tarea3AD2024base.view.AlertsView;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -100,6 +101,9 @@ public class ExportParadaController {
 
 	@Autowired
 	private AyudaService ayudaService;
+	
+	@Autowired
+	private AlertsView alertsView;
 
 	private LocalDate fechaInicio = null;
 	private LocalDate fechaFin = null;
@@ -109,7 +113,6 @@ public class ExportParadaController {
 	@FXML
 
 	public void initialize() {
-		LocalDate[] fechas = rangoDeFechas();
 		paradaActual = sesionService.getParadaActual();
 
 		desdeDatePicker.valueProperty().addListener((obs, oldDate, newDate) -> actualizarTablaConFechas());
@@ -122,7 +125,7 @@ public class ExportParadaController {
 		limpiarButton.setOnAction(event -> limpiarFormulario());
 
 		exportarButton.setOnAction(event -> {
-			exportarDatosParadaXML(paradaActual, fechas[0], fechas[1]);
+			exportarDatosParadaXML(paradaActual);
 		});
 		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/ExportParada.html"));
 
@@ -139,7 +142,7 @@ public class ExportParadaController {
 					switch (event.getCode()) {
 					case ENTER -> {
 						event.consume();
-						exportarDatosParadaXML(paradaActual, rangoDeFechas()[0], rangoDeFechas()[1]);
+						exportarDatosParadaXML(paradaActual);
 					}
 					case F1 -> {
 						event.consume();
@@ -161,7 +164,24 @@ public class ExportParadaController {
 		});
 	}
 
-	public void exportarDatosParadaXML(Parada parada, LocalDate fechaInicio, LocalDate fechaFin) {
+	public void exportarDatosParadaXML(Parada parada) {
+	    fechaInicio = desdeDatePicker.getValue();
+	    fechaFin = hastaDatePicker.getValue();
+
+	    if (fechaInicio == null || fechaFin == null) {
+	        alertsView.mostrarError("Error", "Las fechas no pueden estar vacías.");
+	        return;
+	    }
+	    if (fechaFin.isBefore(fechaInicio)) {
+	        alertsView.mostrarError("Error", "La fecha de fin no puede ser anterior a la fecha de inicio.");
+	        return;
+	    }
+
+	    if (parada == null) {
+	        alertsView.mostrarError("Error", "No hay una parada seleccionada.");
+	        return;
+	    }
+
 
 		List<Estancia> estancias = paradaService.obtenerEstancias(parada.getId());
 		List<Estancia> estanciasFiltradas = new ArrayList<>();
@@ -242,29 +262,16 @@ public class ExportParadaController {
 
 			try (OutputStream outputStream = new FileOutputStream(new File(fichero))) {
 				transformer.transform(new DOMSource(doc), new StreamResult(outputStream));
-				mostrarAlerta("Éxito", "Datos exportados correctamente en: " + fichero);
+				alertsView.mostrarInfo("Éxito", "Datos exportados correctamente en: " + fichero);
 			}
 
 		} catch (ParserConfigurationException | IOException | TransformerException e) {
-			mostrarAlerta("Error", "Error al exportar los datos: " + e.getMessage());
+			System.out.println("Error al exportar los datos: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
-	private LocalDate[] rangoDeFechas() {
-		LocalDate[] rangoFechas = new LocalDate[2];
-
-		fechaInicio = desdeDatePicker.getValue();
-		fechaFin = hastaDatePicker.getValue();
-
-		if (fechaInicio == null || fechaFin == null || fechaFin.isBefore(fechaInicio)) {
-			return rangoFechas;
-		}
-
-		rangoFechas[0] = fechaInicio;
-		rangoFechas[1] = fechaFin;
-		return rangoFechas;
-	}
+	
 
 	private void cargarPeregrinosYEstancias(Parada parada, LocalDate fechaInicio, LocalDate fechaFin) {
 		List<Estancia> estancias = paradaService.obtenerEstancias(parada.getId());
@@ -305,11 +312,4 @@ public class ExportParadaController {
 		stageManager.switchScene(FxmlView.RESPARADA);
 	}
 
-	private void mostrarAlerta(String titulo, String mensaje) {
-		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle(titulo);
-		alert.setHeaderText(null);
-		alert.setContentText(mensaje);
-		alert.showAndWait();
-	}
 }
