@@ -18,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -56,7 +57,7 @@ public class CrearParadaController {
 	private Button limpiarButton;
 
 	@FXML
-	private Button volverMenuButton;
+	private Hyperlink volverMenuLink;
 
 	@FXML
 	private Button ayudaButton;
@@ -73,25 +74,25 @@ public class CrearParadaController {
 
 	@Autowired
 	private AyudaService ayudaService;
-	
+
 	@Autowired
 	private ValidacionesService validacionesService;
-	
+
 	@Autowired
 	private AlertsView alertsView;
 
 	@FXML
 	public void initialize() {
 		regionField.textProperty().addListener((observable, oldValue, newValue) -> {
-	        if (newValue.length() > 1) {
-	            regionField.setText(oldValue);
-	        }
-	    });
+			if (newValue.length() > 1) {
+				regionField.setText(oldValue);
+			}
+		});
 		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
 
 		crearButton.setOnAction(event -> registrarParada());
 		limpiarButton.setOnAction(event -> limpiarFormulario());
-		volverMenuButton.setOnAction(event -> volverMenu());
+		volverMenuLink.setOnAction(event -> volverMenu());
 		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/CrearParada.html"));
 
 		configurarAtajos();
@@ -138,41 +139,39 @@ public class CrearParadaController {
 			String correo = correoField.getText();
 			String password = passwordField.getText();
 			String confirmPassword = confirmPasswordField.getText();
-			
-			if(!validacionesService.validarNombreUsuario(usuario)) {
+
+			if (!validacionesService.validarNombreUsuario(usuario)) {
 				return;
 			}
-			
-			if(validacionesService.existeUsuario(usuario)) {
+
+			if (validacionesService.existeUsuario(usuario)) {
 				return;
 			}
-			
-			if(!validacionesService.validarCorreo(correo)) {
+
+			if (!validacionesService.validarCorreo(correo)) {
 				return;
 			}
 			if (!password.equals(confirmPassword)) {
 				alertsView.mostrarError("Error", "Las contraseñas no coinciden");
 				return;
 			}
-			
-			if(!validacionesService.validarNombreParadaYResponsable(nombre)) {
-				return;
-			}
-			
-			if(!validacionesService.validarNombreParadaYResponsable(responsable)) {
-				return;
-			}
-			
-			if(!validacionesService.validarSinEspacios(password)) {
-				return;
-			}
-			
-			if(validacionesService.existeNombreYRegion(nombre, region)) {
-				alertsView.mostrarError("Error", "Ya existe una parda con ese nombre en esa region");
+
+			if (!validacionesService.validarNombreParadaYResponsable(nombre)) {
 				return;
 			}
 
-			
+			if (!validacionesService.validarNombreParadaYResponsable(responsable)) {
+				return;
+			}
+
+			if (!validacionesService.validarSinEspacios(password)) {
+				return;
+			}
+
+			if (validacionesService.existeNombreYRegion(nombre, region)) {
+				alertsView.mostrarError("Error", "Ya existe una parda con ese nombre en esa region");
+				return;
+			}
 
 			paradaService.registrarParada(nombre, region, responsable, usuario, correo, password);
 			alertsView.mostrarInfo("Exitoso", "Parada registrada correctamente");
@@ -195,6 +194,5 @@ public class CrearParadaController {
 	private void volverMenu() {
 		stageManager.switchScene(FxmlView.ADMIN);
 	}
-
 
 }

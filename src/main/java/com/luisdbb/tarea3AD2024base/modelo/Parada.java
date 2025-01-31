@@ -24,7 +24,7 @@ public class Parada implements Serializable {
 	@Column(nullable = false)
 	private String responsable;
 
-	// RELACIONES (AUXILIARES, NO SE MAPEAN) --> ACCESO RAPIDO Y COMODO
+	// RELACIONES (AUXILIARES)
 	@Transient
 	private List<Estancia> estancias;
 
@@ -98,7 +98,7 @@ public class Parada implements Serializable {
 	// METODOS ENITTY
 	@Override
 	public String toString() {
-		return "Nombre: "+nombre + " Region: "+region;
+		return "Nombre: " + nombre + " Region: " + region;
 	}
 
 	@Override

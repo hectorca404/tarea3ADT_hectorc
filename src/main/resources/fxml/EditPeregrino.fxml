@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Hyperlink?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity"
 	minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
@@ -50,6 +51,6 @@
 			</children>
 		</HBox>
 
-		<Button fx:id="volverMenuButton" text="Volver al Menú" alignment="CENTER" />
+		<Hyperlink fx:id="volverMenuLink" text="Volver al Menú." alignment="CENTER" />
 	</children>
 </VBox>

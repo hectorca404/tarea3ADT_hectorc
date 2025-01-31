@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ParadaRepository extends JpaRepository<Parada, Long> {
-    boolean existsByNombreAndRegion(String nombre, char region);
+	boolean existsByNombreAndRegion(String nombre, char region);
 }

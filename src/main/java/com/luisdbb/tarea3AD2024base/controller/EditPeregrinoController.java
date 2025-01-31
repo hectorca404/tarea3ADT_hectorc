@@ -30,6 +30,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -51,7 +52,7 @@ public class EditPeregrinoController {
 	@FXML
 	private Button limpiarButton;
 	@FXML
-	private Button volverMenuButton;
+	private Hyperlink volverMenuLink;
 	@FXML
 	private Button ayudaButton;
 
@@ -73,10 +74,10 @@ public class EditPeregrinoController {
 
 	@Autowired
 	private AyudaService ayudaService;
-	
+
 	@Autowired
 	private ValidacionesService validacionesService;
-	
+
 	@Autowired
 	private AlertsView alertsView;
 
@@ -92,7 +93,7 @@ public class EditPeregrinoController {
 
 		guardarButton.setOnAction(event -> guardarCambios());
 		limpiarButton.setOnAction(event -> limpiarFormulario());
-		volverMenuButton.setOnAction(event -> volverMenu());
+		volverMenuLink.setOnAction(event -> volverMenu());
 		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/EditPeregrino.html"));
 
 		cargarNacionalidades();
@@ -143,8 +144,8 @@ public class EditPeregrinoController {
 	}
 
 	private void cargarNacionalidades() {
-			List<String> nacionalidades = obtenerNacionalidadesXML("/paises.xml");
-			nacionalidadComboBox.setItems(FXCollections.observableArrayList(nacionalidades));
+		List<String> nacionalidades = obtenerNacionalidadesXML("/paises.xml");
+		nacionalidadComboBox.setItems(FXCollections.observableArrayList(nacionalidades));
 	}
 
 	private void guardarCambios() {
@@ -173,10 +174,9 @@ public class EditPeregrinoController {
 			volverMenu();
 		} catch (IllegalArgumentException e) {
 			alertsView.mostrarError("Error", e.getMessage());
+		} catch (Exception e) {
+			alertsView.mostrarError("Error", "Error al guardar los cambios.");
 		}
-		 catch (Exception e) {
-		        alertsView.mostrarError("Error", "Error al guardar los cambios.");
-		    }
 
 	}
 
@@ -190,8 +190,6 @@ public class EditPeregrinoController {
 	private void volverMenu() {
 		stageManager.switchScene(FxmlView.PEREGRINO);
 	}
-
-
 
 	private List<String> obtenerNacionalidadesXML(String rutaArchivo) {
 		List<String> nacionalidades = new ArrayList<>();

@@ -83,7 +83,7 @@ public class ExportPeregrinoController {
 	@FXML
 	private Button exportarButton;
 	@FXML
-	private Button volverMenuButton;
+	private Hyperlink volverMenuLink;
 	@FXML
 	private Button ayudaButton;
 
@@ -105,7 +105,7 @@ public class ExportPeregrinoController {
 
 	@Autowired
 	private AyudaService ayudaService;
-	
+
 	@Autowired
 	private AlertsView alertsView;
 
@@ -121,7 +121,7 @@ public class ExportPeregrinoController {
 		cargarDatosPeregrino(peregrinoActual);
 		cargarParadasYEstancias(peregrinoActual);
 
-		volverMenuButton.setOnAction(event -> volverMenu());
+		volverMenuLink.setOnAction(event -> volverMenu());
 		exportarButton.setOnAction(event -> exportarPeregrinoXML(peregrinoActual));
 		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/ExportPeregrino.html"));
 
@@ -311,7 +311,7 @@ public class ExportPeregrinoController {
 
 			try (OutputStream outputStream = new FileOutputStream(new File(fichero))) {
 				transformer.transform(new DOMSource(doc), new StreamResult(outputStream));
-				alertsView.mostrarInfo("Expotado correctamente", "Peregrino exportado exitosamente a :"+fichero);
+				alertsView.mostrarInfo("Expotado correctamente", "Peregrino exportado exitosamente a :" + fichero);
 			}
 
 		} catch (Exception e) {

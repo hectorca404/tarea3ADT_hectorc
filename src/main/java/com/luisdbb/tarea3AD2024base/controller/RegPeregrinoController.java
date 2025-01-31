@@ -87,10 +87,10 @@ public class RegPeregrinoController {
 
 	@Autowired
 	private AyudaService ayudaService;
-	
+
 	@Autowired
 	private AlertsView alertsView;
-	
+
 	@Autowired
 	private ValidacionesService validacionesService;
 
@@ -143,68 +143,69 @@ public class RegPeregrinoController {
 	}
 
 	private void cargarNacionalidades() {
-			List<String> nacionalidades = obtenerNacionalidadesXML("/paises.xml");
-			nacionalidadComboBox.setItems(FXCollections.observableArrayList(nacionalidades));
+		List<String> nacionalidades = obtenerNacionalidadesXML("/paises.xml");
+		nacionalidadComboBox.setItems(FXCollections.observableArrayList(nacionalidades));
 	}
 
 	private void cargarParadas() {
-			List<Parada> paradas = paradaService.obtenerTodasLasParadas();
-			paradaInicioComboBox.setItems(FXCollections.observableArrayList(paradas));
+		List<Parada> paradas = paradaService.obtenerTodasLasParadas();
+		paradaInicioComboBox.setItems(FXCollections.observableArrayList(paradas));
 	}
 
 	private void registrarPeregrino() {
-		
-			String nombreUsuario = userField.getText();
-			if(validacionesService.existeUsuario(nombreUsuario)) {
-				return;
-			}
-			if(!validacionesService.validarNombreUsuario(nombreUsuario)) {
-				return;
-			}
-				
-			String contrasena = passwordField.getText();
-			String confirmarContrasena = confirmPasswordField.getText();
-			
-			
-			String correo = correoField.getText();
-			if(!validacionesService.validarCorreo(correo)) {
-				return;
-			}
-			
-			String nombre = nombreField.getText();
-			String apellido = apellidoField.getText();
-			if(!validacionesService.validarNombreYApellido(nombre, apellido)) {
-				return;
-			}
-			
-			String nacionalidad = nacionalidadComboBox.getValue();
-			if(!validacionesService.validarComboBox(nacionalidad)) {
-				return;
-			}
-			
-			Parada paradaInicio = paradaInicioComboBox.getValue();
-			if (paradaInicio == null) {
-		        alertsView.mostrarError("Error", "Debes seleccionar una parada de inicio.");
-		        return;
-		    }
-			
-			
-			if (!contrasena.equals(confirmarContrasena)) {
-				alertsView.mostrarError("Error", "Las contraseñas no coinciden");
-				return;
-			}
-			
-			try {
-				peregrinoService.registrarPeregrino(nombreUsuario, contrasena, correo, nombre, apellido, nacionalidad,
-						paradaInicio);
-				alertsView.mostrarInfo("Peregrino Reistrado", "Peregrino registrado correctamente");
-				limpiarFormulario();
 
-			} catch (IllegalArgumentException e) {
-				alertsView.mostrarError("Error", e.getMessage());
-			}
-
+		String nombreUsuario = userField.getText();
+		if (validacionesService.existeUsuario(nombreUsuario)) {
+			return;
 		}
+		if (!validacionesService.validarNombreUsuario(nombreUsuario)) {
+			return;
+		}
+
+		String contrasena = passwordField.getText();
+		String confirmarContrasena = confirmPasswordField.getText();
+
+		String correo = correoField.getText();
+		if (!validacionesService.validarCorreo(correo)) {
+			return;
+		}
+
+		String nombre = nombreField.getText();
+		String apellido = apellidoField.getText();
+		if (!validacionesService.validarNombreYApellido(nombre, apellido)) {
+			return;
+		}
+
+		String nacionalidad = nacionalidadComboBox.getValue();
+		if (!validacionesService.validarComboBox(nacionalidad)) {
+			return;
+		}
+
+		Parada paradaInicio = paradaInicioComboBox.getValue();
+		if (paradaInicio == null) {
+			alertsView.mostrarError("Error", "Debes seleccionar una parada de inicio.");
+			return;
+		}
+		if (!validacionesService.validarSinEspacios(contrasena)) {
+			return;
+		}
+
+		if (!contrasena.equals(confirmarContrasena)) {
+			alertsView.mostrarError("Error", "Las contraseñas no coinciden");
+			return;
+		}
+
+		try {
+			peregrinoService.registrarPeregrino(nombreUsuario, contrasena, correo, nombre, apellido, nacionalidad,
+					paradaInicio);
+			alertsView.mostrarInfo("Peregrino Reistrado", "Peregrino registrado correctamente");
+			limpiarFormulario();
+
+		} catch (IllegalArgumentException e) {
+			alertsView.mostrarError("Error", e.getMessage());
+		}
+
+	}
 
 	private void limpiarFormulario() {
 		userField.clear();
@@ -216,8 +217,6 @@ public class RegPeregrinoController {
 		passwordField.clear();
 		confirmPasswordField.clear();
 	}
-
-	
 
 	private List<String> obtenerNacionalidadesXML(String rutaArchivo) {
 		List<String> nacionalidades = new ArrayList<>();

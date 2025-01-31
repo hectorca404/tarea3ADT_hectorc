@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class AyudaService {
 
-    public void mostrarAyuda(String path) {
-        Platform.runLater(() -> {
-            Stage stage = new Stage();
-            stage.setTitle("Ayuda");
+	public void mostrarAyuda(String path) {
+		Platform.runLater(() -> {
+			Stage stage = new Stage();
+			stage.setTitle("Ayuda");
 
-            WebView webView = new WebView();
-            webView.getEngine().load(getClass().getResource(path).toExternalForm());
+			WebView webView = new WebView();
+			webView.getEngine().load(getClass().getResource(path).toExternalForm());
 
-            Scene scene = new Scene(webView, 800, 600); 
-            stage.setScene(scene);
-            stage.show();
-        });
-    }
+			Scene scene = new Scene(webView, 800, 600);
+			stage.setScene(scene);
+			stage.show();
+		});
+	}
 }

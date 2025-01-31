@@ -76,7 +76,7 @@ public class PrincipalController {
 
 	@Autowired
 	private AyudaService ayudaService;
-	
+
 	@Autowired
 	private ValidacionesService validacionesService;
 
@@ -118,16 +118,14 @@ public class PrincipalController {
 		String username = userLogField.getText();
 		String password = passField.getText();
 
-		
-			Credenciales credenciales = validacionesService.validarCredenciales(username, password);
-			
-			if (credenciales == null) {
-		        return;
-		    }
-			
-			vistaSegunRol(credenciales.getPerfil(), credenciales);
+		Credenciales credenciales = validacionesService.validarCredenciales(username, password);
 
-		
+		if (credenciales == null) {
+			return;
+		}
+
+		vistaSegunRol(credenciales.getPerfil(), credenciales);
+
 	}
 
 	private void vistaSegunRol(Perfil perfil, Credenciales credenciales) {
@@ -145,7 +143,8 @@ public class PrincipalController {
 			sesionService.setParadaActual(parada);
 			menuParada();
 		}
-		default -> {}
+		default -> {
+		}
 		}
 	}
 

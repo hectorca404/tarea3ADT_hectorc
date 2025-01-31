@@ -18,7 +18,7 @@ public interface CredencialesRepository extends JpaRepository<Credenciales, Long
 	Optional<Credenciales> findByPeregrino(Peregrino peregrino);
 
 	List<Credenciales> findByPerfil(Perfil perfil);
-	
+
 	boolean existsByNombreUsuario(String nombreUsuario);
 
 }

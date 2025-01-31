@@ -26,7 +26,6 @@ public class CredencialesService {
 		this.credencialesRepository = credencialesRepository;
 	}
 
-
 	public Credenciales obtenerCredencialesPeregrino(Peregrino peregrino) {
 		return credencialesRepository.findByPeregrino(peregrino)
 				.orElseThrow(() -> new IllegalArgumentException("No se encontraron credenciales parada el peregrino"));
@@ -43,6 +42,5 @@ public class CredencialesService {
 	public Optional<Credenciales> obtenerCredencialPorUsuario(String nombreUsuario) {
 		return credencialesRepository.findByNombreUsuario(nombreUsuario);
 	}
-	
 
 }

@@ -7,59 +7,61 @@ import java.util.Objects;
 
 @Embeddable
 public class ParadasPeregrinosId implements Serializable {
-    
-    private LocalDate fecha;
-    private Long peregrino;
-    private Long parada;
 
-    // CONTRUCTORES
-    public ParadasPeregrinosId() {}
+	private LocalDate fecha;
+	private Long peregrino;
+	private Long parada;
 
-    public ParadasPeregrinosId(Long peregrino, Long parada) {
-        this.fecha = LocalDate.now();
-        this.peregrino = peregrino;
-        this.parada = parada;
-    }
+	// CONTRUCTORES
+	public ParadasPeregrinosId() {
+	}
 
-    // GETTERS Y SETTERS
-    public LocalDate getFecha() {
-        return fecha;
-    }
+	public ParadasPeregrinosId(Long peregrino, Long parada) {
+		this.fecha = LocalDate.now();
+		this.peregrino = peregrino;
+		this.parada = parada;
+	}
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
+	// GETTERS Y SETTERS
+	public LocalDate getFecha() {
+		return fecha;
+	}
 
-    public Long getPeregrino() {
-        return peregrino;
-    }
+	public void setFecha(LocalDate fecha) {
+		this.fecha = fecha;
+	}
 
-    public void setPeregrino(Long peregrino) {
-        this.peregrino = peregrino;
-    }
+	public Long getPeregrino() {
+		return peregrino;
+	}
 
-    public Long getParada() {
-        return parada;
-    }
+	public void setPeregrino(Long peregrino) {
+		this.peregrino = peregrino;
+	}
 
-    public void setParada(Long parada) {
-        this.parada = parada;
-    }
+	public Long getParada() {
+		return parada;
+	}
 
-    //METODOS CLASE ENTITY
-    
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ParadasPeregrinosId that = (ParadasPeregrinosId) o;
-        return Objects.equals(fecha, that.fecha) &&
-               Objects.equals(peregrino, that.peregrino) &&
-               Objects.equals(parada, that.parada);
-    }
+	public void setParada(Long parada) {
+		this.parada = parada;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(fecha, peregrino, parada);
-    }
+	// METODOS CLASE ENTITY
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		ParadasPeregrinosId that = (ParadasPeregrinosId) o;
+		return Objects.equals(fecha, that.fecha) && Objects.equals(peregrino, that.peregrino)
+				&& Objects.equals(parada, that.parada);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(fecha, peregrino, parada);
+	}
 }

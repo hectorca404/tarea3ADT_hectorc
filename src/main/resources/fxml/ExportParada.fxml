@@ -3,20 +3,16 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.image.ImageView?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity"
-	minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
-	prefWidth="800.0" spacing="20.0" stylesheets="@../styles/Styles.css"
-	xmlns="http://javafx.com/javafx/23.0.1"
-	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="com.luisdbb.tarea3AD2024base.controller.ExportParadaController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.luisdbb.tarea3AD2024base.controller.ExportParadaController">
 
 	<padding>
 		<Insets bottom="20.0" left="50.0" right="50.0" top="20.0" />
@@ -27,7 +23,7 @@
 			<children>
 				<Label text="Exportar Datos Parada" />
 				<Region HBox.hgrow="ALWAYS" />
-				<Button fx:id="ayudaButton" styleClass="help-button" minHeight="25.0" minWidth="25.0">
+				<Button fx:id="ayudaButton" minHeight="25.0" minWidth="25.0" styleClass="help-button">
 					<graphic>
 						<ImageView fx:id="ayudaIcon" fitHeight="20.0" fitWidth="20.0" />
 					</graphic>
@@ -45,22 +41,22 @@
 				</HBox>
 				<HBox alignment="CENTER_LEFT" spacing="10.0">
 					<children>
-						<Label text="Hasta:" />
-						<DatePicker fx:id="hastaDatePicker" editable="false" prefHeight="40.0" prefWidth="293.0" />
+						<Label text="Hasta: " />
+						<DatePicker fx:id="hastaDatePicker" editable="false" prefHeight="40.0" prefWidth="292.0" />
 					</children>
 				</HBox>
 			</children>
 		</VBox>
 
-		<Label text="Peregrinos sellados en la fecha indicada:" />
+		<Label text="Peregrinos sellados en el rango de fechas indicado:" />
 
-		<VBox maxWidth="-Infinity" prefHeight="200.0" prefWidth="270.0">
+		<VBox alignment="TOP_CENTER" maxWidth="-Infinity" prefHeight="111.0" prefWidth="828.0">
 			<children>
-				<TableView fx:id="tablaPeregrinos" maxWidth="-Infinity" prefHeight="152.0" prefWidth="306.0">
+				<TableView fx:id="tablaPeregrinos" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="104.0" prefWidth="300.0">
 					<columns>
-						<TableColumn fx:id="peregrinoColumn" prefWidth="120.0" text="Peregrino" />
-						<TableColumn fx:id="estanciaColumn" text="Estancia" />
-						<TableColumn fx:id="vipColumn" prefWidth="70.0" text="VIP" />
+						<TableColumn fx:id="peregrinoColumn" prefWidth="100.0" text="Peregrino" />
+						<TableColumn fx:id="estanciaColumn" prefWidth="100.0" text="Estancia" />
+						<TableColumn fx:id="vipColumn" prefWidth="100.0" text="VIP" />
 					</columns>
 				</TableView>
 			</children>
@@ -70,9 +66,8 @@
 			<children>
 				<Button fx:id="exportarButton" text="Exportar" />
 				<Button fx:id="limpiarButton" text="Limpiar" />
-				<Button fx:id="volverMenuButton" alignment="CENTER" text="Volver al Menú" />
 			</children>
 		</HBox>
+		<Hyperlink fx:id="volverMenuLink" alignment="CENTER" text="Volver al Menú." />
 	</children>
 </VBox>
-

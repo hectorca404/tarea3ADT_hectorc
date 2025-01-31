@@ -81,7 +81,7 @@ public class ExportParadaController {
 	private Button limpiarButton;
 
 	@FXML
-	private Button volverMenuButton;
+	private Hyperlink volverMenuLink;
 
 	@FXML
 	private Button ayudaButton;
@@ -101,7 +101,7 @@ public class ExportParadaController {
 
 	@Autowired
 	private AyudaService ayudaService;
-	
+
 	@Autowired
 	private AlertsView alertsView;
 
@@ -121,7 +121,7 @@ public class ExportParadaController {
 
 		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
 
-		volverMenuButton.setOnAction(event -> volverMenu());
+		volverMenuLink.setOnAction(event -> volverMenu());
 		limpiarButton.setOnAction(event -> limpiarFormulario());
 
 		exportarButton.setOnAction(event -> {
@@ -165,23 +165,22 @@ public class ExportParadaController {
 	}
 
 	public void exportarDatosParadaXML(Parada parada) {
-	    fechaInicio = desdeDatePicker.getValue();
-	    fechaFin = hastaDatePicker.getValue();
+		fechaInicio = desdeDatePicker.getValue();
+		fechaFin = hastaDatePicker.getValue();
 
-	    if (fechaInicio == null || fechaFin == null) {
-	        alertsView.mostrarError("Error", "Las fechas no pueden estar vacías.");
-	        return;
-	    }
-	    if (fechaFin.isBefore(fechaInicio)) {
-	        alertsView.mostrarError("Error", "La fecha de fin no puede ser anterior a la fecha de inicio.");
-	        return;
-	    }
+		if (fechaInicio == null || fechaFin == null) {
+			alertsView.mostrarError("Error", "Las fechas no pueden estar vacías.");
+			return;
+		}
+		if (fechaFin.isBefore(fechaInicio)) {
+			alertsView.mostrarError("Error", "La fecha de fin no puede ser anterior a la fecha de inicio.");
+			return;
+		}
 
-	    if (parada == null) {
-	        alertsView.mostrarError("Error", "No hay una parada seleccionada.");
-	        return;
-	    }
-
+		if (parada == null) {
+			alertsView.mostrarError("Error", "No hay una parada seleccionada.");
+			return;
+		}
 
 		List<Estancia> estancias = paradaService.obtenerEstancias(parada.getId());
 		List<Estancia> estanciasFiltradas = new ArrayList<>();
@@ -271,8 +270,6 @@ public class ExportParadaController {
 		}
 	}
 
-	
-
 	private void cargarPeregrinosYEstancias(Parada parada, LocalDate fechaInicio, LocalDate fechaFin) {
 		List<Estancia> estancias = paradaService.obtenerEstancias(parada.getId());
 
@@ -290,13 +287,21 @@ public class ExportParadaController {
 		vipColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().isVip() ? "Si" : "No"));
 
 		List<Estancia> estanciass = paradaService.obtenerEstancias(parada.getId());
-		System.out.println("Número total de estancias: " + estanciass.size());
 
 	}
 
 	private void actualizarTablaConFechas() {
 		LocalDate fechaInicio = desdeDatePicker.getValue();
 		LocalDate fechaFin = hastaDatePicker.getValue();
+
+		if (fechaInicio == null || fechaFin == null) {
+			return;
+		}
+
+		if (fechaFin.isBefore(fechaInicio)) {
+			alertsView.mostrarError("Error", "La fecha de fin no puede ser antes a la fecha de inicio.");
+			return;
+		}
 
 		cargarPeregrinosYEstancias(paradaActual, fechaInicio, fechaFin);
 	}

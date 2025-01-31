@@ -23,6 +23,7 @@ import com.luisdbb.tarea3AD2024base.services.ParadaService;
 import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
 import com.luisdbb.tarea3AD2024base.services.SesionService;
 import com.luisdbb.tarea3AD2024base.services.ValidacionesService;
+import com.luisdbb.tarea3AD2024base.view.AlertsView;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.collections.FXCollections;
@@ -32,6 +33,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -55,7 +57,7 @@ public class SellarAlojarController {
 	private Button limpiarButton;
 
 	@FXML
-	private Button volverMenuButton;
+	private Hyperlink volverMenuLink;
 
 	@FXML
 	private Button ayudaButton;
@@ -78,7 +80,10 @@ public class SellarAlojarController {
 
 	@Autowired
 	private AyudaService ayudaService;
-	
+
+	@Autowired
+	private AlertsView alertsView;
+
 	@Autowired
 	private ValidacionesService validacionesService;
 
@@ -101,7 +106,7 @@ public class SellarAlojarController {
 
 		cargarPeregrinosComboBox();
 
-		volverMenuButton.setOnAction(event -> volverLogin());
+		volverMenuLink.setOnAction(event -> volverLogin());
 
 		limpiarButton.setOnAction(event -> limpiarFormulario());
 
@@ -169,66 +174,67 @@ public class SellarAlojarController {
 	}
 
 	private void sellarAlojar() {
-	    String nombreUsuarioSeleccionado = peregrinoComboBox.getSelectionModel().getSelectedItem();
+		String nombreUsuarioSeleccionado = peregrinoComboBox.getSelectionModel().getSelectedItem();
 
-	    if (nombreUsuarioSeleccionado == null) {
-	        mostrarAlerta("Error", "Hay que seleccionar un usuario.");
-	        return;
-	    }
+		if (nombreUsuarioSeleccionado == null) {
+			alertsView.mostrarError("Error", "Hay que seleccionar un usuario.");
+			return;
+		}
 
-	    Optional<Credenciales> credencialesOp = credencialesService.obtenerCredencialPorUsuario(nombreUsuarioSeleccionado);
+		Optional<Credenciales> credencialesOp = credencialesService
+				.obtenerCredencialPorUsuario(nombreUsuarioSeleccionado);
 
-	    if (credencialesOp.isEmpty()) {
-	        mostrarAlerta("Error", "Usuario no encontrado.");
-	        return;
-	    }
+		if (credencialesOp.isEmpty()) {
+			alertsView.mostrarError("Error", "Usuario no encontrado.");
+			return;
+		}
 
-	    Credenciales credenciales = credencialesOp.get();
-	    Peregrino peregrino = credenciales.getPeregrino();
-	    Parada paradaActual = sesionService.getParadaActual();
-	    LocalDate fechaHoy = LocalDate.now(); // 📌 Definir la fecha actual correctamente
+		Credenciales credenciales = credencialesOp.get();
+		Peregrino peregrino = credenciales.getPeregrino();
+		Parada paradaActual = sesionService.getParadaActual();
+		LocalDate fechaHoy = LocalDate.now();
 
-	    // 📌 🔹 Verificar si ya selló en esta parada hoy
-	    boolean yaSellado = validacionesService.yaHaSelladoHoy(peregrino, paradaActual, fechaHoy);
-	    if (yaSellado) {
-	        mostrarAlerta("Error", "Este peregrino ya ha sellado en esta parada hoy.");
-	        return;
-	    }
+		boolean yaSellado = validacionesService.yaSelladoHoy(peregrino, paradaActual, fechaHoy);
 
-	    Carnet carnet = peregrino.getCarnet();
-	    carnet.setDistancia(carnet.getDistancia() + 5);
+		boolean yaAlojado = validacionesService.yaAlojoHoy(peregrino, paradaActual, fechaHoy);
 
-	    ParadasPeregrinos paradasPeregrinos = new ParadasPeregrinos(peregrino, paradaActual);
-	    paradaService.guardarParadasPeregrinos(paradasPeregrinos);
+		if (yaSellado && !alojarCheckBox.isSelected()) {
+			alertsView.mostrarError("Error", "Este peregrino ya ha sellado en esta parada hoy.");
+			return;
+		}
 
-	    if (alojarCheckBox.isSelected()) {
-	        boolean esVip = vipCheckBox.isSelected();
+		if (yaAlojado && alojarCheckBox.isSelected()) {
+			alertsView.mostrarError("Error", "Este peregrino ya se ha alojado en esta parada hoy.");
+			return;
+		}
 
-	        Estancia estancia = new Estancia();
-	        estancia.setVip(esVip);
-	        estancia.setParada(paradaActual);
-	        estancia.setPeregrino(peregrino);
+		Carnet carnet = peregrino.getCarnet();
 
-	        estanciaService.guardarEstancia(estancia);
+		if (!yaSellado) {
+			carnet.setDistancia(carnet.getDistancia() + 5);
+			ParadasPeregrinos paradasPeregrinos = new ParadasPeregrinos(peregrino, paradaActual);
+			paradaService.guardarParadasPeregrinos(paradasPeregrinos);
+		}
 
-	        if (esVip) {
-	            carnet.setnVips(carnet.getnVips() + 1);
-	        }
-	    }
+		if (alojarCheckBox.isSelected() && !yaAlojado) {
+			boolean esVip = vipCheckBox.isSelected();
 
-	    peregrinoService.actualizarCarnet(carnet);
+			Estancia estancia = new Estancia();
+			estancia.setVip(esVip);
+			estancia.setParada(paradaActual);
+			estancia.setPeregrino(peregrino);
 
-	    mostrarAlerta("Éxito", "Sellado/Alojamiento completado.");
-	    limpiarFormulario();
-	}
+			estanciaService.guardarEstancia(estancia);
 
+			if (esVip) {
+				carnet.setnVips(carnet.getnVips() + 1);
+			}
+		}
 
-	private void mostrarAlerta(String titulo, String mensaje) {
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle(titulo);
-		alert.setHeaderText(null);
-		alert.setContentText(mensaje);
-		alert.showAndWait();
+		peregrinoService.actualizarCarnet(carnet);
+
+		alertsView.mostrarInfo("Éxito", "Sellado/Alojamiento completado.");
+		limpiarFormulario();
 	}
 
 }

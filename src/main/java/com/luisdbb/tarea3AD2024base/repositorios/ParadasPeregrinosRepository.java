@@ -13,9 +13,8 @@ import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
 
 @Repository
 public interface ParadasPeregrinosRepository extends JpaRepository<ParadasPeregrinos, Long> {
-    List<ParadasPeregrinos> findByPeregrinoId(Long peregrinoId);
-    
-    boolean existsById(ParadasPeregrinosId id);
-   
-    
+	List<ParadasPeregrinos> findByPeregrinoId(Long peregrinoId);
+
+	boolean existsById(ParadasPeregrinosId id);
+
 }
