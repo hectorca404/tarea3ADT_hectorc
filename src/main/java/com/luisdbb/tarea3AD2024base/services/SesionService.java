@@ -1,9 +1,9 @@
 package com.luisdbb.tarea3AD2024base.services;
 
-import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
-import com.luisdbb.tarea3AD2024base.modelo.Parada;
-import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
 import org.springframework.stereotype.Service;
+
+import com.luisdbb.tarea3AD2024base.modelo.Parada;
+import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
 
 @Service
 public class SesionService {

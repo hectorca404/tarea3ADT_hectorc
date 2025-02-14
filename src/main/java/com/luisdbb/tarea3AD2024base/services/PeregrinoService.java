@@ -1,14 +1,21 @@
 package com.luisdbb.tarea3AD2024base.services;
 
-import com.luisdbb.tarea3AD2024base.modelo.*;
-import com.luisdbb.tarea3AD2024base.repositorios.*;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.luisdbb.tarea3AD2024base.modelo.Carnet;
+import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
+import com.luisdbb.tarea3AD2024base.modelo.Estancia;
+import com.luisdbb.tarea3AD2024base.modelo.Parada;
+import com.luisdbb.tarea3AD2024base.modelo.ParadasPeregrinos;
+import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
+import com.luisdbb.tarea3AD2024base.modelo.Perfil;
+import com.luisdbb.tarea3AD2024base.repositorios.CredencialesRepository;
+import com.luisdbb.tarea3AD2024base.repositorios.EstanciaRepository;
+import com.luisdbb.tarea3AD2024base.repositorios.ParadasPeregrinosRepository;
+import com.luisdbb.tarea3AD2024base.repositorios.PeregrinoRepository;
 
 @Service
 public class PeregrinoService {

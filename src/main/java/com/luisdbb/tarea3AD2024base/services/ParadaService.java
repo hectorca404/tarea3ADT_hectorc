@@ -1,20 +1,19 @@
 package com.luisdbb.tarea3AD2024base.services;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
 import com.luisdbb.tarea3AD2024base.modelo.Estancia;
 import com.luisdbb.tarea3AD2024base.modelo.Parada;
 import com.luisdbb.tarea3AD2024base.modelo.ParadasPeregrinos;
-import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
 import com.luisdbb.tarea3AD2024base.modelo.Perfil;
 import com.luisdbb.tarea3AD2024base.repositorios.CredencialesRepository;
 import com.luisdbb.tarea3AD2024base.repositorios.EstanciaRepository;
 import com.luisdbb.tarea3AD2024base.repositorios.ParadaRepository;
 import com.luisdbb.tarea3AD2024base.repositorios.ParadasPeregrinosRepository;
-
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ParadaService {

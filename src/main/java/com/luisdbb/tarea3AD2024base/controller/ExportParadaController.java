@@ -1,50 +1,19 @@
 package com.luisdbb.tarea3AD2024base.controller;
-
-import com.luisdbb.tarea3AD2024base.config.StageManager;
-import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
-import com.luisdbb.tarea3AD2024base.modelo.Estancia;
-import com.luisdbb.tarea3AD2024base.modelo.Parada;
-import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
-import com.luisdbb.tarea3AD2024base.services.AyudaService;
-import com.luisdbb.tarea3AD2024base.services.CredencialesService;
-import com.luisdbb.tarea3AD2024base.services.ParadaService;
-import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
-import com.luisdbb.tarea3AD2024base.services.SesionService;
-import com.luisdbb.tarea3AD2024base.view.AlertsView;
-import com.luisdbb.tarea3AD2024base.view.FxmlView;
-
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
-import javafx.util.Callback;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Controller;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import java.io.File;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -52,10 +21,43 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Controller;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import com.luisdbb.tarea3AD2024base.config.StageManager;
+import com.luisdbb.tarea3AD2024base.modelo.Estancia;
+import com.luisdbb.tarea3AD2024base.modelo.Parada;
+import com.luisdbb.tarea3AD2024base.services.AyudaService;
+import com.luisdbb.tarea3AD2024base.services.ParadaService;
+import com.luisdbb.tarea3AD2024base.services.SesionService;
+import com.luisdbb.tarea3AD2024base.view.AlertsView;
+import com.luisdbb.tarea3AD2024base.view.FxmlView;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 @Controller
 public class ExportParadaController {
@@ -104,6 +106,9 @@ public class ExportParadaController {
 
 	@Autowired
 	private AlertsView alertsView;
+	
+	@Autowired
+    private DataSource dataSource;
 
 	private LocalDate fechaInicio = null;
 	private LocalDate fechaFin = null;
@@ -126,6 +131,7 @@ public class ExportParadaController {
 
 		exportarButton.setOnAction(event -> {
 			exportarDatosParadaXML(paradaActual);
+			exportarParadaPDF(paradaActual);
 		});
 		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/ExportParada.html"));
 
@@ -315,6 +321,93 @@ public class ExportParadaController {
 	@FXML
 	private void volverMenu() {
 		stageManager.switchScene(FxmlView.RESPARADA);
+	}
+
+	public void exportarParadaPDF(Parada parada) {
+		fechaInicio = desdeDatePicker.getValue();
+		fechaFin = hastaDatePicker.getValue();
+
+		if (fechaInicio == null || fechaFin == null) {
+			alertsView.mostrarError("Error", "Las fechas no pueden estar vacías.");
+			return;
+		}
+		if (fechaFin.isBefore(fechaInicio)) {
+			alertsView.mostrarError("Error", "La fecha de fin no puede ser anterior a la fecha de inicio.");
+			return;
+		}
+
+		List<Estancia> estancias = paradaService.obtenerEstancias(parada.getId());
+		List<Estancia> estanciasFiltradas = new ArrayList<>();
+
+		for (Estancia estancia : estancias) {
+			if (estancia.getFecha() != null && !estancia.getFecha().isBefore(fechaInicio)
+					&& !estancia.getFecha().isAfter(fechaFin)) {
+				estanciasFiltradas.add(estancia);
+			}
+		}
+		long totalPeregrinos = estanciasFiltradas.stream().map(estancia -> estancia.getPeregrino().getId()).distinct()
+				.count();
+
+		try {
+			File reporteFile = new ClassPathResource("ParadaInforme/Parada.jasper").getFile();
+			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reporteFile);
+
+			List<Map<String, Object>> listaDatos = new ArrayList<>();
+			for (Estancia estancia : estanciasFiltradas) {
+				Map<String, Object> row = new HashMap<>();
+				row.put("nombre", estancia.getPeregrino().getNombre());
+				row.put("apellido", estancia.getPeregrino().getApellido());
+				row.put("fecha_estancia", java.sql.Date.valueOf(estancia.getFecha()));
+				row.put("vip", estancia.isVip());
+				row.put("nombre_parada", paradaActual.getNombre());
+				row.put("total_peregrinos", totalPeregrinos);
+				listaDatos.add(row);
+			}
+
+			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(listaDatos);
+
+			Map<String, Object> parametros = new HashMap<>();
+			parametros.put("nombre_parada", parada.getNombre());
+			parametros.put("total_peregrinos", (int) totalPeregrinos);
+
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
+
+			File carpetaExportacion = new File("src/main/resources/ParadaInforme");
+			if (!carpetaExportacion.exists()) {
+				carpetaExportacion.mkdirs();
+			}
+
+			String nombreArchivo = "Parada_" + parada.getNombre().replaceAll(" ", "_") + "_" + fechaInicio + "_"
+					+ fechaFin + ".pdf";
+			File archivoPDF = new File(carpetaExportacion, nombreArchivo);
+
+			JasperExportManager.exportReportToPdfFile(jasperPrint, archivoPDF.getAbsolutePath());
+			mostrarPDF(archivoPDF);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			alertsView.mostrarError("Error", "No se pudo generar el informe: " + e.getMessage());
+		}
+	}
+
+	public void mostrarPDF(File archivoPDF) {
+		try {
+			String ruta = archivoPDF.getAbsolutePath();
+			String os = System.getProperty("os.name").toLowerCase();
+
+			if (os.contains("win")) {
+				Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + ruta);
+			} else if (os.contains("mac")) {
+				Runtime.getRuntime().exec("open " + ruta);
+			} else if (os.contains("nix") || os.contains("nux")) {
+				Runtime.getRuntime().exec("xdg-open " + ruta);
+			} else {
+				System.out.println("Sistema operativo no soportado para abrir el PDF.");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Error al lanzar el proceso del PDF: " + e.getMessage());
+		}
 	}
 
 }

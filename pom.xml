@@ -62,6 +62,19 @@
 			<artifactId>javafx-web</artifactId>
 			<version>23</version>
 		</dependency>
+		
+		<dependency>
+        <groupId>net.sf.jasperreports</groupId>
+        <artifactId>jasperreports</artifactId>
+        <version>6.20.0</version> 
+    </dependency>
+    
+    <dependency>
+    <groupId>org.apache.pdfbox</groupId>
+    <artifactId>pdfbox</artifactId>
+    <version>2.0.27</version>
+</dependency>
+
 
 
 	</dependencies>

@@ -1,9 +1,10 @@
 package com.luisdbb.tarea3AD2024base.modelo;
 
-import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
+
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class ParadasPeregrinosId implements Serializable {

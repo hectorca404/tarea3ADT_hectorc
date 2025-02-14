@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
 import com.luisdbb.tarea3AD2024base.modelo.Parada;
+import com.luisdbb.tarea3AD2024base.modelo.ParadasPeregrinosId;
 import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
 import com.luisdbb.tarea3AD2024base.modelo.Perfil;
-import com.luisdbb.tarea3AD2024base.modelo.ParadasPeregrinosId;
 import com.luisdbb.tarea3AD2024base.repositorios.CredencialesRepository;
 import com.luisdbb.tarea3AD2024base.repositorios.EstanciaRepository;
 import com.luisdbb.tarea3AD2024base.repositorios.ParadaRepository;

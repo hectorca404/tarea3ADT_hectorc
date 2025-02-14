@@ -4,27 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
-import com.luisdbb.tarea3AD2024base.config.SpringFXMLLoader;
 import com.luisdbb.tarea3AD2024base.config.StageManager;
 import com.luisdbb.tarea3AD2024base.services.AyudaService;
-import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 import com.luisdbb.tarea3AD2024base.services.ParadaService;
 import com.luisdbb.tarea3AD2024base.services.ValidacionesService;
 import com.luisdbb.tarea3AD2024base.view.AlertsView;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
 
 @Controller
 public class CrearParadaController {

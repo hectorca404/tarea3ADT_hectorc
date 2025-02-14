@@ -1,10 +1,11 @@
 package com.luisdbb.tarea3AD2024base.services;
 
+import org.springframework.stereotype.Service;
+
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import org.springframework.stereotype.Service;
 
 @Service
 public class AyudaService {
@@ -22,4 +23,7 @@ public class AyudaService {
 			stage.show();
 		});
 	}
+	
+	
+
 }
