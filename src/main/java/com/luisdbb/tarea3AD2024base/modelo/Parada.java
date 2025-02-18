@@ -5,13 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 @Table(name = "paradas")
@@ -30,6 +33,11 @@ public class Parada implements Serializable {
 
 	@Column(nullable = false)
 	private String responsable;
+
+	@ElementCollection
+	@CollectionTable(name = "parada_servicio", joinColumns = @JoinColumn(name = "parada_id"))
+	@Column(name = "servicio_id")
+	private List<Long> serviciosIds;
 
 	// RELACIONES (AUXILIARES)
 	@Transient
@@ -50,6 +58,7 @@ public class Parada implements Serializable {
 		this.responsable = responsable;
 		this.estancias = new ArrayList<>();
 		this.peregrinos = new ArrayList<>();
+		this.serviciosIds = new ArrayList<>();
 	}
 
 	// GETTERS Y SETTERS
@@ -100,6 +109,14 @@ public class Parada implements Serializable {
 
 	public void setPeregrinos(List<Peregrino> peregrinos) {
 		this.peregrinos = peregrinos;
+	}
+
+	public List<Long> getServiciosIds() {
+		return serviciosIds;
+	}
+
+	public void setServiciosIds(List<Long> serviciosIds) {
+		this.serviciosIds = serviciosIds;
 	}
 
 	// METODOS ENITTY

@@ -36,5 +36,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/db4o-8.0.224.15975-core-java5.jar"/>
+	<classpathentry kind="lib" path="lib/objectdb-2.9.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
