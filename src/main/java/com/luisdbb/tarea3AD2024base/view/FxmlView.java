@@ -113,6 +113,50 @@ public enum FxmlView {
 			return "/fxml/SellarAlojar.fxml";
 		}
 	},
+	MENUSERVICIOS {
+		@Override
+		public String getTitle() {
+			return "Menu servicios";
+		}
+
+		@Override
+		public String getFxmlFile() {
+			return "/fxml/MenuServices.fxml";
+		}
+	},
+	VERENVIOS {
+		@Override
+		public String getTitle() {
+			return "Envios Realizados Actualmente";
+		}
+
+		@Override
+		public String getFxmlFile() {
+			return "/fxml/VerEnvios.fxml";
+		}
+	},
+	CREARSERVICIO {
+		@Override
+		public String getTitle() {
+			return "Crear Servicio";
+		}
+
+		@Override
+		public String getFxmlFile() {
+			return "/fxml/CrearServicio.fxml";
+		}
+	},
+	EDITARSERVICIO {
+		@Override
+		public String getTitle() {
+			return "Editar Servicio";
+		}
+
+		@Override
+		public String getFxmlFile() {
+			return "/fxml/EditarServicio.fxml";
+		}
+	},
 
 	PRINCIPAL {
 		@Override

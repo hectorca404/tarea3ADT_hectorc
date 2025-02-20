@@ -39,6 +39,16 @@
 						<ImageView fx:id="crearParadaIcon" fitHeight="20.0" fitWidth="20.0" />
 					</graphic>
 				</Button>
+				<Button fx:id="serviciosButton" prefWidth="200.0" text="Servicios">
+					<graphic>
+						<ImageView fx:id="serviciosIcon" fitHeight="20.0" fitWidth="20.0" />
+					</graphic>
+				</Button>
+				<Button fx:id="verEnviosButton" prefWidth="200.0" text="Ver Envios">
+					<graphic>
+						<ImageView fx:id="verEnviosIcon" fitHeight="20.0" fitWidth="20.0" />
+					</graphic>
+				</Button>
 				<Button fx:id="cerrarSesionButton" prefWidth="200.0" text="Cerrar Sesión">
 					<graphic>
 						<ImageView fx:id="cerrarSesionIcon" fitHeight="20.0" fitWidth="20.0" />

@@ -22,6 +22,12 @@ public class AdminController {
 
 	@FXML
 	private Button cerrarSesionButton;
+	
+	@FXML
+	private Button serviciosButton;
+	
+	@FXML
+	private Button verEnviosButton;
 
 	@FXML
 	private Button ayudaButton;
@@ -31,9 +37,15 @@ public class AdminController {
 
 	@FXML
 	private ImageView cerrarSesionIcon;
+	
+	@FXML
+	private ImageView serviciosIcon;
 
 	@FXML
 	private ImageView ayudaIcon;
+	
+	@FXML 
+	private ImageView verEnviosIcon;
 
 	@Lazy
 	@Autowired
@@ -47,10 +59,15 @@ public class AdminController {
 		crearParadaIcon.setImage(new Image(getClass().getResourceAsStream("/images/parada.png")));
 		cerrarSesionIcon.setImage(new Image(getClass().getResourceAsStream("/images/cerrarSesion.png")));
 		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
+		serviciosIcon.setImage(new Image(getClass().getResourceAsStream("/images/servicio.png")));
+		verEnviosIcon.setImage(new Image (getClass().getResourceAsStream("/images/abierto.png")));
+	    verEnviosButton.setOnAction(event -> verEnvio());
+
 
 		crearParadaButton.setOnAction(event -> crearParada());
 		cerrarSesionButton.setOnAction(event -> cerrarSesion());
 		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/Admin.html"));
+		serviciosButton.setOnAction(event -> mostrarMenuServicios());
 
 		configurarAtajo();
 	}
@@ -70,6 +87,13 @@ public class AdminController {
 
 	private void crearParada() {
 		stageManager.switchScene(FxmlView.CREARPARADA);
+	}
+	
+	private void mostrarMenuServicios() {
+		stageManager.switchScene(FxmlView.MENUSERVICIOS);
+	}
+	 private void verEnvio() {
+	        stageManager.switchScene(FxmlView.VERENVIOS);
 	}
 
 	private void cerrarSesion() {

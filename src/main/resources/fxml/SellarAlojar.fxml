@@ -4,71 +4,118 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity"
-	minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
-	prefWidth="800.0" spacing="20.0" stylesheets="@../styles/Styles.css"
-	xmlns="http://javafx.com/javafx/23.0.1"
-	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="com.luisdbb.tarea3AD2024base.controller.SellarAlojarController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.luisdbb.tarea3AD2024base.controller.SellarAlojarController">
 
-	<padding>
-		<Insets bottom="20.0" left="50.0" right="50.0" top="20.0" />
-	</padding>
+    <padding>
+        <Insets bottom="20.0" left="50.0" right="50.0" top="20.0" />
+    </padding>
 
-	<children>
-		<HBox alignment="CENTER_LEFT" prefHeight="51.0" prefWidth="760.0"
-			spacing="10.0">
-			<children>
-				<Label text="Sellar Alojar" />
-				<Region HBox.hgrow="ALWAYS" />
-				<Button fx:id="ayudaButton" styleClass="help-button"
-					minHeight="25.0" minWidth="25.0">
-					<graphic>
-						<ImageView fx:id="ayudaIcon" fitHeight="20.0"
-							fitWidth="20.0" />
-					</graphic>
-				</Button>
-			</children>
-		</HBox>
+    <children>
+        <HBox alignment="CENTER_LEFT" prefHeight="51.0" prefWidth="760.0" spacing="10.0">
+            <children>
+                <Label text="Sellar Alojar" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="ayudaButton" minHeight="25.0" minWidth="25.0" styleClass="help-button">
+                    <graphic>
+                        <ImageView fx:id="ayudaIcon" fitHeight="20.0" fitWidth="20.0" />
+                    </graphic>
+                </Button>
+            </children>
+        </HBox>
+        <HBox spacing="20.0">
+            <VBox alignment="CENTER_LEFT" spacing="10.0">
+                <children>
+                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                        <children>
+                            <Label text="Seleccionar Peregrino:" />
+                            <ComboBox fx:id="peregrinoComboBox" promptText="Seleccionar peregrino" />
+                        </children>
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                        <children>
+                            <CheckBox fx:id="alojarCheckBox" text="Alojar al peregrino" />
+                        </children>
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                        <children>
+                            <CheckBox fx:id="vipCheckBox" disable="true" text="¿VIP?" />
+                        </children>
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                        <children>
+                            <Label text="Servicios Disponibles:" />
+                            <ComboBox fx:id="serviciosComboBox" disable="true" promptText="Seleccione los servicios" />
+                        </children>
+                    </HBox>
+                </children>
+            </VBox>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <children>
+                <Label text="Modo de Pago:" />
+                <RadioButton fx:id="efectivoRadio" disable="true" text="Efectivo"/>
+                <RadioButton fx:id="tarjetaRadio" disable="true" text="Tarjeta" />
+                <RadioButton fx:id="bizumRadio" disable="true" text="Bizum" />
+            <Label text="Precio Total: ">
+               <HBox.margin>
+                  <Insets left="50.0" />
+               </HBox.margin>
+            </Label>
+            </children>
+        </HBox>
+        <VBox spacing="10.0">
+            <HBox spacing="10.0">
+                <children>
+                    <Label text="Envío a Casa (10€):" />
+                    <CheckBox fx:id="envioCheckBox" disable="true" text="Habilitar Envío" />
+                </children>
+            </HBox>
 
-		<VBox alignment="CENTER_LEFT" prefHeight="225.0"
-			prefWidth="600.0" spacing="10.0">
-			<children>
-				<HBox alignment="CENTER_LEFT" spacing="10.0">
-					<children>
-						<Label text="Seleccionar Peregrino:" />
-						<ComboBox fx:id="peregrinoComboBox"
-							promptText="Seleccionar peregrino" />
-					</children>
-				</HBox>
-				<HBox alignment="CENTER_LEFT" spacing="10.0">
-					<children>
-						<CheckBox fx:id="alojarCheckBox"
-							text="Alojar al peregrino" />
-					</children>
-				</HBox>
-				<HBox alignment="CENTER_LEFT" spacing="10.0">
-					<children>
-						<CheckBox fx:id="vipCheckBox" text="¿VIP?" disable="true" />
-					</children>
-				</HBox>
-			</children>
-		</VBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <children>
+                    <Label text="Peso (kg):" />
+                    <TextField fx:id="pesoField" disable="true" promptText="Peso"/>
+                </children>
+            </HBox>
 
-		<HBox alignment="CENTER" spacing="20.0">
-			<children>
-				<Button fx:id="confirmarButton" text="Confirmar" />
-				<Button fx:id="limpiarButton" text="Limpiar" />
-			</children>
-		</HBox>
-		<Hyperlink fx:id="volverMenuLink" text="Volver al Menú." alignment="CENTER" />
-	</children>
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <children>
+                    <Label minWidth="-Infinity" prefHeight="16.0" prefWidth="94.0" text="Volumen (cm):" />
+                    <TextField fx:id="volumenX" disable="true" promptText="Largo" />
+                    <TextField fx:id="volumenY" disable="true" promptText="Ancho" />
+                    <TextField fx:id="volumenZ" disable="true" prefHeight="29.0" prefWidth="178.0" promptText="Alto" />
+                </children>
+            </HBox>
+         <HBox prefHeight="40.0" prefWidth="700.0" spacing="10.0">
+            <children>
+               <Label prefHeight="31.0" prefWidth="63.0" text="Direccion:" />
+               <TextField fx:id="direccionField" disable="true" promptText="Direccion" />
+               <TextField fx:id="localidadField" disable="true" promptText="Localidad" />
+            </children>
+         </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <children>
+                    <CheckBox fx:id="urgenteCheckBox" disable="true" text="Urgente" />
+                </children>
+            </HBox>
+        </VBox>
+        <HBox alignment="CENTER" spacing="20.0">
+            <children>
+                <Button fx:id="confirmarButton" text="Confirmar" />
+                <Button fx:id="limpiarButton" text="Limpiar" />
+            </children>
+        </HBox>
+        <Hyperlink fx:id="volverMenuLink" alignment="CENTER" text="Volver al Menú." />
+    </children>
 </VBox>
-

@@ -23,6 +23,7 @@ import com.luisdbb.tarea3AD2024base.services.ParadaService;
 import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
 import com.luisdbb.tarea3AD2024base.services.SesionService;
 import com.luisdbb.tarea3AD2024base.services.ValidacionesService;
+import com.luisdbb.tarea3AD2024base.utils.UIUtils;
 import com.luisdbb.tarea3AD2024base.view.AlertsView;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
@@ -33,14 +34,20 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
 
 @Controller
 public class SellarAlojarController {
 
 	@FXML
 	private ComboBox<String> peregrinoComboBox;
+	@FXML
+	private ComboBox<String> serviciosComboBox;
 
 	@FXML
 	private CheckBox alojarCheckBox;
@@ -68,8 +75,10 @@ public class SellarAlojarController {
 
 	@Autowired
 	private PeregrinoService peregrinoService;
+	
 	@Autowired
 	private SesionService sesionService;
+	
 	@Autowired
 	private ParadaService paradaService;
 
@@ -89,29 +98,107 @@ public class SellarAlojarController {
 	@Autowired
 	private StageManager stageManager;
 
+	@FXML 
+	private ToggleGroup modoPagoGroup;
+	
+	@FXML
+	private RadioButton efectivoRadio;
+	
+	@FXML 
+	private RadioButton tarjetaRadio;
+	
+	@FXML 
+	private RadioButton bizumRadio;
+
+	@FXML 
+	private CheckBox envioCheckBox;
+	
+	@FXML
+	private TextField pesoField;
+	
+	@FXML
+	private TextField volumenX;
+	
+	@FXML
+	private TextField volumenY;
+	
+	@FXML
+	private TextField volumenZ;
+	
+	@FXML
+	private TextField direccionField;
+	
+	@FXML
+	private TextField localidadField;
+	
+	@FXML 
+	private CheckBox urgenteCheckBox;
+	
+	
+	private ObservableList<String> serviciosSeleccionados = FXCollections.observableArrayList();
+	
+	//EJEMPLO PROVISIONARL METEMOS SERVICIOS A PELO (AUN NO SE HAN CREADO)
+	private ObservableList<String> listaServicios = FXCollections.observableArrayList("WiFi", "Desayuno", "Parking", "Gimnasio");
+
+	
+
 	@FXML
 	public void initialize() {
-		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
-
-		alojarCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			vipCheckBox.setDisable(!newValue);
-			if (!newValue) {
-				vipCheckBox.setSelected(false);
-			}
-		});
-
-		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/SellarAlojar.html"));
-
-		cargarPeregrinosComboBox();
-
-		volverMenuLink.setOnAction(event -> volverLogin());
-
-		limpiarButton.setOnAction(event -> limpiarFormulario());
-
-		confirmarButton.setOnAction(event -> sellarAlojar());
-
-		configurarAtajos();
+	    configurarModoPago();
+	    configurarServicios();
+	    configurarEventos();
+	    configurarBotones();
+	    cargarPeregrinosComboBox();
+	    configurarAtajos();
 	}
+
+	private void configurarModoPago() {
+	    modoPagoGroup = new ToggleGroup();
+	    efectivoRadio.setToggleGroup(modoPagoGroup);
+	    tarjetaRadio.setToggleGroup(modoPagoGroup);
+	    bizumRadio.setToggleGroup(modoPagoGroup);
+	}
+
+	private void configurarServicios() {
+	    UIUtils.configurarServiciosComboBox(serviciosComboBox, listaServicios);
+	}
+
+	private void configurarEventos() {
+	    alojarCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+	        actualizarEstadoCampos(newValue);
+	    });
+
+	    envioCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+	        UIUtils.setEstadoCamposEnvio(newValue, pesoField, volumenX, volumenY, volumenZ, direccionField, localidadField, urgenteCheckBox);
+	    });
+	}
+
+	private void actualizarEstadoCampos(boolean alojar) {
+	    boolean activar = alojar;
+
+	    serviciosComboBox.setDisable(!activar);
+	    vipCheckBox.setDisable(!activar);
+	    envioCheckBox.setDisable(!activar);
+	    efectivoRadio.setDisable(!activar);
+	    tarjetaRadio.setDisable(!activar);
+	    bizumRadio.setDisable(!activar);
+
+	    if (!activar) {
+	        modoPagoGroup.selectToggle(null);
+	        envioCheckBox.setSelected(false);
+	    }
+
+	    UIUtils.setEstadoCamposEnvio(activar, pesoField, volumenX, volumenY, volumenZ, direccionField, localidadField, urgenteCheckBox);
+	}
+
+	private void configurarBotones() {
+	    ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
+	    ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/SellarAlojar.html"));
+	    volverMenuLink.setOnAction(event -> volverLogin());
+	    limpiarButton.setOnAction(event -> limpiarFormulario());
+	    confirmarButton.setOnAction(event -> sellarAlojar());
+	}
+
 
 	private void configurarAtajos() {
 		confirmarButton.sceneProperty().addListener((observable, oldScene, newScene) -> {
@@ -153,6 +240,7 @@ public class SellarAlojarController {
 		peregrinoComboBox.getSelectionModel().clearSelection();
 		alojarCheckBox.setSelected(false);
 		vipCheckBox.setSelected(false);
+		serviciosComboBox.getSelectionModel().clearSelection();
 	}
 
 	private List<Credenciales> cargarPeregrinos() {
