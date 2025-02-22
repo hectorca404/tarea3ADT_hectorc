@@ -187,8 +187,6 @@ public class SellarAlojarController {
 	        modoPagoGroup.selectToggle(null);
 	        envioCheckBox.setSelected(false);
 	    }
-
-	    UIUtils.setEstadoCamposEnvio(activar, pesoField, volumenX, volumenY, volumenZ, direccionField, localidadField, urgenteCheckBox);
 	}
 
 	private void configurarBotones() {

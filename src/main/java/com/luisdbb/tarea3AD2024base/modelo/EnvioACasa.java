@@ -4,53 +4,47 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.MappedSuperclass;
 
 //OBJECTDB
-
 @Entity
-public class EnvioACasa implements Serializable{
-	// ATRIBUTOS
+@MappedSuperclass
+public class EnvioACasa extends Servicio implements Serializable {
+    // ATRIBUTOS
 	@Id
-	@GeneratedValue
-	private Long id;
-	private double peso;
-	private int[] volumen;
-	private boolean urgente;
-	
-	//RELACIONES
-	private Long idParada;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	private Direccion direccion;
+    private double peso;
+    private int[] volumen;
+    private boolean urgente;
+    
+    private static final String NOMBRE_ENVIO = "Envio a Casa";
+    private static final double PRECIO_ENVIO = 10.0;
 
-	// CONSTRUCTORES
-	public EnvioACasa() {
-	}
+    //RELACION
+    @Embedded
+    private Direccion direccion;
 
-	public EnvioACasa(Long id, double peso, int[] volumen, boolean urgente, Long idParada, Direccion direccion) {
-		this.id = id;
-		this.peso = peso;
+    // CONSTRUCTORES
+    public EnvioACasa() {
+        super(null, NOMBRE_ENVIO, PRECIO_ENVIO);
+    }
+
+    public EnvioACasa(Long id, double peso, int[] volumen, boolean urgente, Direccion direccion) {
+        super(id, NOMBRE_ENVIO, PRECIO_ENVIO);
+        this.peso = peso;
 		this.volumen = volumen;
 		this.urgente = urgente;
-		this.idParada = idParada;
 		this.direccion = direccion;
 	}
 
 	// GETTERS AND SETTERS
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public double getPeso() {
 		return peso;
 	}
@@ -75,14 +69,6 @@ public class EnvioACasa implements Serializable{
 		this.urgente = urgente;
 	}
 
-	public Long getIdParada() {
-		return idParada;
-	}
-
-	public void setIdParada(Long idParada) {
-		this.idParada = idParada;
-	}
-
 	public Direccion getDireccion() {
 		return direccion;
 	}
@@ -92,19 +78,18 @@ public class EnvioACasa implements Serializable{
 	}
 
 	// METODOS CLASS ENTITY
-
 	@Override
 	public String toString() {
 		return "EnvioACasa [id=" + id + ", peso=" + peso + ", volumen=" + Arrays.toString(volumen) + ", urgente="
-				+ urgente + ", idParada=" + idParada + ", direccion=" + direccion + "]";
+				+ urgente + ", direccion=" + direccion + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + Arrays.hashCode(volumen);
-		result = prime * result + Objects.hash(direccion, id, idParada, peso, urgente);
+		result = prime * result + Objects.hash(direccion, id, peso, urgente);
 		return result;
 	}
 
@@ -112,13 +97,12 @@ public class EnvioACasa implements Serializable{
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		EnvioACasa other = (EnvioACasa) obj;
 		return Objects.equals(direccion, other.direccion) && Objects.equals(id, other.id)
-				&& Objects.equals(idParada, other.idParada)
 				&& Double.doubleToLongBits(peso) == Double.doubleToLongBits(other.peso) && urgente == other.urgente
 				&& Arrays.equals(volumen, other.volumen);
 	}

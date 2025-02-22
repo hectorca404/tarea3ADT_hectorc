@@ -3,16 +3,14 @@ package com.luisdbb.tarea3AD2024base.modelo;
 import java.io.Serializable;
 import java.util.Objects;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 //OBJECTDB
-@Entity
+@Embeddable
 public class Direccion implements Serializable{
-	@Id
-	@GeneratedValue
-	private Long id;
+
 	private String direccion;
 	private String localidad;
 
@@ -22,22 +20,14 @@ public class Direccion implements Serializable{
 
 	}
 
-	public Direccion(Long id, String direccion, String localidad) {
+	public Direccion(String direccion, String localidad) {
 		super();
-		this.id = id;
 		this.direccion = direccion;
 		this.localidad = localidad;
 	}
 
 	// GETTERS AND SETTERS
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getDireccion() {
 		return direccion;
@@ -58,12 +48,12 @@ public class Direccion implements Serializable{
 	// METODOS CLASS ENTITY
 	@Override
 	public String toString() {
-		return "Direccion [id=" + id + ", direccion=" + direccion + ", localidad=" + localidad + "]";
+		return "Direccion [direccion=" + direccion + ", localidad=" + localidad + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(direccion, id, localidad);
+		return Objects.hash(direccion, localidad);
 	}
 
 	@Override
@@ -75,8 +65,9 @@ public class Direccion implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Direccion other = (Direccion) obj;
-		return Objects.equals(direccion, other.direccion) && Objects.equals(id, other.id)
-				&& Objects.equals(localidad, other.localidad);
+		return Objects.equals(direccion, other.direccion) && Objects.equals(localidad, other.localidad);
 	}
+
+	
 
 }

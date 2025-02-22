@@ -14,16 +14,18 @@ public class ConjuntoContratado implements Serializable {
 
 	// RELACION SERVICIOS
 	private List<Servicio> servicios;
+	private Long idEstancia;
 
 	public ConjuntoContratado() {
 		this.servicios = new ArrayList<>();
 	}
 
-	public ConjuntoContratado(Long id, double precioTotal, char modoPago, String extra) {
+	public ConjuntoContratado(Long id, double precioTotal, char modoPago, String extra, Long idEstancia) {
 		this.id = id;
 		this.precioTotal = precioTotal;
 		this.modoPago = modoPago;
 		this.extra = extra;
+		this.idEstancia = idEstancia;
 		this.servicios = new ArrayList<>();
 	}
 
@@ -69,6 +71,14 @@ public class ConjuntoContratado implements Serializable {
 		this.servicios = servicios;
 	}
 
+	public Long getIdEstancia() {
+		return idEstancia;
+	}
+
+	public void setIdEstancia(Long idEstancia) {
+		this.idEstancia = idEstancia;
+	}
+
 	// METODOS AUXILIARES
 	public void agregarServicio(Servicio servicio) {
 		if (!servicios.contains(servicio)) {
@@ -85,13 +95,12 @@ public class ConjuntoContratado implements Serializable {
 	@Override
 	public String toString() {
 		return "ConjuntoContratado [id=" + id + ", precioTotal=" + precioTotal + ", modoPago=" + modoPago + ", extra="
-				+ extra + ", servicios=" + servicios.size() + "]";
-
+				+ extra + ", servicios=" + servicios + ", idEstancia=" + idEstancia + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(extra, id, modoPago, precioTotal, servicios);
+		return Objects.hash(extra, id, idEstancia, modoPago, precioTotal, servicios);
 	}
 
 	@Override
@@ -103,7 +112,8 @@ public class ConjuntoContratado implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		ConjuntoContratado other = (ConjuntoContratado) obj;
-		return Objects.equals(extra, other.extra) && Objects.equals(id, other.id) && modoPago == other.modoPago
+		return Objects.equals(extra, other.extra) && Objects.equals(id, other.id)
+				&& Objects.equals(idEstancia, other.idEstancia) && modoPago == other.modoPago
 				&& Double.doubleToLongBits(precioTotal) == Double.doubleToLongBits(other.precioTotal)
 				&& Objects.equals(servicios, other.servicios);
 	}

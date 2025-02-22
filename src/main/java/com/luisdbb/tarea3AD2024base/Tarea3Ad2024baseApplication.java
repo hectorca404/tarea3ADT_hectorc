@@ -1,14 +1,11 @@
 package com.luisdbb.tarea3AD2024base;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.luisdbb.tarea3AD2024base.view.FxmlView;
 import com.luisdbb.tarea3AD2024base.config.StageManager;
-import com.luisdbb.tarea3AD2024base.services.CredencialesService;
+import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.application.Application;
 import javafx.scene.image.Image;
@@ -22,6 +19,7 @@ public class Tarea3Ad2024baseApplication extends Application {
 
 	protected ConfigurableApplicationContext springContext;
 	protected StageManager stageManager;
+	
 	
 
 	@Override

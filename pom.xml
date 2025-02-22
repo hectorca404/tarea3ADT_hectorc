@@ -114,10 +114,6 @@
 						com.luisdbb.tarea3AD2024base.Tarea3Ad2024baseApplication</mainClass>
 				</configuration>
 			</plugin>
-
-
 		</plugins>
 	</build>
-
-
 </project>

@@ -1,5 +1,6 @@
 package com.luisdbb.tarea3AD2024base.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import com.luisdbb.tarea3AD2024base.modelo.Estancia;
 import com.luisdbb.tarea3AD2024base.modelo.Parada;
 import com.luisdbb.tarea3AD2024base.modelo.ParadasPeregrinos;
 import com.luisdbb.tarea3AD2024base.modelo.Perfil;
+import com.luisdbb.tarea3AD2024base.modelo.Servicio;
 import com.luisdbb.tarea3AD2024base.repositorios.CredencialesRepository;
 import com.luisdbb.tarea3AD2024base.repositorios.EstanciaRepository;
 import com.luisdbb.tarea3AD2024base.repositorios.ParadaRepository;
@@ -31,9 +33,13 @@ public class ParadaService {
 		this.estanciaRepository = estanciaRepository;
 	}
 
+	@Transactional
 	public List<Parada> obtenerTodasLasParadas() {
-		return paradaRepository.findAll();
+	    List<Parada> paradas = paradaRepository.findAll();
+	    
+	    return paradas;
 	}
+
 
 	@Transactional
 	public void registrarParada(String nombreParada, char region, String responsable, String usuario, String correo,
@@ -55,4 +61,12 @@ public class ParadaService {
 	public void guardarParadasPeregrinos(ParadasPeregrinos paradasPeregrinos) {
 		paradasPeregrinosRepository.save(paradasPeregrinos);
 	}
+
+	@Transactional
+	public void asociarServicioParada(Parada parada, Servicio servicio) {
+		Parada paradaBD = paradaRepository.findById(parada.getId()).orElse(null);
+		paradaBD.getServiciosIds().add(servicio.getId());
+		paradaRepository.save(paradaBD);
+	}
+
 }

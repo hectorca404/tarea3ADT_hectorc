@@ -48,11 +48,6 @@
                         <Label text="Paradas:" />
                         <ComboBox fx:id="paradasComboBox" prefWidth="300.0" />
                     </HBox>
-
-                    <HBox spacing="10.0">
-                        <Label text="Paradas que ofrecen servicio:" />
-                        <Label fx:id="numParadasLabel" text="0 seleccionadas" />
-                    </HBox>
                 </children>
             </VBox>
         </HBox>

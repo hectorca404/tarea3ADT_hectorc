@@ -1,60 +1,49 @@
 package com.luisdbb.tarea3AD2024base.config;
 
-import java.util.*;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-@Component
 public class ObjectDBConnection {
-	private static ObjectDBConnection instance;
-	private EntityManagerFactory entityManagerFactory;
-	private EntityManager entityManager;
+    private static ObjectDBConnection INSTANCE;
+    private EntityManagerFactory emf;
+    private EntityManager em;
 
-	@Value("${objectdb.path}")
-	private String dbPath;
+    private static final String DB_PATH = "databases/database.odb";
 
-	private ObjectDBConnection() {
-	}
+    private ObjectDBConnection() {
+        open();
+    }
 
-	public static ObjectDBConnection getInstance() {
-		if (instance == null) {
-			instance = new ObjectDBConnection();
-		}
-		return instance;
-	}
+    public static synchronized ObjectDBConnection getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new ObjectDBConnection();
+        }
+        return INSTANCE;
+    }
 
-	public void open() {
-		if (entityManagerFactory == null || !entityManagerFactory.isOpen()) {
-			Map<String, String> properties = new HashMap<>();
-			properties.put("javax.persistence.jdbc.url", "objectdb:" + dbPath);
-			properties.put("javax.persistence.jdbc.driver", "com.objectdb.jpa.Driver");
-			properties.put("javax.persistence.schema-generation.database.action", "create");
+    private void open() {
+        if (emf == null || !emf.isOpen()) {
+            emf = Persistence.createEntityManagerFactory("objectdb:" + DB_PATH);
+        }
+        if (em == null || !em.isOpen()) {
+            em = emf.createEntityManager();
+        }
+    }
 
-			entityManagerFactory = Persistence.createEntityManagerFactory("objectdb:" + dbPath, properties);
-		}
-		if (entityManager == null || !entityManager.isOpen()) {
-			entityManager = entityManagerFactory.createEntityManager();
-		}
-	}
+    public EntityManager getEntityManager() {
+        if (em == null || !em.isOpen()) {
+            open();
+        }
+        return em;
+    }
 
-	public EntityManager getEntityManager() {
-		if (entityManager == null || !entityManager.isOpen()) {
-			open();
-		}
-		return entityManager;
-	}
-
-	public void close() {
-		if (entityManager != null && entityManager.isOpen()) {
-			entityManager.close();
-		}
-		if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
-			entityManagerFactory.close();
-		}
-	}
+    public void cerrarBD() {
+        if (em != null && em.isOpen()) {
+            em.close();
+        }
+        if (emf != null && emf.isOpen()) {
+            emf.close();
+        }
+    }
 }

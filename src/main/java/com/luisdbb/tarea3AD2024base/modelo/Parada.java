@@ -35,7 +35,7 @@ public class Parada implements Serializable {
 	private String responsable;
 
 	@ElementCollection
-	@CollectionTable(name = "parada_servicio", joinColumns = @JoinColumn(name = "parada_id"))
+	@CollectionTable(name = "parada_servicios", joinColumns = @JoinColumn(name = "parada_id"))
 	@Column(name = "servicio_id")
 	private List<Long> serviciosIds;
 
