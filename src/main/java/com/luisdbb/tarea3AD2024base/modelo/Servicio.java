@@ -53,7 +53,7 @@ public class Servicio implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Servicio [id=" + id + ", nombre=" + nombre + ", precio=" + precio + "]";
+		return nombre;
 	}
 
 	@Override

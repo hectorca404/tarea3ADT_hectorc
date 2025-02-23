@@ -1,6 +1,7 @@
 package com.luisdbb.tarea3AD2024base.utils;
 
 import com.luisdbb.tarea3AD2024base.modelo.Parada;
+import com.luisdbb.tarea3AD2024base.modelo.Servicio;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
@@ -23,8 +24,8 @@ public class UIUtils {
 		urgenteCheckBox.setDisable(!activar);
 	}
 
-	public static void configurarServiciosComboBox(ComboBox<String> serviciosComboBox,
-			ObservableList<String> listaServicios) {
+	public static void configurarServiciosComboBox(ComboBox<Servicio> serviciosComboBox,
+			ObservableList<Servicio> listaServicios, ObservableList<Servicio> serviciosSeleccionados) {
 		serviciosComboBox.setItems(listaServicios);
 
 		serviciosComboBox.setCellFactory(param -> new ListCell<>() {
@@ -34,23 +35,31 @@ public class UIUtils {
 				checkBox.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event -> {
 					event.consume();
 					checkBox.setSelected(!checkBox.isSelected());
+					Servicio servicio = getItem();
+					if (servicio != null) {
+						if (checkBox.isSelected()) {
+							serviciosSeleccionados.add(servicio);
+						} else {
+							serviciosSeleccionados.remove(servicio);
+						}
+					}
 				});
 			}
 
 			@Override
-			protected void updateItem(String servicio, boolean empty) {
+			protected void updateItem(Servicio servicio, boolean empty) {
 				super.updateItem(servicio, empty);
 				if (empty || servicio == null) {
 					setGraphic(null);
 				} else {
-					checkBox.setText(servicio);
+					checkBox.setText(servicio.getNombre());
+					checkBox.setSelected(serviciosSeleccionados.contains(servicio));
 					setGraphic(checkBox);
 				}
 			}
 		});
 
 		serviciosComboBox.getSelectionModel().clearSelection();
-		serviciosComboBox.setPromptText("Selecciona un servicio");
 	}
 
 

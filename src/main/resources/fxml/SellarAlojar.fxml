@@ -7,8 +7,8 @@
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -63,16 +63,22 @@
         <HBox alignment="CENTER_LEFT" spacing="10.0">
             <children>
                 <Label text="Modo de Pago:" />
-                <RadioButton fx:id="efectivoRadio" disable="true" text="Efectivo"/>
+                <RadioButton fx:id="efectivoRadio" disable="true" text="Efectivo" />
                 <RadioButton fx:id="tarjetaRadio" disable="true" text="Tarjeta" />
                 <RadioButton fx:id="bizumRadio" disable="true" text="Bizum" />
-            <Label text="Precio Total: ">
+            <Label text="Precio Total: " fx:id="totalLabel">
                <HBox.margin>
                   <Insets left="50.0" />
                </HBox.margin>
             </Label>
             </children>
         </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+         <children>
+            <Label text="Extras:" />
+            <TextArea fx:id="extraConjunto" prefHeight="57.0" prefWidth="318.0" promptText="Extra"/>
+         </children>
+      </HBox>
         <VBox spacing="10.0">
             <HBox spacing="10.0">
                 <children>
@@ -84,7 +90,7 @@
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                 <children>
                     <Label text="Peso (kg):" />
-                    <TextField fx:id="pesoField" disable="true" promptText="Peso"/>
+                    <TextField fx:id="pesoField" disable="true" promptText="Peso" />
                 </children>
             </HBox>
 

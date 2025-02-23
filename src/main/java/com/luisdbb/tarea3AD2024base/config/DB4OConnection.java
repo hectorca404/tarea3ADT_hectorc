@@ -1,9 +1,13 @@
 package com.luisdbb.tarea3AD2024base.config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.config.EmbeddedConfiguration;
 
+@Component
 public class DB4OConnection {
 
 	private static DB4OConnection INSTANCE = null;
@@ -24,6 +28,8 @@ public class DB4OConnection {
 		EmbeddedConfiguration configuracion = Db4oEmbedded.newConfiguration();
 		db = Db4oEmbedded.openFile(configuracion,PATH);
 	}
+	
+	@Bean
 	public static ObjectContainer obtenerInstancia(){
 		if(INSTANCE == null)
 			crearInstancia();

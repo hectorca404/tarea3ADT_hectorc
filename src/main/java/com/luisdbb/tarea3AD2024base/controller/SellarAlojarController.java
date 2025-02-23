@@ -1,6 +1,7 @@
 package com.luisdbb.tarea3AD2024base.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,17 +11,21 @@ import org.springframework.stereotype.Controller;
 
 import com.luisdbb.tarea3AD2024base.config.StageManager;
 import com.luisdbb.tarea3AD2024base.modelo.Carnet;
+import com.luisdbb.tarea3AD2024base.modelo.ConjuntoContratado;
 import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
 import com.luisdbb.tarea3AD2024base.modelo.Estancia;
 import com.luisdbb.tarea3AD2024base.modelo.Parada;
 import com.luisdbb.tarea3AD2024base.modelo.ParadasPeregrinos;
 import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
 import com.luisdbb.tarea3AD2024base.modelo.Perfil;
+import com.luisdbb.tarea3AD2024base.modelo.Servicio;
 import com.luisdbb.tarea3AD2024base.services.AyudaService;
+import com.luisdbb.tarea3AD2024base.services.ConjuntoContratadoService;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
 import com.luisdbb.tarea3AD2024base.services.EstanciaService;
 import com.luisdbb.tarea3AD2024base.services.ParadaService;
 import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
+import com.luisdbb.tarea3AD2024base.services.ServicioService;
 import com.luisdbb.tarea3AD2024base.services.SesionService;
 import com.luisdbb.tarea3AD2024base.services.ValidacionesService;
 import com.luisdbb.tarea3AD2024base.utils.UIUtils;
@@ -28,13 +33,16 @@ import com.luisdbb.tarea3AD2024base.view.AlertsView;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -47,7 +55,7 @@ public class SellarAlojarController {
 	@FXML
 	private ComboBox<String> peregrinoComboBox;
 	@FXML
-	private ComboBox<String> serviciosComboBox;
+	private ComboBox<Servicio> serviciosComboBox;
 
 	@FXML
 	private CheckBox alojarCheckBox;
@@ -134,11 +142,22 @@ public class SellarAlojarController {
 	@FXML 
 	private CheckBox urgenteCheckBox;
 	
+	@FXML
+	private TextArea extraConjunto;
 	
-	private ObservableList<String> serviciosSeleccionados = FXCollections.observableArrayList();
+	@FXML
+	private Label totalLabel;
+	
+	@Autowired
+	private ServicioService servicioService;
+	
+	@Autowired
+	private ConjuntoContratadoService conjuntoContratadoService;
+	
+	private ObservableList<Servicio> serviciosSeleccionados = FXCollections.observableArrayList();
 	
 	//EJEMPLO PROVISIONARL METEMOS SERVICIOS A PELO (AUN NO SE HAN CREADO)
-	private ObservableList<String> listaServicios = FXCollections.observableArrayList("WiFi", "Desayuno", "Parking", "Gimnasio");
+	private ObservableList<Servicio> listaServicios;
 
 	
 
@@ -150,6 +169,9 @@ public class SellarAlojarController {
 	    configurarBotones();
 	    cargarPeregrinosComboBox();
 	    configurarAtajos();
+	    serviciosSeleccionados.addListener((ListChangeListener<Servicio>) change -> {
+	        actualizarPrecioTotal();
+	    });
 	}
 
 	private void configurarModoPago() {
@@ -158,9 +180,21 @@ public class SellarAlojarController {
 	    tarjetaRadio.setToggleGroup(modoPagoGroup);
 	    bizumRadio.setToggleGroup(modoPagoGroup);
 	}
+	
+	private void actualizarPrecioTotal() {
+	    double precioTotal = serviciosSeleccionados.stream().mapToDouble(Servicio::getPrecio).sum();
+	    totalLabel.setText("Precio Total: " + precioTotal);
+	}
 
 	private void configurarServicios() {
-	    UIUtils.configurarServiciosComboBox(serviciosComboBox, listaServicios);
+		listaServicios = FXCollections.observableArrayList(servicioService.obtenerTodosServicios());
+		UIUtils.configurarServiciosComboBox(serviciosComboBox, listaServicios, serviciosSeleccionados);
+	}
+	private char obtenerModoPagoSeleccionado() {
+		if (efectivoRadio.isSelected()) return 'E';
+		if (tarjetaRadio.isSelected()) return 'T';
+		if (bizumRadio.isSelected()) return 'B';
+		return ' ';
 	}
 
 	private void configurarEventos() {
@@ -299,11 +333,14 @@ public class SellarAlojarController {
 			ParadasPeregrinos paradasPeregrinos = new ParadasPeregrinos(peregrino, paradaActual);
 			paradaService.guardarParadasPeregrinos(paradasPeregrinos);
 		}
+		
+		
+		Estancia estancia = null;
 
 		if (alojarCheckBox.isSelected() && !yaAlojado) {
 			boolean esVip = vipCheckBox.isSelected();
 
-			Estancia estancia = new Estancia();
+			estancia = new Estancia();
 			estancia.setVip(esVip);
 			estancia.setParada(paradaActual);
 			estancia.setPeregrino(peregrino);
@@ -314,10 +351,24 @@ public class SellarAlojarController {
 				carnet.setnVips(carnet.getnVips() + 1);
 			}
 		}
+		
+		if (modoPagoGroup.getSelectedToggle() != null && !serviciosSeleccionados.isEmpty() && estancia != null && !yaAlojado) {
+			char modoPago = obtenerModoPagoSeleccionado();
+			String extra = extraConjunto.getText();
+			double precioTotal = serviciosSeleccionados.stream().mapToDouble(Servicio::getPrecio).sum();
+			
+			Long id = conjuntoContratadoService.obtenerSiguienteId();
+			 
+			ConjuntoContratado conjunto = new ConjuntoContratado(id, precioTotal, modoPago, extra, estancia.getId());
+			conjunto.setServicios(new ArrayList<>(serviciosSeleccionados));
+
+
+			conjuntoContratadoService.guardarConjunto(conjunto);
+		}
 
 		peregrinoService.actualizarCarnet(carnet);
 
-		alertsView.mostrarInfo("Éxito", "Sellado/Alojamiento completado.");
+		alertsView.mostrarInfo("Exito", "Sellado/Alojamiento completado.");
 		limpiarFormulario();
 	}
 
