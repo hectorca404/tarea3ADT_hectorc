@@ -13,6 +13,8 @@ import com.luisdbb.tarea3AD2024base.config.StageManager;
 import com.luisdbb.tarea3AD2024base.modelo.Carnet;
 import com.luisdbb.tarea3AD2024base.modelo.ConjuntoContratado;
 import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
+import com.luisdbb.tarea3AD2024base.modelo.Direccion;
+import com.luisdbb.tarea3AD2024base.modelo.EnvioACasa;
 import com.luisdbb.tarea3AD2024base.modelo.Estancia;
 import com.luisdbb.tarea3AD2024base.modelo.Parada;
 import com.luisdbb.tarea3AD2024base.modelo.ParadasPeregrinos;
@@ -22,6 +24,7 @@ import com.luisdbb.tarea3AD2024base.modelo.Servicio;
 import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.services.ConjuntoContratadoService;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
+import com.luisdbb.tarea3AD2024base.services.EnvioACasaService;
 import com.luisdbb.tarea3AD2024base.services.EstanciaService;
 import com.luisdbb.tarea3AD2024base.services.ParadaService;
 import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
@@ -154,9 +157,11 @@ public class SellarAlojarController {
 	@Autowired
 	private ConjuntoContratadoService conjuntoContratadoService;
 	
+	@Autowired
+	private EnvioACasaService envioACasaService;
+	
 	private ObservableList<Servicio> serviciosSeleccionados = FXCollections.observableArrayList();
 	
-	//EJEMPLO PROVISIONARL METEMOS SERVICIOS A PELO (AUN NO SE HAN CREADO)
 	private ObservableList<Servicio> listaServicios;
 
 	
@@ -182,8 +187,17 @@ public class SellarAlojarController {
 	}
 	
 	private void actualizarPrecioTotal() {
-	    double precioTotal = serviciosSeleccionados.stream().mapToDouble(Servicio::getPrecio).sum();
-	    totalLabel.setText("Precio Total: " + precioTotal);
+		double precioTotal = 0.0;
+
+		for (Servicio servicio : serviciosSeleccionados) {
+			precioTotal += servicio.getPrecio();
+		}
+
+		if (envioCheckBox.isSelected()) {
+			precioTotal += 10.0;
+		}
+
+		totalLabel.setText("Precio Total: " + precioTotal);
 	}
 
 	private void configurarServicios() {
@@ -204,6 +218,7 @@ public class SellarAlojarController {
 
 	    envioCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
 	        UIUtils.setEstadoCamposEnvio(newValue, pesoField, volumenX, volumenY, volumenZ, direccionField, localidadField, urgenteCheckBox);
+	        actualizarPrecioTotal();
 	    });
 	}
 
@@ -352,23 +367,52 @@ public class SellarAlojarController {
 			}
 		}
 		
+		EnvioACasa envio = null;
+		if(envioCheckBox.isSelected() && estancia != null && !yaAlojado) {
+			try {
+				double peso = Double.parseDouble(pesoField.getText());
+				int[] volumen = {
+						Integer.parseInt(volumenX.getText()),
+						Integer.parseInt(volumenY.getText()),
+						Integer.parseInt(volumenZ.getText()),
+				};
+				boolean urgente  = urgenteCheckBox.isSelected();
+				Direccion direccion = new Direccion(direccionField.getText(), localidadField.getText());
+				
+				envio = new EnvioACasa(null, peso, volumen, urgente, direccion);
+				envioACasaService.guardarEnvio(envio);
+			}catch(NumberFormatException e) {
+				alertsView.mostrarError("Error", "Peso y volumen deben de ser numeros");
+				return;
+			}
+		}
+		
 		if (modoPagoGroup.getSelectedToggle() != null && !serviciosSeleccionados.isEmpty() && estancia != null && !yaAlojado) {
 			char modoPago = obtenerModoPagoSeleccionado();
 			String extra = extraConjunto.getText();
-			double precioTotal = serviciosSeleccionados.stream().mapToDouble(Servicio::getPrecio).sum();
+			double precioTotal = 0.0;
+
+			for (Servicio servicio : serviciosSeleccionados) {
+				precioTotal += servicio.getPrecio();
+			}
 			
+			if(envio != null) {
+				precioTotal += 10.0;
+			}
 			Long id = conjuntoContratadoService.obtenerSiguienteId();
-			 
-			ConjuntoContratado conjunto = new ConjuntoContratado(id, precioTotal, modoPago, extra, estancia.getId());
-			conjunto.setServicios(new ArrayList<>(serviciosSeleccionados));
+	        ConjuntoContratado conjunto = new ConjuntoContratado(id, precioTotal, modoPago, extra, estancia.getId());
+	        conjunto.setServicios(new ArrayList<>(serviciosSeleccionados));
 
+	        if (envio != null) {
+	            conjunto.getServicios().add(envio);
+	        }
 
-			conjuntoContratadoService.guardarConjunto(conjunto);
-		}
+	        conjuntoContratadoService.guardarConjunto(conjunto);
+	    }
 
 		peregrinoService.actualizarCarnet(carnet);
 
-		alertsView.mostrarInfo("Exito", "Sellado/Alojamiento completado.");
+		alertsView.mostrarInfo("Exito", "Sellado/Alojamiento completado");
 		limpiarFormulario();
 	}
 

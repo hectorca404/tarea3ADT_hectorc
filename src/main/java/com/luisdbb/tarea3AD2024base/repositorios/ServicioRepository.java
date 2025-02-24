@@ -1,13 +1,13 @@
 package com.luisdbb.tarea3AD2024base.repositorios;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
 import com.db4o.ObjectContainer;
-import com.db4o.query.Query;
 import com.luisdbb.tarea3AD2024base.config.DB4OConnection;
+import com.luisdbb.tarea3AD2024base.modelo.EnvioACasa;
 import com.luisdbb.tarea3AD2024base.modelo.Servicio;
 
 @Repository
@@ -21,19 +21,26 @@ public class ServicioRepository {
 	}
 
 	public List<Servicio> obtenerTodosServicios() {
-	    return (List<Servicio>) db.query(Servicio.class);
-	}
+		List<Servicio> servicios = db.query(Servicio.class);
+		List<Servicio> serviciosFiltrados = new ArrayList<>();
 
+		for (Servicio servicio : servicios) {
+			if (!(servicio instanceof EnvioACasa)) {
+				serviciosFiltrados.add(servicio);
+			}
+		}
+
+		return serviciosFiltrados;
+	}
 
 	public Servicio buscarPorNombre(String nombre) {
-	    for (Servicio servicio : db.query(Servicio.class)) {
-	        if (servicio.getNombre().equals(nombre)) {
-	            return servicio;
-	        }
-	    }
-	    return null;
+		for (Servicio servicio : db.query(Servicio.class)) {
+			if (servicio.getNombre().equals(nombre)) {
+				return servicio;
+			}
+		}
+		return null;
 	}
-
 
 	public boolean existeServicio(String nombre) {
 		return buscarPorNombre(nombre) != null;
@@ -44,7 +51,4 @@ public class ServicioRepository {
 		db.commit();
 	}
 
-	public void cerrarConexion() {
-		DB4OConnection.cerrarBD();
-	}
 }

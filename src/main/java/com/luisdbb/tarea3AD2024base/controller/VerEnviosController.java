@@ -50,7 +50,7 @@ public class VerEnviosController {
    
 
     private void volverAlMenu() {
-        stageManager.switchScene(FxmlView.ADMIN);
+        stageManager.switchScene(FxmlView.RESPARADA);
     }
 
 }

@@ -9,11 +9,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
 
 //OBJECTDB
 @Entity
-@MappedSuperclass
 public class EnvioACasa extends Servicio implements Serializable {
     // ATRIBUTOS
 	@Id
