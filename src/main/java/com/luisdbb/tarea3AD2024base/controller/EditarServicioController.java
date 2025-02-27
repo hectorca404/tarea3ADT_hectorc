@@ -1,5 +1,6 @@
 package com.luisdbb.tarea3AD2024base.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.luisdbb.tarea3AD2024base.modelo.Parada;
 import com.luisdbb.tarea3AD2024base.modelo.Servicio;
 import com.luisdbb.tarea3AD2024base.services.ParadaService;
 import com.luisdbb.tarea3AD2024base.services.ServicioService;
+import com.luisdbb.tarea3AD2024base.services.ValidacionesService;
 import com.luisdbb.tarea3AD2024base.utils.UIUtils;
 import com.luisdbb.tarea3AD2024base.view.AlertsView;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
@@ -64,6 +66,9 @@ public class EditarServicioController {
 	@Autowired
 	private AlertsView alertsView;
 
+	@Autowired
+	private ValidacionesService validacionesService;
+
 	private ObservableList<Parada> listaParadas = FXCollections.observableArrayList();
 	private ObservableList<Parada> paradasSeleccionadas = FXCollections.observableArrayList();
 
@@ -103,7 +108,7 @@ public class EditarServicioController {
 		paradasSeleccionadas.clear();
 
 		for (Parada parada : listaParadas) {
-			if (parada.getServiciosIds().contains(servicio.getId())) {
+			if (servicio.getParadaIds().contains(parada.getId())) {
 				paradasSeleccionadas.add(parada);
 			}
 		}
@@ -120,6 +125,10 @@ public class EditarServicioController {
 
 		String nombre = nombreServicioField.getText();
 		String precioTexto = precioField.getText();
+
+		if (!validacionesService.validarNombre(nombre)) {
+			return;
+		}
 
 		if (nombre.isEmpty() || precioTexto.isEmpty()) {
 			alertsView.mostrarError("Error", "Tienes campos vacios");
@@ -141,9 +150,11 @@ public class EditarServicioController {
 		servicioSeleccionado.setNombre(nombre);
 		servicioSeleccionado.setPrecio(precio);
 
-		servicioService.eliminarAsociacionesParadas(servicioSeleccionado);
-
-		servicioService.añadirServicioParada(servicioSeleccionado, paradasSeleccionadas);
+		List<Long> nuevasParadas = new ArrayList<>();
+		for (Parada parada : paradasSeleccionadas) {
+			nuevasParadas.add(parada.getId());
+		}
+		servicioSeleccionado.setParadaIds(nuevasParadas);
 
 		alertsView.mostrarConfirmacion("Exito", "Servicio editado correctamente");
 	}

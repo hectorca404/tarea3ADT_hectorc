@@ -33,6 +33,19 @@ public class ServicioRepository {
 		return serviciosFiltrados;
 	}
 
+	public List<Servicio> obtenerServiciosPorParada(Long paradaId) {
+		List<Servicio> todosServicios = obtenerTodosServicios();
+		List<Servicio> serviciosFiltrados = new ArrayList<>();
+
+		for (Servicio servicio : todosServicios) {
+			if (servicio.getParadaIds().contains(paradaId)) {
+				serviciosFiltrados.add(servicio);
+			}
+		}
+
+		return serviciosFiltrados;
+	}
+
 	public Servicio buscarPorNombre(String nombre) {
 		for (Servicio servicio : db.query(Servicio.class)) {
 			if (servicio.getNombre().equals(nombre)) {

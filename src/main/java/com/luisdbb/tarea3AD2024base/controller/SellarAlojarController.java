@@ -51,7 +51,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-
 @Controller
 public class SellarAlojarController {
 
@@ -86,10 +85,10 @@ public class SellarAlojarController {
 
 	@Autowired
 	private PeregrinoService peregrinoService;
-	
+
 	@Autowired
 	private SesionService sesionService;
-	
+
 	@Autowired
 	private ParadaService paradaService;
 
@@ -109,83 +108,81 @@ public class SellarAlojarController {
 	@Autowired
 	private StageManager stageManager;
 
-	@FXML 
+	@FXML
 	private ToggleGroup modoPagoGroup;
-	
+
 	@FXML
 	private RadioButton efectivoRadio;
-	
-	@FXML 
+
+	@FXML
 	private RadioButton tarjetaRadio;
-	
-	@FXML 
+
+	@FXML
 	private RadioButton bizumRadio;
 
-	@FXML 
+	@FXML
 	private CheckBox envioCheckBox;
-	
+
 	@FXML
 	private TextField pesoField;
-	
+
 	@FXML
 	private TextField volumenX;
-	
+
 	@FXML
 	private TextField volumenY;
-	
+
 	@FXML
 	private TextField volumenZ;
-	
+
 	@FXML
 	private TextField direccionField;
-	
+
 	@FXML
 	private TextField localidadField;
-	
-	@FXML 
+
+	@FXML
 	private CheckBox urgenteCheckBox;
-	
+
 	@FXML
 	private TextArea extraConjunto;
-	
+
 	@FXML
 	private Label totalLabel;
-	
+
 	@Autowired
 	private ServicioService servicioService;
-	
+
 	@Autowired
 	private ConjuntoContratadoService conjuntoContratadoService;
-	
+
 	@Autowired
 	private EnvioACasaService envioACasaService;
-	
-	private ObservableList<Servicio> serviciosSeleccionados = FXCollections.observableArrayList();
-	
-	private ObservableList<Servicio> listaServicios;
 
-	
+	private ObservableList<Servicio> serviciosSeleccionados = FXCollections.observableArrayList();
+
+	private ObservableList<Servicio> listaServicios;
 
 	@FXML
 	public void initialize() {
-	    configurarModoPago();
-	    configurarServicios();
-	    configurarEventos();
-	    configurarBotones();
-	    cargarPeregrinosComboBox();
-	    configurarAtajos();
-	    serviciosSeleccionados.addListener((ListChangeListener<Servicio>) change -> {
-	        actualizarPrecioTotal();
-	    });
+		configurarModoPago();
+		configurarServicios();
+		configurarEventos();
+		configurarBotones();
+		cargarPeregrinosComboBox();
+		configurarAtajos();
+		serviciosSeleccionados.addListener((ListChangeListener<Servicio>) change -> {
+			actualizarPrecioTotal();
+		});
 	}
 
 	private void configurarModoPago() {
-	    modoPagoGroup = new ToggleGroup();
-	    efectivoRadio.setToggleGroup(modoPagoGroup);
-	    tarjetaRadio.setToggleGroup(modoPagoGroup);
-	    bizumRadio.setToggleGroup(modoPagoGroup);
+		modoPagoGroup = new ToggleGroup();
+		efectivoRadio.setToggleGroup(modoPagoGroup);
+		tarjetaRadio.setToggleGroup(modoPagoGroup);
+		bizumRadio.setToggleGroup(modoPagoGroup);
 	}
-	
+
 	private void actualizarPrecioTotal() {
 		double precioTotal = 0.0;
 
@@ -204,48 +201,52 @@ public class SellarAlojarController {
 		listaServicios = FXCollections.observableArrayList(servicioService.obtenerTodosServicios());
 		UIUtils.configurarServiciosComboBox(serviciosComboBox, listaServicios, serviciosSeleccionados);
 	}
+
 	private char obtenerModoPagoSeleccionado() {
-		if (efectivoRadio.isSelected()) return 'E';
-		if (tarjetaRadio.isSelected()) return 'T';
-		if (bizumRadio.isSelected()) return 'B';
+		if (efectivoRadio.isSelected())
+			return 'E';
+		if (tarjetaRadio.isSelected())
+			return 'T';
+		if (bizumRadio.isSelected())
+			return 'B';
 		return ' ';
 	}
 
 	private void configurarEventos() {
-	    alojarCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-	        actualizarEstadoCampos(newValue);
-	    });
+		alojarCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			actualizarEstadoCampos(newValue);
+		});
 
-	    envioCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-	        UIUtils.setEstadoCamposEnvio(newValue, pesoField, volumenX, volumenY, volumenZ, direccionField, localidadField, urgenteCheckBox);
-	        actualizarPrecioTotal();
-	    });
+		envioCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			UIUtils.setEstadoCamposEnvio(newValue, pesoField, volumenX, volumenY, volumenZ, direccionField,
+					localidadField, urgenteCheckBox);
+			actualizarPrecioTotal();
+		});
 	}
 
 	private void actualizarEstadoCampos(boolean alojar) {
-	    boolean activar = alojar;
+		boolean activar = alojar;
 
-	    serviciosComboBox.setDisable(!activar);
-	    vipCheckBox.setDisable(!activar);
-	    envioCheckBox.setDisable(!activar);
-	    efectivoRadio.setDisable(!activar);
-	    tarjetaRadio.setDisable(!activar);
-	    bizumRadio.setDisable(!activar);
+		serviciosComboBox.setDisable(!activar);
+		vipCheckBox.setDisable(!activar);
+		envioCheckBox.setDisable(!activar);
+		efectivoRadio.setDisable(!activar);
+		tarjetaRadio.setDisable(!activar);
+		bizumRadio.setDisable(!activar);
 
-	    if (!activar) {
-	        modoPagoGroup.selectToggle(null);
-	        envioCheckBox.setSelected(false);
-	    }
+		if (!activar) {
+			modoPagoGroup.selectToggle(null);
+			envioCheckBox.setSelected(false);
+		}
 	}
 
 	private void configurarBotones() {
-	    ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
-	    ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/SellarAlojar.html"));
-	    volverMenuLink.setOnAction(event -> volverLogin());
-	    limpiarButton.setOnAction(event -> limpiarFormulario());
-	    confirmarButton.setOnAction(event -> sellarAlojar());
+		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
+		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/SellarAlojar.html"));
+		volverMenuLink.setOnAction(event -> volverLogin());
+		limpiarButton.setOnAction(event -> limpiarFormulario());
+		confirmarButton.setOnAction(event -> sellarAlojar());
 	}
-
 
 	private void configurarAtajos() {
 		confirmarButton.sceneProperty().addListener((observable, oldScene, newScene) -> {
@@ -341,6 +342,20 @@ public class SellarAlojarController {
 			return;
 		}
 
+		if (envioCheckBox.isSelected() && direccionField.getText().isEmpty() || localidadField.getText().isEmpty()) {
+			alertsView.mostrarError("Error!!!", "Los campos de envio a casa no pueden estar vacios.");
+			return;
+		}
+		if (modoPagoGroup.getSelectedToggle() == null && !serviciosSeleccionados.isEmpty()) {
+			alertsView.mostrarError("Error!!", "Debe seleccionar un modo de pago");
+			return;
+		}
+
+		if (modoPagoGroup.getSelectedToggle() != null && serviciosSeleccionados.isEmpty()) {
+			alertsView.mostrarError("Error!!", "Debe seleccionar un servicio");
+			return;
+		}
+
 		Carnet carnet = peregrino.getCarnet();
 
 		if (!yaSellado) {
@@ -348,8 +363,7 @@ public class SellarAlojarController {
 			ParadasPeregrinos paradasPeregrinos = new ParadasPeregrinos(peregrino, paradaActual);
 			paradaService.guardarParadasPeregrinos(paradasPeregrinos);
 		}
-		
-		
+
 		Estancia estancia = null;
 
 		if (alojarCheckBox.isSelected() && !yaAlojado) {
@@ -366,28 +380,27 @@ public class SellarAlojarController {
 				carnet.setnVips(carnet.getnVips() + 1);
 			}
 		}
-		
+
 		EnvioACasa envio = null;
-		if(envioCheckBox.isSelected() && estancia != null && !yaAlojado) {
+		if (envioCheckBox.isSelected() && estancia != null && !yaAlojado) {
 			try {
 				double peso = Double.parseDouble(pesoField.getText());
-				int[] volumen = {
-						Integer.parseInt(volumenX.getText()),
-						Integer.parseInt(volumenY.getText()),
-						Integer.parseInt(volumenZ.getText()),
-				};
-				boolean urgente  = urgenteCheckBox.isSelected();
+				int[] volumen = { Integer.parseInt(volumenX.getText()), Integer.parseInt(volumenY.getText()),
+						Integer.parseInt(volumenZ.getText()), };
+				boolean urgente = urgenteCheckBox.isSelected();
 				Direccion direccion = new Direccion(direccionField.getText(), localidadField.getText());
-				
-				envio = new EnvioACasa(null, peso, volumen, urgente, direccion);
+
+				Long idEnvio = servicioService.obtenerSiguienteIdServicio();
+				envio = new EnvioACasa(idEnvio, peso, volumen, urgente, direccion);
 				envioACasaService.guardarEnvio(envio);
-			}catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				alertsView.mostrarError("Error", "Peso y volumen deben de ser numeros");
 				return;
 			}
 		}
-		
-		if (modoPagoGroup.getSelectedToggle() != null && !serviciosSeleccionados.isEmpty() && estancia != null && !yaAlojado) {
+
+		if (modoPagoGroup.getSelectedToggle() != null && !serviciosSeleccionados.isEmpty() && estancia != null
+				&& !yaAlojado) {
 			char modoPago = obtenerModoPagoSeleccionado();
 			String extra = extraConjunto.getText();
 			double precioTotal = 0.0;
@@ -395,20 +408,20 @@ public class SellarAlojarController {
 			for (Servicio servicio : serviciosSeleccionados) {
 				precioTotal += servicio.getPrecio();
 			}
-			
-			if(envio != null) {
+
+			if (envio != null) {
 				precioTotal += 10.0;
 			}
 			Long id = conjuntoContratadoService.obtenerSiguienteId();
-	        ConjuntoContratado conjunto = new ConjuntoContratado(id, precioTotal, modoPago, extra, estancia.getId());
-	        conjunto.setServicios(new ArrayList<>(serviciosSeleccionados));
+			ConjuntoContratado conjunto = new ConjuntoContratado(id, precioTotal, modoPago, extra, estancia.getId());
+			conjunto.setServicios(new ArrayList<>(serviciosSeleccionados));
 
-	        if (envio != null) {
-	            conjunto.getServicios().add(envio);
-	        }
+			if (envio != null) {
+				conjunto.getServicios().add(envio);
+			}
 
-	        conjuntoContratadoService.guardarConjunto(conjunto);
-	    }
+			conjuntoContratadoService.guardarConjunto(conjunto);
+		}
 
 		peregrinoService.actualizarCarnet(carnet);
 

@@ -207,5 +207,16 @@ public class ValidacionesService {
 
 		return true;
 	}
+	
+	public boolean validarNombre(String cadena) {
+		for (int i = 1; i < cadena.length(); i++) {
+			if (!Character.isLetter(cadena.charAt(i))) {
+				alertsView.mostrarError("Error", "El campo nombre no puede contener números ni caracteres especiales.");
+				return false;
+			}
+		}
+		return true;
+		
+	}
 
 }

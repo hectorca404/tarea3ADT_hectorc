@@ -13,7 +13,7 @@ public class ConjuntoContratado implements Serializable {
 	private String extra;
 
 	// RELACION SERVICIOS
-	private List<Servicio> servicios;
+	private List<Servicio> servicios = new ArrayList<>();
 	private Long idEstancia;
 
 	public ConjuntoContratado() {

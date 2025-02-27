@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.luisdbb.tarea3AD2024base.config.StageManager;
-import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.fxml.FXML;
@@ -17,54 +16,52 @@ import javafx.scene.image.ImageView;
 @Controller
 public class MenuServiceController {
 
-    @FXML private Button ayudaButton;
-    @FXML private ImageView ayudaIcon;
-   
-    @FXML private Button crearServicioButton;
-    @FXML private ImageView crearServicioIcon;
-    @FXML private Button editarServicioButton;
-    
-    @FXML private ImageView editarServicioIcon;
-    @FXML private Hyperlink volverMenuLink;
+	@FXML
+	private Button ayudaButton;
 
-    @Autowired private AyudaService ayudaService;
+	@FXML
+	private ImageView ayudaIcon;
 
-    @Lazy
-    @Autowired private StageManager stageManager;
+	@FXML
+	private Button crearServicioButton;
 
-    @FXML
-    public void initialize() {
-        ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
-        crearServicioIcon.setImage(new Image(getClass().getResourceAsStream("/images/agregarUsuario.png")));
-        editarServicioIcon.setImage(new Image(getClass().getResourceAsStream("/images/editarUsuario.png")));
-       
-        //ayudaButton.setOnAction(event -> mostrarAyuda());
-        crearServicioButton.setOnAction(event -> abrirCrearServicio());
-        editarServicioButton.setOnAction(event -> editarServicio());
-        volverMenuLink.setOnAction(event -> volverAlMenuAdministrador());
-    }
+	@FXML
+	private ImageView crearServicioIcon;
 
-//    private void mostrarAyuda() {
-//        ayudaService.mostrarAyuda("/help/MenuService.html");
-//    }
+	@FXML
+	private Button editarServicioButton;
 
-//    private void abrirCrearServicio() {
-//        stageManager.switchScene(FxmlView.CREARSERVICIO);
-//    }
-//
-//    private void editarServicio() {
-//        stageManager.switchScene(FxmlView.EDITARSERVICIO);
-//    }
+	@FXML
+	private ImageView editarServicioIcon;
 
-    private void volverAlMenuAdministrador() {
-        stageManager.switchScene(FxmlView.ADMIN);
-    }
-    
-    private void abrirCrearServicio() {
-        stageManager.switchScene(FxmlView.CREARSERVICIO);
-    }
-    private void editarServicio() {
-        stageManager.switchScene(FxmlView.EDITARSERVICIO);
-    }
-   
+	@FXML
+	private Hyperlink volverMenuLink;
+
+	@Lazy
+	@Autowired
+	private StageManager stageManager;
+
+	@FXML
+	public void initialize() {
+		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
+		crearServicioIcon.setImage(new Image(getClass().getResourceAsStream("/images/agregarUsuario.png")));
+		editarServicioIcon.setImage(new Image(getClass().getResourceAsStream("/images/editarUsuario.png")));
+
+		crearServicioButton.setOnAction(event -> abrirCrearServicio());
+		editarServicioButton.setOnAction(event -> editarServicio());
+		volverMenuLink.setOnAction(event -> volverAlMenuAdministrador());
+	}
+
+	private void volverAlMenuAdministrador() {
+		stageManager.switchScene(FxmlView.ADMIN);
+	}
+
+	private void abrirCrearServicio() {
+		stageManager.switchScene(FxmlView.CREARSERVICIO);
+	}
+
+	private void editarServicio() {
+		stageManager.switchScene(FxmlView.EDITARSERVICIO);
+	}
+
 }

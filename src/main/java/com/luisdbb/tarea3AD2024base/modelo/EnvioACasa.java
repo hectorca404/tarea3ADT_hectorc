@@ -13,30 +13,30 @@ import jakarta.persistence.Id;
 //OBJECTDB
 @Entity
 public class EnvioACasa extends Servicio implements Serializable {
-    // ATRIBUTOS
+	// ATRIBUTOS
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private double peso;
-    private int[] volumen;
-    private boolean urgente;
-    
-    private static final String NOMBRE_ENVIO = "Envio a Casa";
-    private static final double PRECIO_ENVIO = 10.0;
+	private double peso;
+	private int[] volumen;
+	private boolean urgente;
 
-    //RELACION
-    @Embedded
-    private Direccion direccion;
+	private static final String NOMBRE_ENVIO = "Envio a Casa";
+	private static final double PRECIO_ENVIO = 10.0;
 
-    // CONSTRUCTORES
-    public EnvioACasa() {
-        super(null, NOMBRE_ENVIO, PRECIO_ENVIO);
-    }
+	// RELACION
+	@Embedded
+	private Direccion direccion;
 
-    public EnvioACasa(Long id, double peso, int[] volumen, boolean urgente, Direccion direccion) {
-        super(id, NOMBRE_ENVIO, PRECIO_ENVIO);
-        this.peso = peso;
+	// CONSTRUCTORES
+	public EnvioACasa(Long id) {
+		super(id, NOMBRE_ENVIO, PRECIO_ENVIO);
+	}
+
+	public EnvioACasa(Long id, double peso, int[] volumen, boolean urgente, Direccion direccion) {
+		super(id, NOMBRE_ENVIO, PRECIO_ENVIO);
+		this.peso = peso;
 		this.volumen = volumen;
 		this.urgente = urgente;
 		this.direccion = direccion;

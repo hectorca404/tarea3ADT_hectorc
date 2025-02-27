@@ -62,7 +62,6 @@ public class UIUtils {
 		serviciosComboBox.getSelectionModel().clearSelection();
 	}
 
-
 	public static void configurarParadasComboBox(ComboBox<Parada> paradasComboBox, ObservableList<Parada> listaParadas,
 			ObservableList<Parada> paradasSeleccionadas) {
 		paradasComboBox.setItems(listaParadas);
@@ -102,4 +101,3 @@ public class UIUtils {
 	}
 
 }
-

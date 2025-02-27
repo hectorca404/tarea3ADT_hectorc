@@ -1,8 +1,9 @@
 package com.luisdbb.tarea3AD2024base.modelo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.*;
 
 //DB4O
 
@@ -11,6 +12,8 @@ public class Servicio implements Serializable {
 	private Long id;
 	private String nombre;
 	private double precio;
+
+	private List<Long> paradaIds = new ArrayList<>();
 
 	// CONTRUSTORES
 
@@ -21,6 +24,7 @@ public class Servicio implements Serializable {
 		this.id = id;
 		this.nombre = nombre;
 		this.precio = precio;
+		this.paradaIds = new ArrayList<>();
 	}
 
 	// GETTERS AND SETTER
@@ -47,6 +51,24 @@ public class Servicio implements Serializable {
 
 	public void setPrecio(double precio) {
 		this.precio = precio;
+	}
+
+	public List<Long> getParadaIds() {
+		return paradaIds;
+	}
+
+	public void setParadaIds(List<Long> paradaIds) {
+		this.paradaIds = paradaIds;
+	}
+
+	public void agregarParada(Long paradaId) {
+		if (!paradaIds.contains(paradaId)) {
+			paradaIds.add(paradaId);
+		}
+	}
+
+	public void eliminarParada(Long paradaId) {
+		paradaIds.remove(paradaId);
 	}
 
 	// METODOS CLASS ENTITY
