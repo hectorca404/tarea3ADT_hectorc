@@ -19,7 +19,7 @@ public class EnvioACasa extends Servicio implements Serializable {
 	private Long id;
 
 	private double peso;
-	private int[] volumen;
+	private double[] volumen;
 	private boolean urgente;
 
 	private static final String NOMBRE_ENVIO = "Envio a Casa";
@@ -34,7 +34,7 @@ public class EnvioACasa extends Servicio implements Serializable {
 		super(id, NOMBRE_ENVIO, PRECIO_ENVIO);
 	}
 
-	public EnvioACasa(Long id, double peso, int[] volumen, boolean urgente, Direccion direccion) {
+	public EnvioACasa(Long id, double peso, double[] volumen, boolean urgente, Direccion direccion) {
 		super(id, NOMBRE_ENVIO, PRECIO_ENVIO);
 		this.peso = peso;
 		this.volumen = volumen;
@@ -51,11 +51,11 @@ public class EnvioACasa extends Servicio implements Serializable {
 		this.peso = peso;
 	}
 
-	public int[] getVolumen() {
+	public double[] getVolumen() {
 		return volumen;
 	}
 
-	public void setVolumen(int[] volumen) {
+	public void setVolumen(double[] volumen) {
 		this.volumen = volumen;
 	}
 

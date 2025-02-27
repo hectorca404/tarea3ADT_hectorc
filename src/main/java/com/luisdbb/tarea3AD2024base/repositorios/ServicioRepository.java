@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.db4o.ObjectContainer;
-import com.luisdbb.tarea3AD2024base.config.DB4OConnection;
+import com.luisdbb.tarea3AD2024base.controller.DB4OConnection;
 import com.luisdbb.tarea3AD2024base.modelo.EnvioACasa;
 import com.luisdbb.tarea3AD2024base.modelo.Servicio;
 

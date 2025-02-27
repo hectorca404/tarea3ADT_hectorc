@@ -341,14 +341,17 @@ public class SellarAlojarController {
 			alertsView.mostrarError("Error", "Este peregrino ya se ha alojado en esta parada hoy.");
 			return;
 		}
-
-		if (envioCheckBox.isSelected() && direccionField.getText().isEmpty() || localidadField.getText().isEmpty()) {
-			alertsView.mostrarError("Error!!!", "Los campos de envio a casa no pueden estar vacios.");
-			return;
-		}
 		if (modoPagoGroup.getSelectedToggle() == null && !serviciosSeleccionados.isEmpty()) {
 			alertsView.mostrarError("Error!!", "Debe seleccionar un modo de pago");
 			return;
+		}
+
+		if (envioCheckBox.isSelected()) {
+			if (direccionField.getText().isEmpty() || localidadField.getText().isEmpty()) {
+				alertsView.mostrarError("Error!!!", "Los campos de envio a casa no pueden estar vacios.");
+				return;
+			}
+
 		}
 
 		if (modoPagoGroup.getSelectedToggle() != null && serviciosSeleccionados.isEmpty()) {
@@ -356,6 +359,34 @@ public class SellarAlojarController {
 			return;
 		}
 
+		EnvioACasa envio = null;
+		if (envioCheckBox.isSelected() && !yaAlojado) {
+			try {
+				double volumenXDouble = Double.parseDouble(volumenX.getText());
+				double volumenYDouble = Double.parseDouble(volumenY.getText());
+				double volumenZDouble = Double.parseDouble(volumenZ.getText());
+				double pesoDouble = Double.parseDouble(pesoField.getText());
+
+				if (volumenXDouble < 0 || volumenYDouble < 0 || volumenZDouble < 0 || pesoDouble < 0) {
+					alertsView.mostrarError("Error!!!", "Los campos de envio a casa no pueden ser menor que cero.");
+					return;
+				}
+
+				double peso = pesoDouble;
+				double[] volumen = { volumenXDouble, volumenYDouble, volumenZDouble };
+				boolean urgente = urgenteCheckBox.isSelected();
+				Direccion direccion = new Direccion(direccionField.getText(), localidadField.getText());
+
+				Long idEnvio = servicioService.obtenerSiguienteIdServicio();
+				envio = new EnvioACasa(idEnvio, peso, volumen, urgente, direccion);
+				envioACasaService.guardarEnvio(envio);
+			} catch (NumberFormatException e) {
+				alertsView.mostrarError("Error", "Peso y volumen deben de ser numeros");
+				return;
+			}
+		}
+		
+		
 		Carnet carnet = peregrino.getCarnet();
 
 		if (!yaSellado) {
@@ -378,24 +409,6 @@ public class SellarAlojarController {
 
 			if (esVip) {
 				carnet.setnVips(carnet.getnVips() + 1);
-			}
-		}
-
-		EnvioACasa envio = null;
-		if (envioCheckBox.isSelected() && estancia != null && !yaAlojado) {
-			try {
-				double peso = Double.parseDouble(pesoField.getText());
-				int[] volumen = { Integer.parseInt(volumenX.getText()), Integer.parseInt(volumenY.getText()),
-						Integer.parseInt(volumenZ.getText()), };
-				boolean urgente = urgenteCheckBox.isSelected();
-				Direccion direccion = new Direccion(direccionField.getText(), localidadField.getText());
-
-				Long idEnvio = servicioService.obtenerSiguienteIdServicio();
-				envio = new EnvioACasa(idEnvio, peso, volumen, urgente, direccion);
-				envioACasaService.guardarEnvio(envio);
-			} catch (NumberFormatException e) {
-				alertsView.mostrarError("Error", "Peso y volumen deben de ser numeros");
-				return;
 			}
 		}
 

@@ -79,15 +79,19 @@ public class EditarServicioController {
 		cancelarButton.setOnAction(event -> cancelar());
 		guardarButton.setOnAction(event -> actualizarServicio());
 
-		cargarParadas();
+		
 		cargarServicios();
 
 		servicioComboBox.setOnAction(event -> {
 			Servicio servicioSeleccionado = servicioComboBox.getSelectionModel().getSelectedItem();
 			if (servicioSeleccionado != null) {
 				cargarDatosServicio(servicioSeleccionado);
+				cargarParadas();
 			}
 		});
+		
+			
+
 	}
 
 	private void cargarParadas() {

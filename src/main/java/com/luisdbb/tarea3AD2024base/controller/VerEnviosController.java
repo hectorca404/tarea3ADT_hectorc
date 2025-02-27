@@ -77,7 +77,7 @@ public class VerEnviosController {
 
 		colPeregrino.setCellValueFactory(data -> {
 			Peregrino peregrino = envioACasaService.obtenerPeregrinoDeEnvio(data.getValue());
-			return new SimpleStringProperty(peregrino != null ? peregrino.getNombre() : "Desconocido");
+			return new SimpleStringProperty(peregrino.getNombre());
 		});
 
 		colDireccion

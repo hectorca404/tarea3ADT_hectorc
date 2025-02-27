@@ -1,7 +1,9 @@
-package com.luisdbb.tarea3AD2024base.config;
+package com.luisdbb.tarea3AD2024base.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -9,13 +11,20 @@ import jakarta.persistence.Persistence;
 
 @Component
 public class ObjectDBConnection {
+
+	@Value("${objectdb.datasource.url}")
+	private String db_url;
+
 	private static ObjectDBConnection INSTANCE;
 	private EntityManagerFactory emf;
 	private EntityManager em;
 
-	private static final String DB_PATH = "databases/database.odb";
-
 	private ObjectDBConnection() {
+
+	}
+
+	@PostConstruct
+	private void init() {
 		open();
 	}
 
@@ -28,7 +37,7 @@ public class ObjectDBConnection {
 
 	private void open() {
 		if (emf == null || !emf.isOpen()) {
-			emf = Persistence.createEntityManagerFactory("objectdb:" + DB_PATH);
+			emf = Persistence.createEntityManagerFactory(db_url);
 		}
 		if (em == null || !em.isOpen()) {
 			em = emf.createEntityManager();
