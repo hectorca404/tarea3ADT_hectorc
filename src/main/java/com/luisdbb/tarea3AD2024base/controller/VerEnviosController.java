@@ -80,8 +80,8 @@ public class VerEnviosController {
 			return new SimpleStringProperty(peregrino.getNombre());
 		});
 
-		colDireccion
-				.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDireccion().getDireccion()));
+		colDireccion.setCellValueFactory(data -> new SimpleStringProperty(
+				data.getValue().getDireccion().getDireccion() + ", " + data.getValue().getDireccion().getLocalidad()));
 	}
 
 	private void volverAlMenu() {

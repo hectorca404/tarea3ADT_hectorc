@@ -1,4 +1,4 @@
-package com.luisdbb.tarea3AD2024base.controller;
+package com.luisdbb.tarea3AD2024base.config;
 
 import org.springframework.stereotype.Component;
 

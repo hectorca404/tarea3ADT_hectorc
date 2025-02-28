@@ -106,6 +106,11 @@ public class CrearServicioController {
 			return;
 		}
 
+		if (servicioService.existeServicio(nombre)) {
+			alertsView.mostrarError("Error!!!", "Ya existe un servicio con este nombre");
+			return;
+		}
+
 		double precio;
 		try {
 			precio = Double.parseDouble(precioTexto);
@@ -147,6 +152,11 @@ public class CrearServicioController {
 	private void limpiarFormulario() {
 		nombreServicioField.clear();
 		precioField.clear();
+
+		paradasComboBox.getSelectionModel().clearSelection();
+		paradasSeleccionadas.clear();
+
+		configurarParadas();
 	}
 
 }

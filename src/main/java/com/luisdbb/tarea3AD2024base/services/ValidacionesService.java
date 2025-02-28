@@ -207,7 +207,7 @@ public class ValidacionesService {
 
 		return true;
 	}
-	
+
 	public boolean validarNombre(String cadena) {
 		for (int i = 1; i < cadena.length(); i++) {
 			if (!Character.isLetter(cadena.charAt(i))) {
@@ -216,7 +216,7 @@ public class ValidacionesService {
 			}
 		}
 		return true;
-		
+
 	}
 
 }

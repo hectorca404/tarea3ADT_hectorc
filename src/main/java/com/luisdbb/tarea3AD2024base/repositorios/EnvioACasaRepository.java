@@ -3,7 +3,7 @@ package com.luisdbb.tarea3AD2024base.repositorios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.luisdbb.tarea3AD2024base.controller.ObjectDBConnection;
+import com.luisdbb.tarea3AD2024base.config.ObjectDBConnection;
 import com.luisdbb.tarea3AD2024base.modelo.EnvioACasa;
 
 import jakarta.persistence.EntityManager;

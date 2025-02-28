@@ -163,8 +163,12 @@ public class SellarAlojarController {
 
 	private ObservableList<Servicio> listaServicios;
 
+	private Parada paradaActual;
+
 	@FXML
 	public void initialize() {
+
+		paradaActual = sesionService.getParadaActual();
 		configurarModoPago();
 		configurarServicios();
 		configurarEventos();
@@ -198,7 +202,8 @@ public class SellarAlojarController {
 	}
 
 	private void configurarServicios() {
-		listaServicios = FXCollections.observableArrayList(servicioService.obtenerTodosServicios());
+		listaServicios = FXCollections
+				.observableArrayList(servicioService.obtenerServiciosPorParada(paradaActual.getId()));
 		UIUtils.configurarServiciosComboBox(serviciosComboBox, listaServicios, serviciosSeleccionados);
 	}
 
@@ -286,9 +291,28 @@ public class SellarAlojarController {
 
 	private void limpiarFormulario() {
 		peregrinoComboBox.getSelectionModel().clearSelection();
+		serviciosComboBox.getSelectionModel().clearSelection();
+
 		alojarCheckBox.setSelected(false);
 		vipCheckBox.setSelected(false);
-		serviciosComboBox.getSelectionModel().clearSelection();
+		envioCheckBox.setSelected(false);
+		urgenteCheckBox.setSelected(false);
+
+		modoPagoGroup.selectToggle(null);
+
+		pesoField.clear();
+		volumenX.clear();
+		volumenY.clear();
+		volumenZ.clear();
+		direccionField.clear();
+		localidadField.clear();
+		extraConjunto.clear();
+
+		serviciosSeleccionados.clear();
+
+		totalLabel.setText("Precio Total: ");
+
+		configurarServicios();
 	}
 
 	private List<Credenciales> cargarPeregrinos() {
@@ -385,8 +409,7 @@ public class SellarAlojarController {
 				return;
 			}
 		}
-		
-		
+
 		Carnet carnet = peregrino.getCarnet();
 
 		if (!yaSellado) {

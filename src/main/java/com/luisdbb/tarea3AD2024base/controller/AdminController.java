@@ -22,10 +22,9 @@ public class AdminController {
 
 	@FXML
 	private Button cerrarSesionButton;
-	
+
 	@FXML
 	private Button serviciosButton;
-
 
 	@FXML
 	private Button ayudaButton;
@@ -35,7 +34,7 @@ public class AdminController {
 
 	@FXML
 	private ImageView cerrarSesionIcon;
-	
+
 	@FXML
 	private ImageView serviciosIcon;
 
@@ -55,7 +54,6 @@ public class AdminController {
 		cerrarSesionIcon.setImage(new Image(getClass().getResourceAsStream("/images/cerrarSesion.png")));
 		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
 		serviciosIcon.setImage(new Image(getClass().getResourceAsStream("/images/servicio.png")));
-
 
 		crearParadaButton.setOnAction(event -> crearParada());
 		cerrarSesionButton.setOnAction(event -> cerrarSesion());
@@ -81,7 +79,7 @@ public class AdminController {
 	private void crearParada() {
 		stageManager.switchScene(FxmlView.CREARPARADA);
 	}
-	
+
 	private void mostrarMenuServicios() {
 		stageManager.switchScene(FxmlView.MENUSERVICIOS);
 	}

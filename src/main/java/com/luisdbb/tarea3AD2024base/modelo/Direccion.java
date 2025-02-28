@@ -4,12 +4,10 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 
 //OBJECTDB
 @Embeddable
-public class Direccion implements Serializable{
+public class Direccion implements Serializable {
 
 	private String direccion;
 	private String localidad;
@@ -27,7 +25,6 @@ public class Direccion implements Serializable{
 	}
 
 	// GETTERS AND SETTERS
-
 
 	public String getDireccion() {
 		return direccion;
@@ -67,7 +64,5 @@ public class Direccion implements Serializable{
 		Direccion other = (Direccion) obj;
 		return Objects.equals(direccion, other.direccion) && Objects.equals(localidad, other.localidad);
 	}
-
-	
 
 }

@@ -79,7 +79,6 @@ public class EditarServicioController {
 		cancelarButton.setOnAction(event -> cancelar());
 		guardarButton.setOnAction(event -> actualizarServicio());
 
-		
 		cargarServicios();
 
 		servicioComboBox.setOnAction(event -> {
@@ -89,8 +88,6 @@ public class EditarServicioController {
 				cargarParadas();
 			}
 		});
-		
-			
 
 	}
 
@@ -110,6 +107,10 @@ public class EditarServicioController {
 		precioField.setText(String.valueOf(servicio.getPrecio()));
 
 		paradasSeleccionadas.clear();
+		
+		if (listaParadas.isEmpty()) {
+	        cargarParadas();
+	    }
 
 		for (Parada parada : listaParadas) {
 			if (servicio.getParadaIds().contains(parada.getId())) {
@@ -119,6 +120,8 @@ public class EditarServicioController {
 
 		UIUtils.configurarParadasComboBox(paradasComboBox, listaParadas, paradasSeleccionadas);
 	}
+	
+
 
 	private void actualizarServicio() {
 		Servicio servicioSeleccionado = servicioComboBox.getSelectionModel().getSelectedItem();
@@ -159,11 +162,17 @@ public class EditarServicioController {
 			nuevasParadas.add(parada.getId());
 		}
 		servicioSeleccionado.setParadaIds(nuevasParadas);
+		
+		servicioService.guardarServicio(servicioSeleccionado);
 
 		alertsView.mostrarConfirmacion("Exito", "Servicio editado correctamente");
+
+		cancelar();
 	}
 
 	private void cancelar() {
 		stageManager.switchScene(FxmlView.MENUSERVICIOS);
+
 	}
+
 }
