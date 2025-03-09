@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 
 import com.luisdbb.tarea3AD2024base.config.StageManager;
 import com.luisdbb.tarea3AD2024base.services.AyudaService;
+import com.luisdbb.tarea3AD2024base.services.ColeccionParadaService;
 import com.luisdbb.tarea3AD2024base.services.ParadaService;
 import com.luisdbb.tarea3AD2024base.services.ValidacionesService;
 import com.luisdbb.tarea3AD2024base.view.AlertsView;
@@ -73,6 +74,9 @@ public class CrearParadaController {
 
 	@Autowired
 	private AlertsView alertsView;
+	
+	@Autowired
+	private ColeccionParadaService coleccionParadaService;
 
 	@FXML
 	public void initialize() {
@@ -166,7 +170,11 @@ public class CrearParadaController {
 				return;
 			}
 
+			
 			paradaService.registrarParada(nombre, region, responsable, usuario, correo, password);
+				
+			coleccionParadaService.crearColeccionParada(nombre);
+           
 			alertsView.mostrarInfo("Exitoso", "Parada registrada correctamente");
 			limpiarFormulario();
 		} catch (Exception e) {
