@@ -28,12 +28,18 @@ public class ResParadaController {
 
 	@FXML
 	private Button ayudaButton;
+	
+	@FXML
+	private Button verPerButton;
 
 	@FXML
 	private Button verEnviosButton;
 
 	@FXML
 	private ImageView exportarIcon;
+	
+	@FXML
+	private ImageView verPerIcon;
 
 	@FXML
 	private ImageView sellarIcon;
@@ -61,12 +67,14 @@ public class ResParadaController {
 		cerrarSesionIcon.setImage(new Image(getClass().getResourceAsStream("/images/cerrarSesion.png")));
 		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
 		verEnviosIcon.setImage(new Image(getClass().getResourceAsStream("/images/abierto.png")));
+		verPerIcon.setImage(new Image(getClass().getResourceAsStream("/images/abierto.png")));
 
 		cerrarSesionButton.setOnAction(event -> volverLogin());
 		sellarAlojarButton.setOnAction(event -> sellarAlojar());
 		exportarDatosButton.setOnAction(event -> exportarDatos());
 		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/ResParada.html"));
 		verEnviosButton.setOnAction(event -> verEnvio());
+		verPerButton.setOnAction(event -> verPeregrinos());
 
 		configurarAtajo();
 
@@ -90,6 +98,9 @@ public class ResParadaController {
 
 	private void verEnvio() {
 		stageManager.switchScene(FxmlView.VERENVIOS);
+	}
+	private void verPeregrinos() {
+		stageManager.switchScene(FxmlView.VERPEREGRINOSPARADA);
 	}
 
 	private void volverLogin() {

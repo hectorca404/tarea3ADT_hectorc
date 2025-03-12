@@ -198,6 +198,7 @@ public class RegPeregrinoController {
 		try {
 			peregrinoService.registrarPeregrino(nombreUsuario, contrasena, correo, nombre, apellido, nacionalidad,
 					paradaInicio);
+
 			alertsView.mostrarInfo("Peregrino Reistrado", "Peregrino registrado correctamente");
 			limpiarFormulario();
 

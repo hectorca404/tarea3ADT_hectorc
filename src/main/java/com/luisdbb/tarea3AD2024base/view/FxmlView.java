@@ -157,6 +157,17 @@ public enum FxmlView {
 			return "/fxml/EditarServicio.fxml";
 		}
 	},
+	VERPEREGRINOSPARADA {
+		@Override
+		public String getTitle() {
+			return "Ver Peregrinos Parada";
+		}
+
+		@Override
+		public String getFxmlFile() {
+			return "/fxml/VerPeregrinosParada.fxml";
+		}
+	},
 
 	PRINCIPAL {
 		@Override

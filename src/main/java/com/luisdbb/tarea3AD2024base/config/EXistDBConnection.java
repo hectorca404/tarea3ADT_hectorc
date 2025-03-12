@@ -6,6 +6,7 @@ import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.base.XMLDBException;
+import org.xmldb.api.modules.CollectionManagementService;
 
 @Component
 public class EXistDBConnection {
@@ -28,9 +29,18 @@ public class EXistDBConnection {
 			DatabaseManager.registerDatabase(baseDeDatos);
 
 			coleccion = DatabaseManager.getCollection(url, usuario, contrasena);
-		} catch (ClassNotFoundException | XMLDBException | InstantiationException | IllegalAccessException
-				| NoSuchMethodException | java.lang.reflect.InvocationTargetException e) {
-			System.out.println("Error al establecer la coenxion con eXistDB");
+
+			if (coleccion == null) {
+				Collection root = DatabaseManager.getCollection("xmldb:exist://localhost:8080/exist/xmlrpc/db", usuario,
+						contrasena);
+				CollectionManagementService mgtService = (CollectionManagementService) root
+						.getService("CollectionManagementService", "1.0");
+				mgtService.createCollection(url.substring(url.lastIndexOf("/") + 1));
+				coleccion = DatabaseManager.getCollection(url, usuario, contrasena);
+			}
+
+		} catch (Exception e) {
+			System.out.println("Error al establecer la conexion eXist-db: " + e.getMessage());
 			e.printStackTrace();
 		}
 		return coleccion;
@@ -41,9 +51,21 @@ public class EXistDBConnection {
 			try {
 				coleccion.close();
 			} catch (XMLDBException e) {
-				System.out.print("Error al cerrar la conexion: ");
+				System.out.println("Error al cerrar la conexion eXist-db: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public String getContrasena() {
+		return contrasena;
 	}
 }

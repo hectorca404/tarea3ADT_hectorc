@@ -1,9 +1,24 @@
 package com.luisdbb.tarea3AD2024base.services;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.luisdbb.tarea3AD2024base.modelo.Carnet;
 import com.luisdbb.tarea3AD2024base.modelo.Credenciales;
@@ -24,19 +39,21 @@ public class PeregrinoService {
 	private final ParadasPeregrinosRepository paradasPeregrinosRepository;
 	private final CredencialesRepository credencialesRepository;
 	private final EstanciaRepository estanciaRepository;
+	private final CarnetExistDBService carnetExistDBService;
 
 	public PeregrinoService(PeregrinoRepository peregrinoRepository,
 			ParadasPeregrinosRepository paradasPeregrinosRepository, CredencialesRepository credencialesRepository,
-			EstanciaRepository estanciaRepository) {
+			EstanciaRepository estanciaRepository, CarnetExistDBService carnetExistDBService) {
 		this.peregrinoRepository = peregrinoRepository;
 		this.paradasPeregrinosRepository = paradasPeregrinosRepository;
 		this.credencialesRepository = credencialesRepository;
 		this.estanciaRepository = estanciaRepository;
+		this.carnetExistDBService = carnetExistDBService;
 
 	}
 
 	@Transactional
-	public Peregrino registrarPeregrino(String nombreUsuario, String contrasena, String correo, String nombre,
+	public void registrarPeregrino(String nombreUsuario, String contrasena, String correo, String nombre,
 			String apellido, String nacionalidad, Parada paradaInicio) {
 		if (credencialesRepository.findByNombreUsuario(nombreUsuario).isPresent()) {
 			throw new IllegalArgumentException("El nombre de usuario ya existe");
@@ -58,7 +75,17 @@ public class PeregrinoService {
 
 		credencialesRepository.save(credenciales);
 
-		return peregrinoGuardado;
+		String nombreFichero = peregrinoGuardado.getNombre().replaceAll(" ", "_") + "_P" + peregrinoGuardado.getId()
+				+ ".xml";
+
+		String xmlContent = generarXMLCarnet(peregrinoGuardado);
+
+		String nombreSubcoleccion = peregrinoGuardado.getCarnet().getParadaInicio().getNombre();
+
+		carnetExistDBService.almacenarCarnet(nombreSubcoleccion, nombreFichero, xmlContent);
+
+		exportarPeregrinoXML(peregrinoGuardado);
+
 	}
 
 	public List<Parada> obtenerParadas(Long peregrinoId) {
@@ -92,6 +119,183 @@ public class PeregrinoService {
 		peregrino.getCarnet().setnVips(carnet.getnVips());
 
 		peregrinoRepository.save(peregrino);
+	}
+
+	public void exportarPeregrinoXML(Peregrino peregrino) {
+		String pathExportacion = "src/main/resources/peregrinosXML/";
+
+		List<Parada> paradas = obtenerParadas(peregrino.getId());
+		List<Estancia> estancias = obtenerEstancias(peregrino.getId());
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		LocalDate fechaExpCarnet = peregrino.getCarnet().getFechaexp();
+		String fechaExpFormateada = (fechaExpCarnet != null) ? fechaExpCarnet.format(formatter) : "Fecha no disponible";
+
+		String nombreFichero = peregrino.getNombre().replaceAll(" ", "_") + "_P" + peregrino.getId() + ".xml";
+		String fichero = pathExportacion + nombreFichero;
+
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document doc = builder.newDocument();
+
+			Element carnetElement = doc.createElement("carnet");
+			doc.appendChild(carnetElement);
+
+			Element idElement = doc.createElement("id");
+			idElement.setTextContent(String.valueOf(peregrino.getCarnet().getId()));
+			carnetElement.appendChild(idElement);
+
+			Element fechaExpElement = doc.createElement("fechaexp");
+			fechaExpElement.setTextContent(fechaExpFormateada);
+			carnetElement.appendChild(fechaExpElement);
+
+			Element expedidoEnElement = doc.createElement("expedidoen");
+			expedidoEnElement.setTextContent(peregrino.getCarnet().getParadaInicio().getNombre());
+			carnetElement.appendChild(expedidoEnElement);
+
+			Element peregrinoElement = doc.createElement("peregrino");
+			carnetElement.appendChild(peregrinoElement);
+
+			Element nombreElement = doc.createElement("nombre");
+			nombreElement.setTextContent(peregrino.getNombre());
+			peregrinoElement.appendChild(nombreElement);
+
+			Element nacionalidadElement = doc.createElement("nacionalidad");
+			nacionalidadElement.setTextContent(peregrino.getNacionalidad());
+			peregrinoElement.appendChild(nacionalidadElement);
+
+			Element hoyElement = doc.createElement("hoy");
+			hoyElement.setTextContent(LocalDate.now().format(formatter));
+			carnetElement.appendChild(hoyElement);
+
+			Element distanciaTotalElement = doc.createElement("distanciatotal");
+			distanciaTotalElement.setTextContent(String.valueOf(peregrino.getCarnet().getDistancia()));
+			carnetElement.appendChild(distanciaTotalElement);
+
+			Element paradasElement = doc.createElement("paradas");
+			carnetElement.appendChild(paradasElement);
+
+			int orden = 1;
+			for (Parada parada : paradas) {
+				Element paradaElement = doc.createElement("parada");
+
+				Element ordenElement = doc.createElement("orden");
+				ordenElement.setTextContent(String.valueOf(orden++));
+				paradaElement.appendChild(ordenElement);
+
+				Element nombreParadaElement = doc.createElement("nombre");
+				nombreParadaElement.setTextContent(parada.getNombre());
+				paradaElement.appendChild(nombreParadaElement);
+
+				Element regionElement = doc.createElement("region");
+				regionElement.setTextContent("" + parada.getRegion());
+				paradaElement.appendChild(regionElement);
+
+				paradasElement.appendChild(paradaElement);
+			}
+
+			Element estanciasElement = doc.createElement("estancias");
+			carnetElement.appendChild(estanciasElement);
+
+			for (Estancia estancia : estancias) {
+				Element estanciaElement = doc.createElement("estancia");
+
+				Element idEstanciaElement = doc.createElement("id");
+				idEstanciaElement.setTextContent(String.valueOf(estancia.getId()));
+				estanciaElement.appendChild(idEstanciaElement);
+
+				Element fechaEstanciaElement = doc.createElement("fecha");
+				fechaEstanciaElement.setTextContent(estancia.getFecha().format(formatter));
+				estanciaElement.appendChild(fechaEstanciaElement);
+
+				Element paradaEstanciaElement = doc.createElement("parada");
+				paradaEstanciaElement.setTextContent(estancia.getParada().getNombre());
+				estanciaElement.appendChild(paradaEstanciaElement);
+
+				if (estancia.isVip()) {
+					Element vipElement = doc.createElement("vip");
+					vipElement.setTextContent("Sí");
+					estanciaElement.appendChild(vipElement);
+				}
+
+				estanciasElement.appendChild(estanciaElement);
+			}
+
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+			try (OutputStream outputStream = new FileOutputStream(new File(fichero))) {
+				transformer.transform(new DOMSource(doc), new StreamResult(outputStream));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Error al exportar el peregrino XML: " + e.getMessage());
+		}
+	}
+
+	private String generarXMLCarnet(Peregrino peregrino) {
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document doc = builder.newDocument();
+
+			Element carnetElement = doc.createElement("carnet");
+			doc.appendChild(carnetElement);
+
+			Element idElement = doc.createElement("id");
+			idElement.setTextContent(String.valueOf(peregrino.getCarnet().getId()));
+			carnetElement.appendChild(idElement);
+
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+			LocalDate fechaExp = peregrino.getCarnet().getFechaexp();
+			String fechaExpFormateada = (fechaExp != null) ? fechaExp.format(formatter) : "Fecha no disponible";
+
+			Element fechaExpElement = doc.createElement("fechaexp");
+			fechaExpElement.setTextContent(fechaExpFormateada);
+			carnetElement.appendChild(fechaExpElement);
+
+			Element expedidoEnElement = doc.createElement("expedidoen");
+			expedidoEnElement.setTextContent(peregrino.getCarnet().getParadaInicio().getNombre());
+			carnetElement.appendChild(expedidoEnElement);
+
+			Element peregrinoElement = doc.createElement("peregrino");
+			carnetElement.appendChild(peregrinoElement);
+
+			Element nombreElement = doc.createElement("nombre");
+			nombreElement.setTextContent(peregrino.getNombre());
+			peregrinoElement.appendChild(nombreElement);
+
+			Element nacionalidadElement = doc.createElement("nacionalidad");
+			nacionalidadElement.setTextContent(peregrino.getNacionalidad());
+			peregrinoElement.appendChild(nacionalidadElement);
+
+			Element hoyElement = doc.createElement("hoy");
+			hoyElement.setTextContent(LocalDate.now().format(formatter));
+			carnetElement.appendChild(hoyElement);
+
+			Element distanciaTotalElement = doc.createElement("distanciatotal");
+			distanciaTotalElement.setTextContent(String.valueOf(peregrino.getCarnet().getDistancia()));
+			carnetElement.appendChild(distanciaTotalElement);
+
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer transformer = tf.newTransformer();
+			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+
+			java.io.StringWriter writer = new java.io.StringWriter();
+			transformer.transform(new javax.xml.transform.dom.DOMSource(doc),
+					new javax.xml.transform.stream.StreamResult(writer));
+
+			return writer.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error generando XML del carnet: " + e.getMessage());
+		}
 	}
 
 }
