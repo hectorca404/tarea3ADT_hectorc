@@ -14,15 +14,21 @@ public class ColeccionParadaRepository {
 	@Autowired
 	private EXistDBConnection conexionExistDB;
 
-	public Collection crearColeccion(String nombreColeccion) throws XMLDBException {
+	public Collection crearColeccion(String nombreColeccion) {
 		Collection coleccionPadre = conexionExistDB.obtenerConexion();
+		Collection nuevaColeccion = null;
 
-		CollectionManagementService servicioGestion = (CollectionManagementService) coleccionPadre
-				.getService("CollectionManagementService", "1.0");
+		try {
+			CollectionManagementService mgtService = (CollectionManagementService) coleccionPadre
+					.getService("CollectionManagementService", "1.0");
 
-		Collection nuevaColeccion = servicioGestion.createCollection(nombreColeccion);
-
-		conexionExistDB.cerrarConexion(coleccionPadre);
+			nuevaColeccion = mgtService.createCollection(nombreColeccion);
+		} catch (XMLDBException e) {
+			System.out.println("Error al crear la coleccion de la parada");
+			e.printStackTrace();
+		} finally {
+			conexionExistDB.cerrarConexion(coleccionPadre);
+		}
 
 		return nuevaColeccion;
 	}

@@ -3,6 +3,7 @@ package com.luisdbb.tarea3AD2024base.services;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -287,14 +288,14 @@ public class PeregrinoService {
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 
-			java.io.StringWriter writer = new java.io.StringWriter();
-			transformer.transform(new javax.xml.transform.dom.DOMSource(doc),
-					new javax.xml.transform.stream.StreamResult(writer));
+			StringWriter writer = new StringWriter();
+			transformer.transform(new DOMSource(doc),
+					new StreamResult(writer));
 
 			return writer.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("Error generando XML del carnet: " + e.getMessage());
+			throw new RuntimeException("Error generando XML del carnet: ");
 		}
 	}
 

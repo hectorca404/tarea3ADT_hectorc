@@ -1,5 +1,8 @@
 package com.luisdbb.tarea3AD2024base.repositorios;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.xmldb.api.base.Collection;
@@ -30,5 +33,25 @@ public class CarnetExistDBRepository {
 		}
 
 		conexionExistDB.cerrarConexion(coleccionPadre);
+	}
+
+	public List<String> obtenerCarnetsPorParada(String nombreParada) {
+		List<String> carnets = new ArrayList<>();
+		Collection coleccionPadre = conexionExistDB.obtenerConexion();
+		Collection subcoleccion;
+		try {
+			subcoleccion = coleccionPadre.getChildCollection(nombreParada);
+
+			String[] recursos = subcoleccion.listResources();
+			for (String recurso : recursos) {
+				Resource resource = subcoleccion.getResource(recurso);
+				carnets.add((String) resource.getContent());
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+
+		conexionExistDB.cerrarConexion(coleccionPadre);
+		return carnets;
 	}
 }

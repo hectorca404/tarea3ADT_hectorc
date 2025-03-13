@@ -31,9 +31,9 @@ public class EXistDBConnection {
 			coleccion = DatabaseManager.getCollection(url, usuario, contrasena);
 
 			if (coleccion == null) {
-				Collection root = DatabaseManager.getCollection("xmldb:exist://localhost:8080/exist/xmlrpc/db", usuario,
+				Collection raiz = DatabaseManager.getCollection("xmldb:exist://localhost:8080/exist/xmlrpc/db", usuario,
 						contrasena);
-				CollectionManagementService mgtService = (CollectionManagementService) root
+				CollectionManagementService mgtService = (CollectionManagementService) raiz
 						.getService("CollectionManagementService", "1.0");
 				mgtService.createCollection(url.substring(url.lastIndexOf("/") + 1));
 				coleccion = DatabaseManager.getCollection(url, usuario, contrasena);

@@ -13,16 +13,14 @@ public class ColeccionParadaService {
 	@Autowired
 	private ColeccionParadaRepository coleccionParadaRepository;
 
-	public boolean crearColeccionParada(String nombreColeccion) {
+	public void crearColeccionParada(String nombreColeccion) {
 		try {
 			Collection nuevaColeccion = coleccionParadaRepository.crearColeccion(nombreColeccion);
 			if (nuevaColeccion != null) {
 				nuevaColeccion.close();
-				return true;
 			}
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
-		return false;
 	}
 }
