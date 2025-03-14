@@ -32,8 +32,8 @@ public class ParadasPeregrinos implements Serializable {
 		this.id = new ParadasPeregrinosId();
 	}
 
-	public ParadasPeregrinos(Peregrino peregrino, Parada parada) {
-		this.id = new ParadasPeregrinosId(peregrino.getId(), parada.getId());
+	public ParadasPeregrinos(Long orden, Peregrino peregrino, Parada parada) {
+		this.id = new ParadasPeregrinosId(orden, peregrino.getId(), parada.getId());
 		this.peregrino = peregrino;
 		this.parada = parada;
 	}
@@ -69,6 +69,14 @@ public class ParadasPeregrinos implements Serializable {
 
 	public void setFecha(LocalDate fecha) {
 		this.id.setFecha(fecha);
+	}
+
+	public void setOrden(Long orden) {
+		this.id.setOrden(orden);
+	}
+
+	public void getOrden(Long orden) {
+		this.id.getOrden();
 	}
 
 	// METODOS ENTITY

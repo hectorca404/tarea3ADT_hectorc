@@ -41,7 +41,10 @@ public class EnvioACasaService {
 			return new ArrayList<>();
 		}
 
-		List<Long> idsEstancia = estancias.stream().map(Estancia::getId).toList();
+		List<Long> idsEstancia = new ArrayList<>();
+	    for (Estancia estancia : estancias) {
+	        idsEstancia.add(estancia.getId());
+	    }
 		List<ConjuntoContratado> conjuntos = conjuntoContratadoRepository.obtenerConjuntosPorIdsEstancia(idsEstancia);
 
 		List<EnvioACasa> enviosEncontrados = new ArrayList<>();

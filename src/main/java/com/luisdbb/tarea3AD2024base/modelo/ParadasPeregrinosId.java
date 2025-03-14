@@ -8,10 +8,10 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class ParadasPeregrinosId implements Serializable {
-
 	private LocalDate fecha;
 	private Long peregrino;
 	private Long parada;
+	private Long orden;
 
 	// CONTRUCTORES
 	public ParadasPeregrinosId() {
@@ -21,6 +21,13 @@ public class ParadasPeregrinosId implements Serializable {
 		this.fecha = LocalDate.now();
 		this.peregrino = peregrino;
 		this.parada = parada;
+	}
+
+	public ParadasPeregrinosId(Long orden, Long peregrino, Long parada) {
+		this.fecha = LocalDate.now();
+		this.peregrino = peregrino;
+		this.parada = parada;
+		this.orden = orden;
 	}
 
 	// GETTERS Y SETTERS
@@ -46,6 +53,14 @@ public class ParadasPeregrinosId implements Serializable {
 
 	public void setParada(Long parada) {
 		this.parada = parada;
+	}
+
+	public Long getOrden() {
+		return orden;
+	}
+
+	public void setOrden(Long orden) {
+		this.orden = orden;
 	}
 
 	// METODOS CLASE ENTITY

@@ -21,25 +21,22 @@ public class EnvioACasa extends Servicio implements Serializable {
 	private double peso;
 	private double[] volumen;
 	private boolean urgente;
+	private double precio;
 
-	private static final String NOMBRE_ENVIO = "Envio a Casa";
-	private static final double PRECIO_ENVIO = 10.0;
+	private static final String NOMBRE_ENVIO = "Envio a casa";
 
 	// RELACION
 	@Embedded
 	private Direccion direccion;
 
 	// CONSTRUCTORES
-	public EnvioACasa(Long id) {
-		super(id, NOMBRE_ENVIO, PRECIO_ENVIO);
-	}
 
-	public EnvioACasa(Long id, double peso, double[] volumen, boolean urgente, Direccion direccion) {
-		super(id, NOMBRE_ENVIO, PRECIO_ENVIO);
+	public EnvioACasa(Long id, double peso, double[] volumen, boolean urgente, double precio, Direccion direccion) {
 		this.peso = peso;
 		this.volumen = volumen;
 		this.urgente = urgente;
 		this.direccion = direccion;
+		this.precio = precio;
 	}
 
 	// GETTERS AND SETTERS
@@ -73,6 +70,26 @@ public class EnvioACasa extends Servicio implements Serializable {
 
 	public void setDireccion(Direccion direccion) {
 		this.direccion = direccion;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public double getPrecio() {
+		return precio;
+	}
+
+	public void setPrecio(double precio) {
+		this.precio = precio;
+	}
+
+	public static String getNombreEnvio() {
+		return NOMBRE_ENVIO;
 	}
 
 	// METODOS CLASS ENTITY

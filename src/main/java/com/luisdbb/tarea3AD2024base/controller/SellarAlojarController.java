@@ -21,6 +21,7 @@ import com.luisdbb.tarea3AD2024base.modelo.ParadasPeregrinos;
 import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
 import com.luisdbb.tarea3AD2024base.modelo.Perfil;
 import com.luisdbb.tarea3AD2024base.modelo.Servicio;
+import com.luisdbb.tarea3AD2024base.repositorios.ParadasPeregrinosRepository;
 import com.luisdbb.tarea3AD2024base.services.AyudaService;
 import com.luisdbb.tarea3AD2024base.services.ConjuntoContratadoService;
 import com.luisdbb.tarea3AD2024base.services.CredencialesService;
@@ -121,9 +122,6 @@ public class SellarAlojarController {
 	private RadioButton bizumRadio;
 
 	@FXML
-	private CheckBox envioCheckBox;
-
-	@FXML
 	private TextField pesoField;
 
 	@FXML
@@ -159,6 +157,9 @@ public class SellarAlojarController {
 	@Autowired
 	private EnvioACasaService envioACasaService;
 
+	@Autowired
+	private ParadasPeregrinosRepository paradasPeregrinosRepository;
+
 	private ObservableList<Servicio> serviciosSeleccionados = FXCollections.observableArrayList();
 
 	private ObservableList<Servicio> listaServicios;
@@ -175,9 +176,14 @@ public class SellarAlojarController {
 		configurarBotones();
 		cargarPeregrinosComboBox();
 		configurarAtajos();
+
 		serviciosSeleccionados.addListener((ListChangeListener<Servicio>) change -> {
 			actualizarPrecioTotal();
+			boolean envioSeleccionado = envioACasaSeleccionado();
+			habilitarCamposEnvio(envioSeleccionado);
 		});
+
+		habilitarCamposEnvio(false);
 	}
 
 	private void configurarModoPago() {
@@ -192,10 +198,6 @@ public class SellarAlojarController {
 
 		for (Servicio servicio : serviciosSeleccionados) {
 			precioTotal += servicio.getPrecio();
-		}
-
-		if (envioCheckBox.isSelected()) {
-			precioTotal += 10.0;
 		}
 
 		totalLabel.setText("Precio Total: " + precioTotal);
@@ -222,11 +224,25 @@ public class SellarAlojarController {
 			actualizarEstadoCampos(newValue);
 		});
 
-		envioCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			UIUtils.setEstadoCamposEnvio(newValue, pesoField, volumenX, volumenY, volumenZ, direccionField,
-					localidadField, urgenteCheckBox);
-			actualizarPrecioTotal();
-		});
+	}
+
+	private void habilitarCamposEnvio(boolean habilitar) {
+		pesoField.setDisable(!habilitar);
+		volumenX.setDisable(!habilitar);
+		volumenY.setDisable(!habilitar);
+		volumenZ.setDisable(!habilitar);
+		direccionField.setDisable(!habilitar);
+		localidadField.setDisable(!habilitar);
+		urgenteCheckBox.setDisable(!habilitar);
+	}
+
+	private boolean envioACasaSeleccionado() {
+		for (Servicio servicio : serviciosSeleccionados) {
+			if ("Envio a casa".equalsIgnoreCase(servicio.getNombre())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void actualizarEstadoCampos(boolean alojar) {
@@ -234,14 +250,12 @@ public class SellarAlojarController {
 
 		serviciosComboBox.setDisable(!activar);
 		vipCheckBox.setDisable(!activar);
-		envioCheckBox.setDisable(!activar);
 		efectivoRadio.setDisable(!activar);
 		tarjetaRadio.setDisable(!activar);
 		bizumRadio.setDisable(!activar);
 
 		if (!activar) {
 			modoPagoGroup.selectToggle(null);
-			envioCheckBox.setSelected(false);
 		}
 	}
 
@@ -295,7 +309,6 @@ public class SellarAlojarController {
 
 		alojarCheckBox.setSelected(false);
 		vipCheckBox.setSelected(false);
-		envioCheckBox.setSelected(false);
 		urgenteCheckBox.setSelected(false);
 
 		modoPagoGroup.selectToggle(null);
@@ -370,7 +383,8 @@ public class SellarAlojarController {
 			return;
 		}
 
-		if (envioCheckBox.isSelected()) {
+		if (pesoField == null || volumenX == null || volumenY == null || volumenZ == null || direccionField == null
+				|| localidadField == null) {
 			if (direccionField.getText().isEmpty() || localidadField.getText().isEmpty()) {
 				alertsView.mostrarError("Error!!!", "Los campos de envio a casa no pueden estar vacios.");
 				return;
@@ -384,7 +398,7 @@ public class SellarAlojarController {
 		}
 
 		EnvioACasa envio = null;
-		if (envioCheckBox.isSelected() && !yaAlojado) {
+		if (!yaAlojado && envioACasaSeleccionado()) {
 			try {
 				double volumenXDouble = Double.parseDouble(volumenX.getText());
 				double volumenYDouble = Double.parseDouble(volumenY.getText());
@@ -402,7 +416,15 @@ public class SellarAlojarController {
 				Direccion direccion = new Direccion(direccionField.getText(), localidadField.getText());
 
 				Long idEnvio = servicioService.obtenerSiguienteIdServicio();
-				envio = new EnvioACasa(idEnvio, peso, volumen, urgente, direccion);
+
+				double precioEnvio = 0.0;
+				for (Servicio servicio : serviciosSeleccionados) {
+					if ("Envio a casa".equalsIgnoreCase(servicio.getNombre())) {
+						precioEnvio = servicio.getPrecio();
+						break;
+					}
+				}
+				envio = new EnvioACasa(idEnvio, peso, volumen, urgente, precioEnvio, direccion);
 				envioACasaService.guardarEnvio(envio);
 			} catch (NumberFormatException e) {
 				alertsView.mostrarError("Error", "Peso y volumen deben de ser numeros");
@@ -414,7 +436,9 @@ public class SellarAlojarController {
 
 		if (!yaSellado) {
 			carnet.setDistancia(carnet.getDistancia() + 5);
-			ParadasPeregrinos paradasPeregrinos = new ParadasPeregrinos(peregrino, paradaActual);
+			Long totalRegistros = paradasPeregrinosRepository.count();
+			Long orden = totalRegistros + 1;
+			ParadasPeregrinos paradasPeregrinos = new ParadasPeregrinos(orden, peregrino, paradaActual);
 			paradaService.guardarParadasPeregrinos(paradasPeregrinos);
 		}
 

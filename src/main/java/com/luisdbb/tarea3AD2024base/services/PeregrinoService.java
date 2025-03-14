@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -63,8 +64,10 @@ public class PeregrinoService {
 		Peregrino peregrino = new Peregrino(null, nombre, apellido, nacionalidad, paradaInicio);
 
 		Peregrino peregrinoGuardado = peregrinoRepository.save(peregrino);
+		Long totalRegistros = paradasPeregrinosRepository.count();
+		Long orden = totalRegistros + 1;
+		ParadasPeregrinos relacion = new ParadasPeregrinos(orden, peregrinoGuardado, paradaInicio);
 
-		ParadasPeregrinos relacion = new ParadasPeregrinos(peregrinoGuardado, paradaInicio);
 		paradasPeregrinosRepository.save(relacion);
 
 		Credenciales credenciales = new Credenciales();
@@ -125,7 +128,10 @@ public class PeregrinoService {
 	public void exportarPeregrinoXML(Peregrino peregrino) {
 		String pathExportacion = "src/main/resources/peregrinosXML/";
 
-		List<Parada> paradas = obtenerParadas(peregrino.getId());
+		List<ParadasPeregrinos> paradasPeregrinos = paradasPeregrinosRepository.findByPeregrinoId(peregrino.getId());
+
+		paradasPeregrinos.sort(Comparator.comparing(pp -> pp.getId().getOrden()));
+
 		List<Estancia> estancias = obtenerEstancias(peregrino.getId());
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -178,7 +184,8 @@ public class PeregrinoService {
 			carnetElement.appendChild(paradasElement);
 
 			int orden = 1;
-			for (Parada parada : paradas) {
+			for (ParadasPeregrinos pp : paradasPeregrinos) {
+				Parada parada = pp.getParada();
 				Element paradaElement = doc.createElement("parada");
 
 				Element ordenElement = doc.createElement("orden");
@@ -238,6 +245,14 @@ public class PeregrinoService {
 	}
 
 	private String generarXMLCarnet(Peregrino peregrino) {
+		
+		List<ParadasPeregrinos> paradasPeregrinos = paradasPeregrinosRepository.findByPeregrinoId(peregrino.getId());
+		paradasPeregrinos.sort(Comparator.comparing(pp -> pp.getId().getOrden()));
+		List<Estancia> estancias = obtenerEstancias(peregrino.getId());
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		LocalDate fechaExpCarnet = peregrino.getCarnet().getFechaexp();
+		String fechaExpFormateada = (fechaExpCarnet != null) ? fechaExpCarnet.format(formatter) : "Fecha no disponible";
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
@@ -249,10 +264,6 @@ public class PeregrinoService {
 			Element idElement = doc.createElement("id");
 			idElement.setTextContent(String.valueOf(peregrino.getCarnet().getId()));
 			carnetElement.appendChild(idElement);
-
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-			LocalDate fechaExp = peregrino.getCarnet().getFechaexp();
-			String fechaExpFormateada = (fechaExp != null) ? fechaExp.format(formatter) : "Fecha no disponible";
 
 			Element fechaExpElement = doc.createElement("fechaexp");
 			fechaExpElement.setTextContent(fechaExpFormateada);
@@ -266,7 +277,7 @@ public class PeregrinoService {
 			carnetElement.appendChild(peregrinoElement);
 
 			Element nombreElement = doc.createElement("nombre");
-			nombreElement.setTextContent(peregrino.getNombre());
+			nombreElement.setTextContent(peregrino.getNombre()+" "+peregrino.getApellido());
 			peregrinoElement.appendChild(nombreElement);
 
 			Element nacionalidadElement = doc.createElement("nacionalidad");
@@ -281,6 +292,56 @@ public class PeregrinoService {
 			distanciaTotalElement.setTextContent(String.valueOf(peregrino.getCarnet().getDistancia()));
 			carnetElement.appendChild(distanciaTotalElement);
 
+			Element paradasElement = doc.createElement("paradas");
+			carnetElement.appendChild(paradasElement);
+
+			int orden = 1;
+			for (ParadasPeregrinos pp : paradasPeregrinos) {
+				Parada parada = pp.getParada();
+				Element paradaElement = doc.createElement("parada");
+
+				Element ordenElement = doc.createElement("orden");
+				ordenElement.setTextContent(String.valueOf(orden++));
+				paradaElement.appendChild(ordenElement);
+
+				Element nombreParadaElement = doc.createElement("nombre");
+				nombreParadaElement.setTextContent(parada.getNombre());
+				paradaElement.appendChild(nombreParadaElement);
+
+				Element regionElement = doc.createElement("region");
+				regionElement.setTextContent("" + parada.getRegion());
+				paradaElement.appendChild(regionElement);
+
+				paradasElement.appendChild(paradaElement);
+			}
+
+			Element estanciasElement = doc.createElement("estancias");
+			carnetElement.appendChild(estanciasElement);
+
+			for (Estancia estancia : estancias) {
+				Element estanciaElement = doc.createElement("estancia");
+
+				Element idEstanciaElement = doc.createElement("id");
+				idEstanciaElement.setTextContent(String.valueOf(estancia.getId()));
+				estanciaElement.appendChild(idEstanciaElement);
+
+				Element fechaEstanciaElement = doc.createElement("fecha");
+				fechaEstanciaElement.setTextContent(estancia.getFecha().format(formatter));
+				estanciaElement.appendChild(fechaEstanciaElement);
+
+				Element paradaEstanciaElement = doc.createElement("parada");
+				paradaEstanciaElement.setTextContent(estancia.getParada().getNombre());
+				estanciaElement.appendChild(paradaEstanciaElement);
+
+				if (estancia.isVip()) {
+					Element vipElement = doc.createElement("vip");
+					vipElement.setTextContent("Sí");
+					estanciaElement.appendChild(vipElement);
+				}
+
+				estanciasElement.appendChild(estanciaElement);
+			}
+
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer transformer = tf.newTransformer();
 			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
@@ -289,8 +350,7 @@ public class PeregrinoService {
 			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 
 			StringWriter writer = new StringWriter();
-			transformer.transform(new DOMSource(doc),
-					new StreamResult(writer));
+			transformer.transform(new DOMSource(doc), new StreamResult(writer));
 
 			return writer.toString();
 		} catch (Exception e) {

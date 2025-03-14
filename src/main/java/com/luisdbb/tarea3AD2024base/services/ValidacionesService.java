@@ -151,26 +151,15 @@ public class ValidacionesService {
 	}
 
 	public boolean validarNombreYApellido(String name, String apell) {
-		if (name == null || apell == null) {
-			alertsView.mostrarError("Error", "El campo nombre o apellido no pueden estar vacios.");
+		if (name == null || name.trim().isEmpty() || apell == null || apell.trim().isEmpty()) {
+			alertsView.mostrarError("Error", "El campo nombre y apelldio no peude estar vacio.");
 			return false;
 		}
-		if (name.contains(" ") || apell.contains(" ")) {
-			alertsView.mostrarError("Error", "El campo nombre o apellido no puede contener espacios.");
+
+		if (!name.matches("[a-zA-ZÑñ ]+") || !apell.matches("[a-zA-ZÑñ ]+")) {
+			alertsView.mostrarError("Error",
+					"El nombre y apellido no puede contener nuemros ni caracteres especiales.");
 			return false;
-		}
-		for (int i = 1; i < name.length(); i++) {
-			if (!Character.isLetter(name.charAt(i))) {
-				alertsView.mostrarError("Error", "El campo nombre no puede contener números ni caracteres especiales.");
-				return false;
-			}
-		}
-		for (int i = 1; i < apell.length(); i++) {
-			if (!Character.isLetter(apell.charAt(i))) {
-				alertsView.mostrarError("Error",
-						"El campo apellido no puede contener números ni caracteres especiales.");
-				return false;
-			}
 		}
 
 		return true;
@@ -178,9 +167,11 @@ public class ValidacionesService {
 
 	// SELLARALOJAR
 	public boolean yaSelladoHoy(Peregrino peregrino, Parada parada, LocalDate fecha) {
-		ParadasPeregrinosId id = new ParadasPeregrinosId(peregrino.getId(), parada.getId());
-		id.setFecha(fecha);
-		return paradasPeregrinosRepository.existsById(id);
+	    return paradasPeregrinosRepository.existsByIdPeregrinoAndIdParadaAndIdFecha(
+	        peregrino.getId(), 
+	        parada.getId(), 
+	        fecha
+	    );
 	}
 
 	public boolean yaAlojoHoy(Peregrino peregrino, Parada parada, LocalDate fecha) {
@@ -209,12 +200,12 @@ public class ValidacionesService {
 	}
 
 	public boolean validarNombre(String cadena) {
-		for (int i = 1; i < cadena.length(); i++) {
-			if (!Character.isLetter(cadena.charAt(i))) {
-				alertsView.mostrarError("Error", "El campo nombre no puede contener números ni caracteres especiales.");
-				return false;
-			}
+		if (!cadena.matches("[a-zA-ZÑñ ]+") || !cadena.matches("[a-zA-ZÑñ ]+")) {
+			alertsView.mostrarError("Error",
+					"El nombre no puede contener numeros ni caracteres especiales.");
+			return false;
 		}
+
 		return true;
 
 	}

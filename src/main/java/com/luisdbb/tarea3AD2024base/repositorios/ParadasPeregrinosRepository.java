@@ -1,5 +1,6 @@
 package com.luisdbb.tarea3AD2024base.repositorios;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,7 @@ public interface ParadasPeregrinosRepository extends JpaRepository<ParadasPeregr
 	List<ParadasPeregrinos> findByPeregrinoId(Long peregrinoId);
 
 	boolean existsById(ParadasPeregrinosId id);
+	
+	 boolean existsByIdPeregrinoAndIdParadaAndIdFecha(Long peregrino, Long parada, LocalDate fecha);
 
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<carnet>
+   <id>73</id>
+   <fechaexp>14-03-2025</fechaexp>
+   <expedidoen>papa</expedidoen>
+   <peregrino>
+      <nombre>luis</nombre>
+      <nacionalidad>Australia</nacionalidad>
+   </peregrino>
+   <hoy>14-03-2025</hoy>
+   <distanciatotal>5.0</distanciatotal>
+   <paradas>
+      <parada>
+         <orden>1</orden>
+         <nombre>papa</nombre>
+         <region>p</region>
+      </parada>
+      <parada>
+         <orden>2</orden>
+         <nombre>Parada A</nombre>
+         <region>A</region>
+      </parada>
+   </paradas>
+   <estancias>
+      <estancia>
+         <id>11</id>
+         <fecha>14-03-2025</fecha>
+         <parada>Parada A</parada>
+      </estancia>
+   </estancias>
+</carnet>

@@ -82,8 +82,7 @@
         <VBox spacing="10.0">
             <HBox spacing="10.0">
                 <children>
-                    <Label text="Envío a Casa (10€):" />
-                    <CheckBox fx:id="envioCheckBox" disable="true" text="Habilitar Envío" />
+                    <Label text="Envío a Casa" />
                 </children>
             </HBox>
 

@@ -137,7 +137,6 @@ public class CrearServicioController {
 		servicio.setParadaIds(paradaIds);
 
 		servicioService.guardarServicio(servicio);
-		;
 
 		alertsView.mostrarConfirmacion("Exito", "Servicio creado correctamente");
 

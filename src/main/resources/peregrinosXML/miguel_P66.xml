@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<carnet>
+   <id>66</id>
+   <fechaexp>13-03-2025</fechaexp>
+   <expedidoen>Zamora</expedidoen>
+   <peregrino>
+      <nombre>miguel</nombre>
+      <nacionalidad>Arabia Saudí</nacionalidad>
+   </peregrino>
+   <hoy>13-03-2025</hoy>
+   <distanciatotal>0.0</distanciatotal>
+   <paradas>
+      <parada>
+         <orden>1</orden>
+         <nombre>Zamora</nombre>
+         <region>Z</region>
+      </parada>
+   </paradas>
+   <estancias/>
+</carnet>
