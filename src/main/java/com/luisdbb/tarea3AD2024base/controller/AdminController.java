@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 
 import com.luisdbb.tarea3AD2024base.config.StageManager;
 import com.luisdbb.tarea3AD2024base.services.AyudaService;
+import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
+import com.luisdbb.tarea3AD2024base.view.AlertsView;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
 import javafx.fxml.FXML;
@@ -28,6 +30,9 @@ public class AdminController {
 
 	@FXML
 	private Button ayudaButton;
+	
+	@FXML
+	private Button exportarCarnetsButton;
 
 	@FXML
 	private ImageView crearParadaIcon;
@@ -40,6 +45,9 @@ public class AdminController {
 
 	@FXML
 	private ImageView ayudaIcon;
+	
+	@FXML
+	private ImageView exportarCarnetsIcon;
 
 	@Lazy
 	@Autowired
@@ -47,6 +55,12 @@ public class AdminController {
 
 	@Autowired
 	private AyudaService ayudaService;
+	
+	@Autowired
+	private AlertsView alertsView;
+	
+	@Autowired
+	private PeregrinoService peregrinoService;
 
 	@FXML
 	public void initialize() {
@@ -54,6 +68,7 @@ public class AdminController {
 		cerrarSesionIcon.setImage(new Image(getClass().getResourceAsStream("/images/cerrarSesion.png")));
 		ayudaIcon.setImage(new Image(getClass().getResourceAsStream("/images/help.png")));
 		serviciosIcon.setImage(new Image(getClass().getResourceAsStream("/images/servicio.png")));
+		exportarCarnetsIcon.setImage(new Image(getClass().getResourceAsStream("/images/exportar.png")));
 
 		crearParadaButton.setOnAction(event -> crearParada());
 		cerrarSesionButton.setOnAction(event -> cerrarSesion());
@@ -74,6 +89,10 @@ public class AdminController {
 				});
 			}
 		});
+	}
+	
+	private void exportarCarnetsActuales() {
+		alertsView.mostrarInfo("Exportacion Exitosa", "Los carnets actuales de los peregrinos se han exportado correctamente.");
 	}
 
 	private void crearParada() {
