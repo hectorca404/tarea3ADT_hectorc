@@ -9,5 +9,5 @@ import com.luisdbb.tarea3AD2024base.modelo.Peregrino;
 
 @Repository
 public interface PeregrinoRepository extends JpaRepository<Peregrino, Long> {
-	Optional<Peregrino> findByCarnetId(Long carnetId);
+	Optional<Peregrino> findByCarnetId(Long carnetId); 
 }

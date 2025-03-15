@@ -44,7 +44,7 @@
 						<ImageView fx:id="serviciosIcon" fitHeight="20.0" fitWidth="20.0" />
 					</graphic>
 				</Button>
-				<Button fx:id="exportarCarnetsButton" prefWidth="200.0" text="Exportar Carnets Actuales Peregrinos">
+				<Button fx:id="exportarCarnetsButton" prefWidth="200.0" text="Exportar Carnets">
 					<graphic>
 						<ImageView fx:id="exportarCarnetsIcon" fitHeight="20.0" fitWidth="20.0" />
 					</graphic>

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 
 import com.luisdbb.tarea3AD2024base.config.StageManager;
 import com.luisdbb.tarea3AD2024base.services.AyudaService;
-import com.luisdbb.tarea3AD2024base.services.PeregrinoService;
+import com.luisdbb.tarea3AD2024base.services.MongoDBService;
 import com.luisdbb.tarea3AD2024base.view.AlertsView;
 import com.luisdbb.tarea3AD2024base.view.FxmlView;
 
@@ -30,7 +30,7 @@ public class AdminController {
 
 	@FXML
 	private Button ayudaButton;
-	
+
 	@FXML
 	private Button exportarCarnetsButton;
 
@@ -45,7 +45,7 @@ public class AdminController {
 
 	@FXML
 	private ImageView ayudaIcon;
-	
+
 	@FXML
 	private ImageView exportarCarnetsIcon;
 
@@ -55,12 +55,12 @@ public class AdminController {
 
 	@Autowired
 	private AyudaService ayudaService;
-	
+
 	@Autowired
 	private AlertsView alertsView;
-	
+
 	@Autowired
-	private PeregrinoService peregrinoService;
+	private MongoDBService mongoDBService;
 
 	@FXML
 	public void initialize() {
@@ -74,6 +74,7 @@ public class AdminController {
 		cerrarSesionButton.setOnAction(event -> cerrarSesion());
 		ayudaButton.setOnAction(event -> ayudaService.mostrarAyuda("/help/Admin.html"));
 		serviciosButton.setOnAction(event -> mostrarMenuServicios());
+		exportarCarnetsButton.setOnAction(event -> exportarCarnetsActuales());
 
 		configurarAtajo();
 	}
@@ -90,9 +91,11 @@ public class AdminController {
 			}
 		});
 	}
-	
+
 	private void exportarCarnetsActuales() {
-		alertsView.mostrarInfo("Exportacion Exitosa", "Los carnets actuales de los peregrinos se han exportado correctamente.");
+		mongoDBService.exportarCarnets();
+		alertsView.mostrarInfo("Exportacion Exitosa",
+				"Los carnets actuales de los peregrinos se han exportado correctamente.");
 	}
 
 	private void crearParada() {

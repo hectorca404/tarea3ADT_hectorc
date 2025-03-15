@@ -101,6 +101,10 @@ public class PeregrinoService {
 		return estanciaRepository.findByPeregrinoId(peregrinoId);
 	}
 
+	public List<Peregrino> obtenerPeregrinos() {
+		return peregrinoRepository.findAll();
+	}
+
 	@Transactional
 	public void guardarCambiosPeregrino(Peregrino peregrino, String nuevoCorreo) {
 		peregrinoRepository.save(peregrino);
@@ -244,8 +248,8 @@ public class PeregrinoService {
 		}
 	}
 
-	private String generarXMLCarnet(Peregrino peregrino) {
-		
+	public String generarXMLCarnet(Peregrino peregrino) {
+
 		List<ParadasPeregrinos> paradasPeregrinos = paradasPeregrinosRepository.findByPeregrinoId(peregrino.getId());
 		paradasPeregrinos.sort(Comparator.comparing(pp -> pp.getId().getOrden()));
 		List<Estancia> estancias = obtenerEstancias(peregrino.getId());
@@ -277,7 +281,7 @@ public class PeregrinoService {
 			carnetElement.appendChild(peregrinoElement);
 
 			Element nombreElement = doc.createElement("nombre");
-			nombreElement.setTextContent(peregrino.getNombre()+" "+peregrino.getApellido());
+			nombreElement.setTextContent(peregrino.getNombre() + " " + peregrino.getApellido());
 			peregrinoElement.appendChild(nombreElement);
 
 			Element nacionalidadElement = doc.createElement("nacionalidad");
