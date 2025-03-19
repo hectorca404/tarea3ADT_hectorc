@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <carnet>
-   <id>64</id>
-   <fechaexp>12-03-2025</fechaexp>
-   <expedidoen>Velone</expedidoen>
+   <id>3</id>
+   <fechaexp>19-03-2025</fechaexp>
+   <expedidoen>las caldas</expedidoen>
    <peregrino>
-      <nombre>iker</nombre>
+      <nombre>isa</nombre>
       <nacionalidad>Bélgica</nacionalidad>
    </peregrino>
-   <hoy>12-03-2025</hoy>
+   <hoy>19-03-2025</hoy>
    <distanciatotal>0.0</distanciatotal>
    <paradas>
       <parada>
          <orden>1</orden>
-         <nombre>Velone</nombre>
-         <region>V</region>
+         <nombre>las caldas</nombre>
+         <region>c</region>
       </parada>
    </paradas>
    <estancias/>
